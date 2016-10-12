@@ -171,7 +171,7 @@ html, body {
 
 .options {
 	position: absolute;
-	right: 2%;
+	right: 0%;
 	z-index: 5;
 	top: 20px;
     width: 200px;
@@ -183,8 +183,8 @@ html, body {
 }
 
 .options button {
-	height: 50px;
-	width: 175px;
+	height: 30px;
+	width: 165px;
     background: #0F0C27;
 	color: #fff;
 	text-transform: uppercase;
@@ -192,10 +192,6 @@ html, body {
 	margin: 2.5px;
     font-size: 15px;
     border: none;
-/*
-    outline: solid;
-    outline-color: floralwhite;
-*/
 }
 
 .options .add-pin {
@@ -401,4 +397,26 @@ html, body {
 .satView .viewUpdate {
 	position: relative;
 	float: left;
+}
+
+/*********************** Zoom Buttons **************************/
+
+.zoom {
+	position: absolute;
+	left: 1%;
+	z-index: 5;
+	top: 20px;
+    width: 40px;
+}
+
+.zoom button {
+	height: 40px;
+	width: 40px;
+    background: #0F0C27;
+	color: #fff;
+	text-transform: uppercase;
+	cursor: pointer;
+	margin: 2.5px;
+    font-size: 15px;
+    border: none;
 }

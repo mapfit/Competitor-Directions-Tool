@@ -13,7 +13,8 @@ $(document).ready(function() {
         style: 'mapbox://styles/parkourmethod/cim5hb9c600jza0m473wrw6y6',
         center: [-77.043132, 38.902705],
         zoom: 16,
-        minZoom: 4
+        minZoom: 4,
+        attributionControl: false
     });
 
     map.dragRotate.disable();
@@ -25,10 +26,14 @@ $(document).ready(function() {
     //initial button focus
     document.getElementById("DC").focus();
     
+//    map.hideAttribution();
+    
+    //fly to cities
     $('.DC').on('click', function(e) {
         map.flyTo({
             center: [-77.043132, 38.902705],
-            zoom: 16
+            zoom: 16,
+            speed: 1.5
         });
         
         defLoc = "DC";
@@ -37,7 +42,8 @@ $(document).ready(function() {
     $('.NYC').on('click', function() {
         map.flyTo({
             center: [-73.998742, 40.725301],
-            zoom: 16
+            zoom: 16,
+            speed: 1.5
         });
         
         defLoc = "NYC";
@@ -46,7 +52,8 @@ $(document).ready(function() {
     $('.SF').on('click', function() {
         map.flyTo({
             center: [-122.410829, 37.785506],
-            zoom: 16
+            zoom: 16,
+            speed: 1.5
         });
         
         defLoc = "SF";
@@ -55,7 +62,8 @@ $(document).ready(function() {
     $('.PA').on('click', function() {
         map.flyTo({
             center: [-122.155012, 37.447295],
-            zoom: 16
+            zoom: 16,
+            speed: 1.5
         });
         
         defLoc = "PA";
@@ -64,7 +72,8 @@ $(document).ready(function() {
     $('.SM').on('click', function() {
         map.flyTo({
             center: [-118.480961, 34.001161],
-            zoom: 16
+            zoom: 16,
+            speed: 1.5
         });
         
         defLoc = "SM";
@@ -73,12 +82,14 @@ $(document).ready(function() {
     $('.CHI').on('click', function() {
         map.flyTo({
             center: [-87.628595, 41.881745],
-            zoom: 16
+            zoom: 16,
+            speed: 1.5
         });
         
         defLoc = "CHI";
     });
     
+    //keep focus on the buttons so they stay highlighted
     map.on("click", function(){
        //keep focus on buttons
         document.getElementById(defLoc).focus();
@@ -92,5 +103,16 @@ $(document).ready(function() {
     map.on("dragstart", function(){
        //keep focus on buttons
         document.getElementById(defLoc).focus();
+    });
+    
+    //zoom buttons
+    $('.IN').on('click', function(e) {
+        var zoom = map.getZoom();        
+        map.setZoom(zoom + 1);
+    });
+    
+    $('.OUT').on('click', function(e) {
+        var zoom = map.getZoom();        
+        map.setZoom(zoom - 1);
     });
 });
