@@ -403,9 +403,9 @@ html, body {
 
 .zoom {
 	position: absolute;
-	left: 1%;
+	right: 2.5%;
+    bottom: 20px;
 	z-index: 5;
-	top: 20px;
     width: 40px;
 }
 
