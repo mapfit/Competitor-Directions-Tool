@@ -115,4 +115,38 @@ $(document).ready(function() {
         var zoom = map.getZoom();        
         map.setZoom(zoom - 1);
     });
+    
+    //search
+    $('.address-search').on('click', function(e) {
+         var query = document.getElementById('address-query').value;
+         locationSearch(query);
+    });
+    
+    function locationSearch(thisQuery){
+         var xhttp = new XMLHttpRequest();
+
+         xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var myArr = JSON.parse(xhttp.responseText);
+
+               console.log("location return = " + myArr);
+               readLocation(myArr);
+           }  
+         };
+
+         xhttp.open('GET', "https://api.mapbox.com/geocoding/v5/mapbox.places/" + thisQuery + ".json?access_token=" + mapboxgl.accessToken, true);
+         xhttp.send();
+     }
+    
+    function readLocation(arr){
+         var lat = arr.features[0].center[1];
+         var lon = arr.features[0].center[0];
+         console.log("data: " + lat + ", " + lon);
+
+        map.flyTo({
+            center: [lon, lat],
+            zoom: 16,
+            speed: 1.5
+        });
+     }   
 });
