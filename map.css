@@ -65,15 +65,15 @@ html, body {
 	height: 30px;
 	width: 90px;
 	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+    background: #0F0C27;
 	color: #fff;
-	text-transform: uppercase;
-	background: #1F363D;
+    text-transform: uppercase;
 	border-radius: 0 3px 3px 0;
 	text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
 }
 
 .search-form button:hover {
-	background: #1F363D;
+    background-color: #231D4D;
 }
 
 /******************** Search Info Pane ***********************/
