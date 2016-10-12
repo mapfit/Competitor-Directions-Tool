@@ -1,0 +1,404 @@
+/************************ CSS Colors *************************
+*					Hex			RGB
+*	White:			#fff		255 255 255
+*	Light Grey:		#f7f7f7		247 247 247
+*	Red:			#F05D5E		254 74  73
+*	Dark Teal:		#1F363D		13  70  86
+*	Turquoise: 		#225560		0   159 183
+*	Chocolate:		#1F363D		88  75  83
+*F5FBEF - white
+*1C3144
+**************************************************************/
+
+/********************** Map Style ***************************/
+
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	
+}
+
+#map {
+	height: 100%;
+}
+
+/********************* Search Bar Style *********************/
+
+.search-form {
+	position: absolute;
+	width: 400px;
+	left: 5%;
+	top: 20px;
+	background: #FFFFFF;
+    background: rgba(0,0,0,.2);
+	z-index: 5;
+}
+
+.search-box {
+     margin-bottom: 5px;
+ }
+
+.search-form input {
+	width: 300px;
+	height: 20px;
+	padding: 5px;
+	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+	border: 0;
+	background: #FFFFFF;
+	font-weight: normal;
+	font-style: italic;
+}
+
+.search-form input:focus {
+	outline: 0;
+	background: #fff;
+}
+
+.search-form button {
+	overflow: visible;
+	position: relative;
+	float: right;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+	height: 30px;
+	width: 90px;
+	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+	color: #fff;
+	text-transform: uppercase;
+	background: #1F363D;
+	border-radius: 0 3px 3px 0;
+	text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
+}
+
+.search-form button:hover {
+	background: #1F363D;
+}
+
+/******************** Search Info Pane ***********************/
+
+.search-info {
+	position: absolute;
+	width: 400px;
+	left: 5%;
+	top: 90px;
+	background: #FFFFFF;
+	z-index: 5;
+}
+
+.address-form {
+	padding: 20px 0;
+	font: bold 15px 'trebuchet MS', 'lucida sans', 'Tahoma';
+	border-bottom: 1px solid black;
+	background-color: #F5FBEF;
+}
+
+.search-info label {
+	width: 90px;
+	padding-left: 10px;
+	display: inline-block;
+	text-align: left;
+}
+
+.search-info input {
+	width: 270px;
+	margin: 3px;
+}
+
+.address-form .state-input {
+	width: 50px;
+	margin-right: 53px;
+}
+
+.address-form .zip-input {
+	width: 60px;
+}
+
+.search-info button {
+	border: 0;
+	padding: 0;
+	margin: 20px 1px 0px 1px;
+	cursor: pointer;
+	height: 30px;
+	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+	color: #fff;
+	text-transform: uppercase;
+	border-radius: 3px;
+	text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
+}
+
+.search-info .commit-button {
+	width: 175px;
+	background: #225560;
+}
+
+.search-info .delete-button {
+	width: 95px;
+	background: #F05D5E;
+	margin-left: 10px;
+}
+
+.search-info .revert-button {
+	width: 95px;
+	background: #1F363D;
+}
+
+.search-info .address-commit-button {
+	width: 175px;
+	background: #225560;
+}
+
+.search-info .address-delete-button {
+	width: 95px;
+	background: #F05D5E;
+	margin-left: 10px;
+}
+
+.search-info .address-revert-button {
+	width: 95px;
+	background: #1F363D;
+}
+
+.search-info .add-business-button {
+	width: 100%;
+	padding: 0;
+	margin-top: 0px;
+	background: #1F363D;
+}
+
+/*********************** Option Buttons **************************/
+
+.options {
+	position: absolute;
+	right: 2%;
+	z-index: 5;
+	top: 20px;
+    width: 200px;
+}
+
+.options img {
+	height: 25px;
+	width: 25px;
+}
+
+.options button {
+	height: 50px;
+	width: 175px;
+    background: #0F0C27;
+	color: #fff;
+	text-transform: uppercase;
+	cursor: pointer;
+	margin: 2.5px;
+    font-size: 15px;
+    border: none;
+/*
+    outline: solid;
+    outline-color: floralwhite;
+*/
+}
+
+.options .add-pin {
+	position: relative;
+	float: left;
+}
+
+.options .update {
+	position: relative;
+	float: left;
+}
+
+.options .toggle-menu {
+	position: relative;
+	float: right;
+}
+
+
+.options button:hover {
+	background-color: #231D4D;
+}
+
+.options button:focus {
+    outline: solid;
+    outline-color: floralwhite;
+}
+
+.dropdown #pin-toggle {
+	width: 154px;
+	font-size: 12px;
+	float: right;
+}
+
+/*.dropdown {
+	margin-top: 10px;
+	vertical-align: middle;
+	height: 50px;
+	width: 155px;
+	background: #1F363D;
+	color: #fff;
+	text-transform: uppercase;
+	cursor: pointer;
+	font-size: 14px;
+	margin-left: 2px;
+}*/
+/*
+.dropdown p {
+	display: inline;
+    width: 60%;
+    padding-left: 10px;
+}
+
+.dropdown input {
+	width: 13px;
+    height: 13px;
+}
+
+.wrapper {
+	padding-top: 15px;
+}*/
+
+/*********************** Venue Items ******************************/
+
+.venue-list {
+	display: table;
+	width: 100%;
+	overflow: hidden;
+}
+
+.venue-item {
+	vertical-align: middle;
+	line-height: 40px;
+	height: 40px;
+	width: 100%;
+	padding: 10px;
+	font: normal 15px 'trebuchet MS', 'lucida sans', 'Tahoma';
+	border-bottom: 1px solid black;
+}
+
+.venue-priority {
+	float: right;
+	margin-right: 20px;
+}
+
+.venue-item:hover {
+	background-color: rgba(0, 255, 0, 0.2);
+	cursor: pointer;
+}
+
+.venue-wrapper {
+	padding-top: 13px;
+} 
+
+/********************* Address Header ******************************/
+
+.edit-container {
+	padding-bottom: 20px;
+	font: normal 15px 'trebuchet MS', 'lucida sans', 'Tahoma';
+	border-bottom: 1px solid black;
+	background-color: #f0f0f0;
+}
+
+.address-container {
+	display: table;
+	width: 100%;
+	overflow: hidden;
+}
+
+.address-input{
+     font-size: 15px;
+}
+
+.city-input{
+    font-size: 15px;
+}
+ 
+.zip-input{
+    font-size: 15px;
+}
+
+.address {
+	padding-left: 35px;
+}
+
+.location-address {
+	display: table-cell;
+	vertical-align: middle;
+	height: 40px;
+	width: 100%;
+	padding: 10px;
+	border-bottom: 1px solid black;
+	font: normal 15px 'trebuchet MS', 'lucida sans', 'Tahoma';
+}
+
+.address-container .address {
+	text-align: center;
+}
+
+.edit-container label {
+	padding-top: 20px;
+	width: 90px;
+	padding-left: 10px;
+	display: inline-block;
+	text-align: left;
+}
+
+.edit-container input {
+	width: 270px;
+	margin: 3px;
+}
+
+.edit-container .priority-label {
+	width: 50px;
+}
+
+.edit-container .priority-input {
+	width: 20px;
+	margin-right: 10px;
+    font-size: 15px;
+}
+
+.edit-container .venue-input {
+	width: 168px;
+    font-size: 15px;
+}
+
+.edit-container .category-input {
+	width: 275px;
+}
+
+.location-address:hover {
+	background-color: rgba(0, 255, 0, 0.2);
+	cursor: pointer;
+}
+
+/*********************** Sat Buttons **************************/
+
+.satView {
+	position: absolute;
+	left: 5%;
+	z-index: 5;
+	bottom: 20px;
+}
+
+.satView img {
+	height: 25px;
+	width: 25px;
+}
+
+.satView button {
+	height: 50px;
+	width: 50px;
+	background: #1F363D;
+	color: #fff;
+	text-transform: uppercase;
+	cursor: pointer;
+	margin: 1px;
+    border: none;
+    border-radius: 25px;
+    outline: none;
+}
+
+.satView .viewUpdate {
+	position: relative;
+	float: left;
+}

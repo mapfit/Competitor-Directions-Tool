@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta charset=utf-8 />
+      <title>GeoFi Map</title>
+      <script src='https://api.mapbox.com/mapbox-gl-js/v0.25.1/mapbox-gl.js'></script>
+      <link href='https://api.mapbox.com/mapbox-gl-js/v0.25.1/mapbox-gl.css' rel='stylesheet' />
+      <link rel="stylesheet" type="text/css" href="map.css">
+      <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+        
+    </head>
+    <body>
+        
+        <div class="options">
+            <button id="DC" class="DC">Washington DC</button>
+            <button id="NYC" class="NYC">New York</button>
+            <button id="SF" class="SF">San Francisco</button>
+            <button id="PA" class="PA">Palo Alto</button>
+            <button id="SM" class="SM">Santa Monica/LA</button>
+            <button id="CHI" class="CHI">Chicago</button>
+          </div>
+        
+        <!--change height and width to adjust map size on page
+        <div id='map' style="height:750px; width:1200px">
+        -->
+        
+        <div id='map'></div>
+        <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+        <script type="text/javascript" src="map.js"></script>
+    </body>
+</html>
