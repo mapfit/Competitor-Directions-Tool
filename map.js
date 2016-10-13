@@ -115,4 +115,59 @@ $(document).ready(function() {
         var zoom = map.getZoom();        
         map.setZoom(zoom - 1);
     });
+    
+    //search
+    $('.address-search').on('click', function(e) {
+         var query = document.getElementById('address-query').value;
+        var cityState = document.getElementById('city-state').value;
+        locAddressSearch(query, cityState);
+    });
+    
+    function locAddressSearch(thisQuery, cityState){
+        var xhttp = new XMLHttpRequest();
+        
+        //split address
+        var splitQuery = cityState.split(",");
+        
+        var state = splitQuery[1].replace(/\s/g, '');
+//        
+//        var address = "";
+//        
+//        for(var i = 0; i < splitQuery.length - 2; i++){
+//            address = address + splitQuery[i] + " ";
+//        }
+        
+        var center = map.getCenter();
+         xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var myArr = JSON.parse(xhttp.responseText);
+
+                console.log("data - all: " + xhttp.responseText);
+
+               if(myArr[0]){
+                   readLocation(myArr);
+               }else{
+                   console.log("no data found");
+               }
+           }  
+         };
+
+//         xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
+        
+        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + thisQuery + "\&city="+ splitQuery[0] +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
+        
+         xhttp.send();
+    }
+    
+    function readLocation(arr){
+         var lat = arr[0].lat;
+         var lon = arr[0].lon;
+         console.log("data - lat: " + lat + ", lon: " + lon);
+
+        map.flyTo({
+            center: [lon, lat],
+            zoom: 17,
+            speed: 1.5
+        });
+     }   
 });
