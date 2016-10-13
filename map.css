@@ -47,7 +47,7 @@ html, body {
 	background: #FFFFFF;
 	font-weight: normal;
 	font-style: italic;
-    margin-bottom: 10px;
+    margin-bottom: 2px;
 }
 
 .search-form input-state {
@@ -68,13 +68,13 @@ html, body {
 
 .search-form button {
 	overflow: visible;
-	position: relative;
+	position: absolute;
 	float: right;
 	border: 0;
 	padding: 0;
 	cursor: pointer;
-	height: 30px;
-	width: 90px;
+	height: 62px;
+	width: 62px;
 	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
     background: #0F0C27;
 	color: #fff;
