@@ -30,8 +30,7 @@ html, body {
 	width: 400px;
 	left: 5%;
 	top: 20px;
-	background: #FFFFFF;
-    background: rgba(0,0,0,.2);
+/*	background: #FEFFFF;*/
 	z-index: 5;
 }
 
@@ -40,6 +39,18 @@ html, body {
  }
 
 .search-form input {
+	width: 300px;
+	height: 20px;
+	padding: 5px;
+	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+	border: 0;
+	background: #FFFFFF;
+	font-weight: normal;
+	font-style: italic;
+    margin-bottom: 10px;
+}
+
+.search-form input-state {
 	width: 300px;
 	height: 20px;
 	padding: 5px;
@@ -70,6 +81,7 @@ html, body {
     text-transform: uppercase;
 	border-radius: 0 3px 3px 0;
 	text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
+/*    margin-left: 5px;*/
 }
 
 .search-form button:hover {
