@@ -252,11 +252,26 @@ $(document).ready(function() {
         latestSearchArray = features;
 
         // Populate the popup and set its coordinates
-        // based on the feature found.    
         var popup = new mapboxgl.Popup()
             .setLngLat(feature.geometry.coordinates)
             .setHTML("<center><b><p style=\"font-size:12px\">" + feature.properties.address + "</p></b>\n" + feature.properties.city + ", " + feature.properties.state + " " + feature.properties.zip + "\n<p>" + feature.properties.placeType+ "</p><center>")
             .addTo(map);
-
+            
     });
+    
+    //directions button
+    $('.open-Directions').on('click', function(e) {
+        $menuWrap = $('.menu-wrap');
+        $menuWrap.toggleClass('menu-show');
+        
+        console.log("open");
+    });
+    
+    $('.close').on('click', function(e) {
+        $menu = $('.menu-show');
+        $menu.toggleClass('menu-wrap');
+        
+        console.log("close");
+    });
+    
 });

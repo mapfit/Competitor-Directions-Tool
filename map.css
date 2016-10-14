@@ -28,7 +28,7 @@ html, body {
 .search-form {
 	position: absolute;
 	width: 400px;
-	left: 5%;
+	left: 1%;
 	top: 20px;
 /*	background: #FEFFFF;*/
 	z-index: 5;
@@ -431,4 +431,94 @@ html, body {
 	margin: 2.5px;
     font-size: 15px;
     border: none;
+}
+
+/******************** Direction Button ********************/
+
+.direction {
+	position: absolute;
+	left: 5%;
+	z-index: 5;
+	bottom: 20px;
+}
+
+.direction img {
+	height: 25px;
+	width: 25px;
+}
+
+.direction button {
+	height: 50px;
+	width: 50px;
+	background: #0F0C27;
+	color: #fff;
+	text-transform: uppercase;
+	cursor: pointer;
+	margin: 1px;
+    border: none;
+    border-radius: 25px;
+    outline: none;
+}
+
+.direction .open-Directions {
+	position: relative;
+	float: left;
+}
+
+/******************** direction menu ***********************/
+
+.menu-wrap {
+    background-color: #0F0C27;
+    position: fixed;
+    top: 0;
+    height: 100%;
+    width: 387px;
+    margin-left: -387px;
+    font-size: 1em;
+    font-weight: 700;
+    overflow: auto;
+    transition: .25s;
+    z-index: 10;
+}
+
+.menu-show {
+    margin-left: 0;
+}
+
+.menu-hide {
+    margin-left: -387px;
+}
+
+.close {
+    position: absolute;
+    height: 50px;
+	width: 50px;
+    right: 0%;
+	background: #0F0C27;
+	color: #fff;
+	text-transform: uppercase;
+	cursor: pointer;
+	margin: 1px;
+    border: none;
+    outline: none;
+}
+
+.directions-form {
+	position: absolute;
+	width: 300px;
+	left: 1%;
+	top: 20px;
+/*	background: #FEFFFF;*/
+	z-index: 5;
+}
+.directions-form input {
+	width: 300px;
+	height: 20px;
+	padding: 5px;
+	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+	border: 0;
+	background: #FFFFFF;
+	font-weight: normal;
+	font-style: italic;
+    margin-bottom: 2px;
 }
