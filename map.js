@@ -190,6 +190,7 @@ $(document).ready(function() {
         });
      }
     
+    //drop marker
     function dropMarker(data){
         var thisAddJsonArray = new Array;
         
@@ -207,6 +208,7 @@ $(document).ready(function() {
                   "city" : data.city,
                   "state" : data.state,
                   "zip" : data.zip,
+                  "placeType" : data["place-type"],
                   "icon" : "marker"
                 }};
 
@@ -236,6 +238,25 @@ $(document).ready(function() {
                 },
             });
         }
-    
     }
+    
+    //marker click detection
+    map.on('click', function(e) {
+        var features = map.queryRenderedFeatures(e.point, { layers: ['addresses'] });
+    
+        if (!features.length) {
+            return;
+        }
+
+        var feature = features[0];
+        latestSearchArray = features;
+
+        // Populate the popup and set its coordinates
+        // based on the feature found.    
+        var popup = new mapboxgl.Popup()
+            .setLngLat(feature.geometry.coordinates)
+            .setHTML("<center><b><p style=\"font-size:12px\">" + feature.properties.address + "</p></b>\n" + feature.properties.city + ", " + feature.properties.state + " " + feature.properties.zip + "\n<p>" + feature.properties.placeType+ "</p><center>")
+            .addTo(map);
+
+    });
 });
