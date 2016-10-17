@@ -396,7 +396,6 @@ $(document).ready(function() {
         var startLoc = [startResult.lon, startResult.lat];
         var endLoc = [endResult.lon, endResult.lat];
 
-        
         //get location points for route
         var locationArray = [];
         var steps = routes[0].legs[0].steps;
@@ -420,6 +419,8 @@ $(document).ready(function() {
         
         
         console.log("duration: " + duration + " seconds \n distance: " + distance + " meters");
+        
+        fillInDetails(distance, duration);
     }
     
     function drawRoute(locationArray){
@@ -457,6 +458,28 @@ $(document).ready(function() {
                 }
             });
         }
+        
+        map.flyTo({
+            center: locationArray[0],
+            zoom: 16,
+            speed: 1.5
+        });
+    }
+    
+    function fillInDetails(meters, seconds){
+        var miles = meters*0.000621371192;
+        var time = secondsToHms(seconds);
+                
+        $('#distance').text("Distance:  " + miles.toFixed(1) + " miles");
+        $('#duration').text("Duration:  " + time);
+    }
+    
+    function secondsToHms(d) {
+        d = Number(d);
+        var h = Math.floor(d / 3600);
+        var m = Math.floor(d % 3600 / 60);
+        var s = Math.floor(d % 3600 % 60);
+        return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s); 
     }
     
 });

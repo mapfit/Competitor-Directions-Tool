@@ -16,7 +16,7 @@ html, body {
 	height: 100%;
 	margin: 0;
 	padding: 0;
-	
+	font-family: sans-serif;
 }
 
 #map {
@@ -575,4 +575,48 @@ html, body {
 	z-index: 5;
     font-size: 20px;
     font-style: oblique;
+}
+
+.details {
+	position: absolute;
+	width: 300px;
+    height: 50px;
+	left: 5%;
+	top: 420px;
+	z-index: 5;
+}
+
+.details label {
+    height: 50px;
+	width: 300px;
+    left: 0%;
+	background: #0F0C27;
+	color: white;
+	text-transform: uppercase;
+    font-size: 20px;
+    padding: 5px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.details2 {
+	position: absolute;
+	width: 300px;
+    height: 50px;
+	left: 5%;
+	top: 480px;
+	z-index: 5;
+}
+
+.details2 label {
+    height: 50px;
+	width: 300px;
+    left: 0%;
+	background: #0F0C27;
+	color: white;
+	text-transform: uppercase;
+    font-size: 20px;
+    padding: 5px;
+    margin-bottom: 5px;
+    margin-top: 10px;
 }
