@@ -26,6 +26,10 @@ $(document).ready(function() {
     //initial button focus
     document.getElementById("DC").focus();
     
+    //initialize car for transit
+    var transitType = "driving";
+    document.getElementById("car").style.backgroundColor = "#3A5391";
+    
 //    map.hideAttribution();
     
     //fly to cities
@@ -279,5 +283,203 @@ $(document).ready(function() {
         $('#start-city-state').val(endCityState);
         $('#end-city-state').val(startCityState);
     });
+    
+    $('#car').on('click', function(e){
+        transitType = "driving";
+        document.getElementById("car").style.backgroundColor = "#3A5391";
+        document.getElementById("walk").style.backgroundColor = "#FFFFFF";
+        document.getElementById("bike").style.backgroundColor = "#FFFFFF";
+    });
+    
+    $('#walk').on('click', function(e){
+        transitType = "walking";
+        document.getElementById("walk").style.backgroundColor = "#3A5391";
+        document.getElementById("car").style.backgroundColor = "#FFFFFF";
+        document.getElementById("bike").style.backgroundColor = "#FFFFFF";
+    });
+    
+    $('#bike').on('click', function(e){
+        transitType = "cycling";
+        document.getElementById("bike").style.backgroundColor = "#3A5391";
+        document.getElementById("walk").style.backgroundColor = "#FFFFFF";
+        document.getElementById("car").style.backgroundColor = "#FFFFFF";
+    });
+    
+    $('.get-directions').on('click', function(e) {        
+        console.log("get " + transitType + " directions");
+        
+        //get query parts
+        var startAddress = document.getElementById('start-address').value;
+        var startCityState = document.getElementById('start-city-state').value;
+        var endAddress = document.getElementById('end-address').value;
+        var endCityState = document.getElementById('end-city-state').value;
+        
+        startSearch(startAddress, startCityState, endAddress, endCityState);
+    });
+    
+    function startSearch(startAddress, startCityState, endAddress, endCityState){
+        var xhttp = new XMLHttpRequest();
+        
+        //split address
+        var splitQuery = startCityState.split(",");
+        
+        var state = splitQuery[1].replace(/\s/g, '');
+        
+        var center = map.getCenter();
+         xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var myArr = JSON.parse(xhttp.responseText);
+
+               if(myArr[0]){
+                   endSearch(myArr[0], endAddress, endCityState);
+               }else{
+                   console.log("no data found");
+               }
+           }  
+         };
+        
+        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + startAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
+        
+         xhttp.send();
+    }
+    
+    function endSearch(startResult, endAddress, endCityState){
+        var xhttp = new XMLHttpRequest();
+        
+        //split address
+        var splitQuery = endCityState.split(",");
+        
+        var state = splitQuery[1].replace(/\s/g, '');
+        
+        var center = map.getCenter();
+         xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var myArr = JSON.parse(xhttp.responseText);
+
+               if(myArr[0]){
+                    console.log("start: " + startResult.lat + ", " + startResult.lon + "\n end: " + myArr[0].lat + ", " + myArr[0].lon);
+
+                   callMapboxDirections(startResult, myArr[0]);
+               }else{
+                   console.log("no data found");
+               }
+           }  
+         };
+        
+        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + endAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
+        
+         xhttp.send();
+    }
+    
+    function callMapboxDirections(startResult, endResult){
+        var xhttp = new XMLHttpRequest();
+        
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+               
+               readDirections(response, startResult, endResult);
+           }  
+         };
+        
+        xhttp.open('GET', "https://api.mapbox.com/directions/v5/mapbox/" + transitType + "/" + startResult.lon + "," + startResult.lat + ";" + endResult.lon + "," + endResult.lat + "?steps=true&access_token=" + mapboxgl.accessToken, true);
+        
+         xhttp.send();
+    }
+    
+    function readDirections(response, startResult, endResult){
+        var routes = response.routes;
+        var duration = routes[0].duration;
+        var distance = routes[0].distance;
+        
+        //format start and stop coordinates
+        var startLoc = [startResult.lon, startResult.lat];
+        var endLoc = [endResult.lon, endResult.lat];
+
+        //get location points for route
+        var locationArray = [];
+        var steps = routes[0].legs[0].steps;
+        
+        //add first location
+        locationArray.push(startLoc);
+        
+        for(var i = 0; i < steps.length; i++){
+            var thisStep = steps[i];
+            var thisLoc = thisStep.maneuver.location;
+                        
+            locationArray.push(thisLoc);
+            
+            if(i == steps.length - 1){
+                //add first location
+                locationArray.push(endLoc);
+                
+                drawRoute(locationArray);
+            }
+        }
+        
+        
+        console.log("duration: " + duration + " seconds \n distance: " + distance + " meters");
+        
+        fillInDetails(distance, duration);
+    }
+    
+    function drawRoute(locationArray){
+        
+        var route = map.getSource('route')
+        
+        var locData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": locationArray
+                }
+        }
+
+        if(route){
+            map.getSource('route').setData(locData);
+        }else{
+            map.addSource('route',{
+                type: 'geojson',
+                data: locData
+            });
+            
+            map.addLayer({
+                "id": "route",
+                "type": "line",
+                "source": "route",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#EA8E18",
+                    "line-width": 8
+                }
+            });
+        }
+        
+        map.flyTo({
+            center: locationArray[0],
+            zoom: 16,
+            speed: 1.5
+        });
+    }
+    
+    function fillInDetails(meters, seconds){
+        var miles = meters*0.000621371192;
+        var time = secondsToHms(seconds);
+                
+        $('#distance').text("Distance:  " + miles.toFixed(1) + " miles");
+        $('#duration').text("Duration:  " + time);
+    }
+    
+    function secondsToHms(d) {
+        d = Number(d);
+        var h = Math.floor(d / 3600);
+        var m = Math.floor(d % 3600 / 60);
+        var s = Math.floor(d % 3600 % 60);
+        return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s); 
+    }
     
 });
