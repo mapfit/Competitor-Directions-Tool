@@ -258,20 +258,26 @@ $(document).ready(function() {
             .addTo(map);
             
     });
-    
+        
     //directions button
     $('.open-Directions').on('click', function(e) {
-        $menuWrap = $('.menu-wrap');
-        $menuWrap.toggleClass('menu-show');
-        
-        console.log("open");
+        document.getElementById("menu").style.marginLeft = "0px";
     });
     
     $('.close').on('click', function(e) {
-        $menu = $('.menu-show');
-        $menu.toggleClass('menu-wrap');
-        
-        console.log("close");
+        document.getElementById("menu").style.marginLeft = "-387px";
+    });
+    
+    $('.swap').on('click', function(e) {        
+        var startAddress = $('#start-address').val();
+        var startCityState = $('#start-city-state').val();
+        var endAddress = $('#end-address').val();
+        var endCityState = $('#end-city-state').val();
+                
+        $('#end-address').val(startAddress);
+        $('#start-address').val(endAddress);
+        $('#start-city-state').val(endCityState);
+        $('#end-city-state').val(startCityState);
     });
     
 });
