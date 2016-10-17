@@ -26,6 +26,10 @@ $(document).ready(function() {
     //initial button focus
     document.getElementById("DC").focus();
     
+    //initialize car for transit
+    var transitType = "car";
+    document.getElementById("car").style.backgroundColor = "#3A5391";
+    
 //    map.hideAttribution();
     
     //fly to cities
@@ -278,6 +282,30 @@ $(document).ready(function() {
         $('#start-address').val(endAddress);
         $('#start-city-state').val(endCityState);
         $('#end-city-state').val(startCityState);
+    });
+    
+    $('#car').on('click', function(e){
+        transitType = "car";
+
+        document.getElementById("car").style.backgroundColor = "#3A5391";
+        document.getElementById("walk").style.backgroundColor = "#FFFFFF";
+        document.getElementById("bike").style.backgroundColor = "#FFFFFF";
+    });
+    
+    $('#walk').on('click', function(e){
+        transitType = "walk";
+        
+        document.getElementById("walk").style.backgroundColor = "#3A5391";
+        document.getElementById("car").style.backgroundColor = "#FFFFFF";
+        document.getElementById("bike").style.backgroundColor = "#FFFFFF";
+    });
+    
+    $('#bike').on('click', function(e){
+        transitType = "bike";
+        
+        document.getElementById("bike").style.backgroundColor = "#3A5391";
+        document.getElementById("walk").style.backgroundColor = "#FFFFFF";
+        document.getElementById("car").style.backgroundColor = "#FFFFFF";
     });
     
 });
