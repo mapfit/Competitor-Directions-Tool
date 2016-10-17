@@ -27,7 +27,7 @@ $(document).ready(function() {
     document.getElementById("DC").focus();
     
     //initialize car for transit
-    var transitType = "car";
+    var transitType = "driving";
     document.getElementById("car").style.backgroundColor = "#3A5391";
     
 //    map.hideAttribution();
@@ -285,27 +285,92 @@ $(document).ready(function() {
     });
     
     $('#car').on('click', function(e){
-        transitType = "car";
-
+        transitType = "driving";
         document.getElementById("car").style.backgroundColor = "#3A5391";
         document.getElementById("walk").style.backgroundColor = "#FFFFFF";
         document.getElementById("bike").style.backgroundColor = "#FFFFFF";
     });
     
     $('#walk').on('click', function(e){
-        transitType = "walk";
-        
+        transitType = "walking";
         document.getElementById("walk").style.backgroundColor = "#3A5391";
         document.getElementById("car").style.backgroundColor = "#FFFFFF";
         document.getElementById("bike").style.backgroundColor = "#FFFFFF";
     });
     
     $('#bike').on('click', function(e){
-        transitType = "bike";
-        
+        transitType = "cycling";
         document.getElementById("bike").style.backgroundColor = "#3A5391";
         document.getElementById("walk").style.backgroundColor = "#FFFFFF";
         document.getElementById("car").style.backgroundColor = "#FFFFFF";
     });
+    
+    $('.get-directions').on('click', function(e) {        
+        console.log("get " + transitType + " directions");
+//        "https://api.mapbox.com/directions/v5/mapbox/cycling/-122.42,37.78;-77.03,38.91?access_token=your-access-token"
+        
+        //get query parts
+        var startAddress = document.getElementById('start-address').value;
+        var startCityState = document.getElementById('start-city-state').value;
+        var endAddress = document.getElementById('end-address').value;
+        var endCityState = document.getElementById('end-city-state').value;
+        
+        startSearch(startAddress, startCityState, endAddress, endCityState);
+        
+    });
+    
+    function startSearch(startAddress, startCityState, endAddress, endCityState){
+        var xhttp = new XMLHttpRequest();
+        
+        //split address
+        var splitQuery = startCityState.split(",");
+        
+        var state = splitQuery[1].replace(/\s/g, '');
+        
+        var center = map.getCenter();
+         xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var myArr = JSON.parse(xhttp.responseText);
+
+               if(myArr[0]){
+                   endSearch(myArr[0], endAddress, endCityState);
+               }else{
+                   console.log("no data found");
+               }
+           }  
+         };
+        
+        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + startAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
+        
+         xhttp.send();
+    }
+    
+    function endSearch(startResult, endAddress, endCityState){
+        var xhttp = new XMLHttpRequest();
+        
+        //split address
+        var splitQuery = endCityState.split(",");
+        
+        var state = splitQuery[1].replace(/\s/g, '');
+        
+        var center = map.getCenter();
+         xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var myArr = JSON.parse(xhttp.responseText);
+
+               if(myArr[0]){
+                    console.log("start: " + startResult.lat + ", " + startResult.lon + "\n end: " + myArr[0].lat + ", " + myArr[0].lon);
+
+//                   return myArr[0];
+               }else{
+                   console.log("no data found");
+               }
+           }  
+         };
+        
+        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + endAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
+        
+         xhttp.send();
+    }
     
 });
