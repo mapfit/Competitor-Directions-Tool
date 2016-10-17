@@ -37,13 +37,20 @@
             </div>
         </div>
         
-        <div class="menu-wrap">
+        <div class="menu" id="menu">
             <div class="menu-sidebar">
                 <button class="close"><i class="fa fa-close fa-3x" aria-hidden="true"></i></button>
-                <form class="search-form">
-                    <input id="departure" type="text" placeholder="Address" required>
-                    <input id="arrival" type="text" placeholder="City, State" required>
+                <label class="directions-label">Directions</label>
+                <button class="swap"><i class="fa fa-arrows-v fa-3x" aria-hidden="true"></i></button>
+                <form class="directions-form">
+                    <label class="start-label">Start</label>
+                    <input id="start-address" type="text" placeholder="Address" required>
+                    <input id="start-city-state" type="text" placeholder="City, State" required>
+                    <label class="stop-label">End</label>
+                    <input id="end-address" type="text" placeholder="Address" required>
+                    <input id="end-city-state" type="text" placeholder="City, State" required>
                 </form>
+                
             </div>
         </div>
         

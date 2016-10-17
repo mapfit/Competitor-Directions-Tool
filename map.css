@@ -237,34 +237,6 @@ html, body {
 	float: right;
 }
 
-/*.dropdown {
-	margin-top: 10px;
-	vertical-align: middle;
-	height: 50px;
-	width: 155px;
-	background: #1F363D;
-	color: #fff;
-	text-transform: uppercase;
-	cursor: pointer;
-	font-size: 14px;
-	margin-left: 2px;
-}*/
-/*
-.dropdown p {
-	display: inline;
-    width: 60%;
-    padding-left: 10px;
-}
-
-.dropdown input {
-	width: 13px;
-    height: 13px;
-}
-
-.wrapper {
-	padding-top: 15px;
-}*/
-
 /*********************** Venue Items ******************************/
 
 .venue-list {
@@ -437,7 +409,7 @@ html, body {
 
 .direction {
 	position: absolute;
-	left: 5%;
+	left: 2%;
 	z-index: 5;
 	bottom: 20px;
 }
@@ -467,7 +439,7 @@ html, body {
 
 /******************** direction menu ***********************/
 
-.menu-wrap {
+.menu {
     background-color: #0F0C27;
     position: fixed;
     top: 0;
@@ -503,14 +475,64 @@ html, body {
     outline: none;
 }
 
+.directions-label {
+    position: absolute;
+    height: 50px;
+	width: 100px;
+    left: 5%;
+    top: 15px;
+	background: #0F0C27;
+	color: #fff;
+	text-transform: uppercase;
+	margin: 1px;
+    font-size: 25px;
+}
+
 .directions-form {
 	position: absolute;
 	width: 300px;
-	left: 1%;
-	top: 20px;
-/*	background: #FEFFFF;*/
+	left: 5%;
+	top: 60px;
 	z-index: 5;
 }
+
+.swap {
+    position: absolute;
+	width: 50px;
+    height: 100px;
+	right: 0%;
+	top: 100px;
+	z-index: 5;
+    background: #0F0C27;
+	color: #fff;
+    border: none;
+}
+
+.start-label {
+    height: 50px;
+	width: 100px;
+    left: 0%;
+    top: 15px;
+	background: #0F0C27;
+	color: #fff;
+	text-transform: uppercase;
+	margin: 1px;
+    font-size: 15px;
+}
+
+.stop-label {
+    height: 50px;
+	width: 100px;
+    left: 0%;
+    top: 15px;
+	background: #0F0C27;
+	color: #fff;
+	text-transform: uppercase;
+	margin: 1px;
+    font-size: 15px;
+    margin-top: 15px;
+}
+
 .directions-form input {
 	width: 300px;
 	height: 20px;
@@ -521,4 +543,5 @@ html, body {
 	font-weight: normal;
 	font-style: italic;
     margin-bottom: 2px;
+    margin-top: 2px;
 }
