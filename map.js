@@ -319,6 +319,16 @@ $(document).ready(function() {
         var endAddress = document.getElementById('end-address').value;
         var endCityState = document.getElementById('end-city-state').value;
         
+        if(startCityState.indexOf(",") == -1){
+            alert("Your start address is missing a comma between city and state");
+            return;
+        }
+        
+        if(endCityState.indexOf(",") == -1){
+            alert("Your destination is missing a comma between city and state");
+            return;
+        }
+        
         startSearch(startAddress, startCityState, endAddress, endCityState);
     });
     
@@ -339,6 +349,7 @@ $(document).ready(function() {
                    endSearch(myArr[0], endAddress, endCityState);
                }else{
                    console.log("no data found");
+                   alert("No Matching Address found for your start location. Please try another address.");
                }
            }  
          };
@@ -367,6 +378,7 @@ $(document).ready(function() {
                    callMapboxDirections(startResult, myArr[0]);
                }else{
                    console.log("no data found");
+                   alert("No Matching Address found for your destination. Please try another address.");
                }
            }  
          };
