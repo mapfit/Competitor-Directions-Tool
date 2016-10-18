@@ -435,6 +435,7 @@ $(document).ready(function() {
 
         //get location points for route
         var locationArray = [];
+        var geometryArray = [];
         var steps = routes[0].legs[0].steps;
         var revSteps = revRoutes[0].legs[0].steps;
         
@@ -444,8 +445,10 @@ $(document).ready(function() {
         for(var i = 0; i < steps.length; i++){
             var thisStep = steps[i];
             var thisLoc = thisStep.maneuver.location;
+            var thisGeo = thisStep.geometry;
                         
             locationArray.push(thisLoc);
+            geometryArray.push(thisGeo);
             
             if(i == steps.length - 1){
                 //add reverse mapbox point for better path
@@ -456,7 +459,7 @@ $(document).ready(function() {
                 //add our last location
                 locationArray.push(endLoc);
                 
-                drawRoute(locationArray);
+                drawRoute(geometryArray);
             }
         }
         
@@ -467,8 +470,7 @@ $(document).ready(function() {
     
     function drawRoute(locationArray){
         
-        var route = map.getSource('route')
-        
+        var route = map.getSource('route');
         var locData = {
                 "type": "Feature",
                 "properties": {},
@@ -525,3 +527,4 @@ $(document).ready(function() {
     }
     
 });
+
