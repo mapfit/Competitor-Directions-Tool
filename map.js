@@ -433,13 +433,14 @@ $(document).ready(function() {
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var response = JSON.parse(xhttp.responseText);
                
-//               readDirections(correctResponse, response, startResult, endResult);
+               readGoogleDirections(response);
            }  
          };
         
         xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ startResult.lat + "," + startResult.lon + "&destination=" + endResult.lat + "," + endResult.lon + "&mode=" + transitType +"&key=" + googleAPI, true);
         
-         xhttp.send();
+        xhttp.setRequestHeader('Access-Control-Allow-Headers', '*');
+        xhttp.send();
     }
     
     function readDirections(correctResponse, reverseResponse, startResult, endResult){
@@ -478,13 +479,36 @@ $(document).ready(function() {
                 //add our last location
                 locationArray.push(endLoc);
                 
-                drawRoute(locationArray);
+//                drawRoute(locationArray);
             }
         }
         
         console.log("duration: " + duration + " seconds \n distance: " + distance + " meters");
         
         fillInDetails(distance, duration);
+    }
+    
+    function readGoogleDirections(response){
+        
+        var routes = response.routes;
+        var bounds = routes[0].bounds;
+        var polyline = routes[0]["overview_polyline"];
+        
+        //fit google bounds
+        map.fitBounds([[
+            bounds.southwest.lng,
+            bounds.southwest.lat
+        ], [
+            bounds.northeast.lng,
+            bounds.northeast.lat
+        ]]);
+        
+        var googleArray = decode(polyline.points, 6);
+        
+         console.log("googleArray: " + googleArray);
+        
+        drawRoute(googleArray);
+        
     }
     
     function drawRoute(locationArray){
@@ -522,11 +546,11 @@ $(document).ready(function() {
             });
         }
         
-        map.flyTo({
-            center: locationArray[0],
-            zoom: 16,
-            speed: 1.5
-        });
+//        map.flyTo({
+//            center: locationArray[0],
+//            zoom: 16,
+//            speed: 1.5
+//        });
     }
     
     function fillInDetails(meters, seconds){
@@ -544,6 +568,59 @@ $(document).ready(function() {
         var s = Math.floor(d % 3600 % 60);
         return ((h > 0 ? h + " h " + (m < 10 ? "0" : "") : "") + m + " min"); 
     }
+    
+    //decode polyline
+    function decode(str, precision) {
+        
+        console.log("polyline: " + str);
+        
+        var index = 0,
+            lat = 0,
+            lng = 0,
+            coordinates = [],
+            shift = 0,
+            result = 0,
+            byte = null,
+            latitude_change,
+            longitude_change,
+            factor = Math.pow(10, precision || 5);
+
+        // Coordinates have variable length when encoded, so just keep
+        // track of whether we've hit the end of the string. In each
+        // loop iteration, a single coordinate is decoded.
+        while (index < str.length) {
+
+            // Reset shift, result, and byte
+            byte = null;
+            shift = 0;
+            result = 0;
+
+            do {
+                byte = str.charCodeAt(index++) - 63;
+                result |= (byte & 0x1f) << shift;
+                shift += 5;
+            } while (byte >= 0x20);
+
+            latitude_change = ((result & 1) ? ~(result >> 1) : (result >> 1));
+
+            shift = result = 0;
+
+            do {
+                byte = str.charCodeAt(index++) - 63;
+                result |= (byte & 0x1f) << shift;
+                shift += 5;
+            } while (byte >= 0x20);
+
+            longitude_change = ((result & 1) ? ~(result >> 1) : (result >> 1));
+
+            lat += latitude_change;
+            lng += longitude_change;
+
+            coordinates.push([lat / factor, lng / factor]);
+        }
+
+        return coordinates;
+    };
     
 });
 
