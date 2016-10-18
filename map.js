@@ -29,9 +29,7 @@ $(document).ready(function() {
     //initialize car for transit
     var transitType = "driving";
     document.getElementById("car").style.backgroundColor = "#3A5391";
-    
-//    map.hideAttribution();
-    
+        
     //fly to cities
     $('.DC').on('click', function(e) {
         map.flyTo({
@@ -128,6 +126,11 @@ $(document).ready(function() {
         if(cityState == ""){
             coordSearch(query);
         }else{
+            if(cityState.indexOf(",") == -1){
+                alert("Make sure there is a comma between city and state.");
+                return;
+            }
+            
             stateSearch(query, cityState);
         }
         
@@ -150,6 +153,7 @@ $(document).ready(function() {
                    readLocation(myArr);
                }else{
                    console.log("no data found");
+                   alert("No Matching Address found. Please try another address.");
                }
            }  
          };
@@ -171,6 +175,7 @@ $(document).ready(function() {
                    readLocation(myArr);
                }else{
                    console.log("no data found");
+                   alert("No Matching Address found. Please try another address.");
                }
            }  
          };
@@ -270,6 +275,8 @@ $(document).ready(function() {
     
     $('.close').on('click', function(e) {
         document.getElementById("menu").style.marginLeft = "-387px";
+        
+        map.removeLayer("route");
     });
     
     $('.swap').on('click', function(e) {        
@@ -314,6 +321,16 @@ $(document).ready(function() {
         var endAddress = document.getElementById('end-address').value;
         var endCityState = document.getElementById('end-city-state').value;
         
+        if(startCityState.indexOf(",") == -1){
+            alert("Your start address is missing a comma between city and state");
+            return;
+        }
+        
+        if(endCityState.indexOf(",") == -1){
+            alert("Your destination is missing a comma between city and state");
+            return;
+        }
+        
         startSearch(startAddress, startCityState, endAddress, endCityState);
     });
     
@@ -334,6 +351,7 @@ $(document).ready(function() {
                    endSearch(myArr[0], endAddress, endCityState);
                }else{
                    console.log("no data found");
+                   alert("No Matching Address found for your start location. Please try another address.");
                }
            }  
          };
@@ -362,6 +380,7 @@ $(document).ready(function() {
                    callMapboxDirections(startResult, myArr[0]);
                }else{
                    console.log("no data found");
+                   alert("No Matching Address found for your destination. Please try another address.");
                }
            }  
          };
@@ -502,7 +521,7 @@ $(document).ready(function() {
         var h = Math.floor(d / 3600);
         var m = Math.floor(d % 3600 / 60);
         var s = Math.floor(d % 3600 % 60);
-        return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s); 
+        return ((h > 0 ? h + " h " + (m < 10 ? "0" : "") : "") + m + " min"); 
     }
     
 });
