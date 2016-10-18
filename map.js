@@ -275,6 +275,8 @@ $(document).ready(function() {
     
     $('.close').on('click', function(e) {
         document.getElementById("menu").style.marginLeft = "-387px";
+        
+        map.removeLayer("route");
     });
     
     $('.swap').on('click', function(e) {        
