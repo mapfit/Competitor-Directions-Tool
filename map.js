@@ -29,9 +29,7 @@ $(document).ready(function() {
     //initialize car for transit
     var transitType = "driving";
     document.getElementById("car").style.backgroundColor = "#3A5391";
-    
-//    map.hideAttribution();
-    
+        
     //fly to cities
     $('.DC').on('click', function(e) {
         map.flyTo({
@@ -128,6 +126,11 @@ $(document).ready(function() {
         if(cityState == ""){
             coordSearch(query);
         }else{
+            if(cityState.indexOf(",") == -1){
+                alert("Make sure there is a comma between city and state.");
+                return;
+            }
+            
             stateSearch(query, cityState);
         }
         
@@ -150,6 +153,7 @@ $(document).ready(function() {
                    readLocation(myArr);
                }else{
                    console.log("no data found");
+                   alert("No Matching Address found. Please try another address.");
                }
            }  
          };
@@ -171,6 +175,7 @@ $(document).ready(function() {
                    readLocation(myArr);
                }else{
                    console.log("no data found");
+                   alert("No Matching Address found. Please try another address.");
                }
            }  
          };
