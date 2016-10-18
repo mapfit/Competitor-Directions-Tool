@@ -378,7 +378,8 @@ $(document).ready(function() {
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var response = JSON.parse(xhttp.responseText);
                
-               readDirections(response, startResult, endResult);
+               reverseMapboxDirections(startResult, endResult, response);
+//               readDirections(response, startResult, endResult);
            }  
          };
         
@@ -387,8 +388,25 @@ $(document).ready(function() {
          xhttp.send();
     }
     
-    function readDirections(response, startResult, endResult){
-        var routes = response.routes;
+    function reverseMapboxDirections(startResult, endResult, correctResponse){
+        var xhttp = new XMLHttpRequest();
+        
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+               
+               readDirections(correctResponse, response, startResult, endResult);
+           }  
+         };
+        
+        xhttp.open('GET', "https://api.mapbox.com/directions/v5/mapbox/" + transitType + "/" + endResult.lon + "," + endResult.lat + ";" + startResult.lon + "," + startResult.lat + "?steps=true&access_token=" + mapboxgl.accessToken, true);
+        
+         xhttp.send();
+    }
+    
+    function readDirections(correctResponse, reverseResponse, startResult, endResult){
+        var routes = correctResponse.routes;
+        var revRoutes = reverseResponse.routes;
         var duration = routes[0].duration;
         var distance = routes[0].distance;
         
@@ -399,6 +417,7 @@ $(document).ready(function() {
         //get location points for route
         var locationArray = [];
         var steps = routes[0].legs[0].steps;
+        var revSteps = revRoutes[0].legs[0].steps;
         
         //add first location
         locationArray.push(startLoc);
@@ -410,13 +429,17 @@ $(document).ready(function() {
             locationArray.push(thisLoc);
             
             if(i == steps.length - 1){
-                //add first location
+                //add reverse mapbox point for better path
+                var revStep = revSteps[0];
+                var revLoc = revStep.maneuver.location;
+                locationArray.push(revLoc);
+                
+                //add our last location
                 locationArray.push(endLoc);
                 
                 drawRoute(locationArray);
             }
         }
-        
         
         console.log("duration: " + duration + " seconds \n distance: " + distance + " meters");
         
