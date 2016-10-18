@@ -1,6 +1,8 @@
 $(document).ready(function() {
     mapboxgl.accessToken = 'pk.eyJ1IjoicGFya291cm1ldGhvZCIsImEiOiI5Y2JmOGJhMDYzZDgyODBhYzQ3OTFkZWE3NGFiMmUzYiJ9.kp_5LMwcR79TKOERpkilAQ';
     
+    var googleAPI = 'AIzaSyALB5yXEHcbkr51lCbrPeCdVf60SbWENtU';
+    
     // Set bounds to DMV
     var bounds = [
         [-77.247255, 38.764495], // Southwest coordinates
@@ -378,6 +380,7 @@ $(document).ready(function() {
                     console.log("start: " + startResult.lat + ", " + startResult.lon + "\n end: " + myArr[0].lat + ", " + myArr[0].lon);
 
                    callMapboxDirections(startResult, myArr[0]);
+                   googleDirections(startResult, myArr[0]);
                }else{
                    console.log("no data found");
                    alert("No Matching Address found for your destination. Please try another address.");
@@ -398,7 +401,6 @@ $(document).ready(function() {
                var response = JSON.parse(xhttp.responseText);
                
                reverseMapboxDirections(startResult, endResult, response);
-//               readDirections(response, startResult, endResult);
            }  
          };
         
@@ -419,6 +421,23 @@ $(document).ready(function() {
          };
         
         xhttp.open('GET', "https://api.mapbox.com/directions/v5/mapbox/" + transitType + "/" + endResult.lon + "," + endResult.lat + ";" + startResult.lon + "," + startResult.lat + "?steps=true&access_token=" + mapboxgl.accessToken, true);
+        
+         xhttp.send();
+    }
+    
+    function googleDirections(startResult, endResult){
+        
+        var xhttp = new XMLHttpRequest();
+        
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+               
+//               readDirections(correctResponse, response, startResult, endResult);
+           }  
+         };
+        
+        xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ startResult.lat + "," + startResult.lon + "&destination=" + endResult.lat + "," + endResult.lon + "&mode=" + transitType +"&key=" + googleAPI, true);
         
          xhttp.send();
     }
@@ -459,7 +478,7 @@ $(document).ready(function() {
                 //add our last location
                 locationArray.push(endLoc);
                 
-                drawRoute(geometryArray);
+                drawRoute(locationArray);
             }
         }
         
