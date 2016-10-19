@@ -247,10 +247,16 @@ $(document).ready(function() {
                 type: 'circle',
                 paint: {
                   'circle-color': '#FFE33D',
-                  'circle-radius': 10
+                  'circle-radius': 8
                 },
             });
         }
+        
+        //show popup
+        var popup = new mapboxgl.Popup()
+            .setLngLat([data.lon,data.lat])
+            .setHTML("<center><b><p style=\"font-size:12px\">" + data.address + "</p></b>\n" + data.city + ", " + data.state + " " + data.zip + "\n<p>" + data.placeType+ "</p><center>")
+            .addTo(map);
     }
     
     //marker click detection
