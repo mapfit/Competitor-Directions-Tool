@@ -509,14 +509,26 @@ $(document).ready(function() {
     }
     
     function readGoogleDirections(directions, startResponse, endResponse){
-                
-        console.log("directions: " + JSON.stringify(directions));
-        console.log("start: " + JSON.stringify(startResponse));
-        console.log("end: " + JSON.stringify(endResponse));
         
         var routes = directions.routes;
         var bounds = routes[0].bounds;
         var polyline = routes[0]["overview_polyline"];
+        
+        //get start point
+        var startResult = startResponse.results;
+        var startLoc = startResult[0].geometry.location;
+        var startPoint = [];
+        startPoint.push(startLoc.lng);
+        startPoint.push(startLoc.lat);
+        
+        //get start point
+        var endResult = endResponse.results;
+        var endLoc = endResult[0].geometry.location;
+        var endPoint = [];
+        endPoint.push(endLoc.lng);
+        endPoint.push(endLoc.lat);
+        
+        console.log(JSON.stringify(startLoc));
         
         //fit google bounds
         map.fitBounds([[
@@ -528,7 +540,10 @@ $(document).ready(function() {
         ]]);
         
         var googleArray = decode(polyline.points, 5);
-                
+        
+        googleArray.unshift(startPoint);
+        googleArray.push(endPoint);
+        
         drawGoogle(googleArray);
         
     }
