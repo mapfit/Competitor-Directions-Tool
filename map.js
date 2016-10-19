@@ -554,7 +554,7 @@ $(document).ready(function() {
                     "line-cap": "round"
                 },
                 "paint": {
-                    "line-color": "#EA8E18",
+                    "line-color": "#4DD10F",
                     "line-width": 8
                 }
             });
