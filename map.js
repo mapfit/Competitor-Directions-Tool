@@ -220,7 +220,8 @@ $(document).ready(function() {
                   "state" : data.state,
                   "zip" : data.zip,
                   "placeType" : data["place-type"],
-                  "icon" : "marker"
+                  "icon" : "circle",
+                  "color" : '#FFE33D'
                 }};
 
             thisAddJsonArray.push(thisJSON);
@@ -243,9 +244,10 @@ $(document).ready(function() {
             map.addLayer({
                 id: 'addresses',
                 source: 'addresses',
-                type: 'symbol',
-                layout: {
-                    'icon-image': '{icon}-15'
+                type: 'circle',
+                paint: {
+                  'circle-color': '#FFE33D',
+                  'circle-radius': 10
                 },
             });
         }
