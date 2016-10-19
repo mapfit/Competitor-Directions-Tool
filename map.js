@@ -479,7 +479,7 @@ $(document).ready(function() {
                 //add our last location
                 locationArray.push(endLoc);
                 
-//                drawRoute(locationArray);
+                drawRoute(locationArray);
             }
         }
         
@@ -503,11 +503,11 @@ $(document).ready(function() {
             bounds.northeast.lat
         ]]);
         
-        var googleArray = decode(polyline.points, 6);
+        var googleArray = decode(polyline.points, 5);
         
          console.log("googleArray: " + googleArray);
         
-        drawRoute(googleArray);
+        drawGoogle(googleArray);
         
     }
     
@@ -545,12 +545,42 @@ $(document).ready(function() {
                 }
             });
         }
+    }
+    
+    function drawGoogle(locationArray){
         
-//        map.flyTo({
-//            center: locationArray[0],
-//            zoom: 16,
-//            speed: 1.5
-//        });
+        var gRoute = map.getSource('gRoute');
+        var locData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": locationArray
+                }
+        }
+
+        if(gRoute){
+            map.getSource('gRoute').setData(locData);
+        }else{
+            map.addSource('gRoute',{
+                type: 'geojson',
+                data: locData
+            });
+            
+            map.addLayer({
+                "id": "gRoute",
+                "type": "line",
+                "source": "gRoute",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#D10F0F",
+                    "line-width": 14
+                }
+            });
+        }
     }
     
     function fillInDetails(meters, seconds){
@@ -615,8 +645,14 @@ $(document).ready(function() {
 
             lat += latitude_change;
             lng += longitude_change;
+            
+            console.log("coordinates: " + lat + ", " + lng);
+            
+            var theseCoords = [];
+            theseCoords.push(lng / factor);
+            theseCoords.push(lat/factor);
 
-            coordinates.push([lat / factor, lng / factor]);
+            coordinates.push(theseCoords);
         }
 
         return coordinates;
