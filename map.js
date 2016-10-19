@@ -448,8 +448,12 @@ $(document).ready(function() {
         for(var e = 0; e < end.length; e++) {
          end = end.replace(" ", "+");
         }
-        
-        xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + transitType +"&key=" + googleAPI, true);
+                
+        if(transitType.valueOf() == "cycling"){
+            xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + "bicycling" +"&key=" + googleAPI, true);
+        }else{
+            xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + transitType +"&key=" + googleAPI, true);
+        }
         
         xhttp.setRequestHeader('Access-Control-Allow-Headers', '*');
         xhttp.send();
@@ -554,7 +558,7 @@ $(document).ready(function() {
                     "line-cap": "round"
                 },
                 "paint": {
-                    "line-color": "#EA8E18",
+                    "line-color": "#4DD10F",
                     "line-width": 8
                 }
             });
