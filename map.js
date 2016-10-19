@@ -157,7 +157,10 @@ $(document).ready(function() {
                    console.log("no data found");
                    alert("No Matching Address found. Please try another address.");
                }
-           }  
+           }else if(xhttp.readyState == 4){
+               alert(xhttp.responseText);
+           }
+             
          };
         
         xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + thisQuery + "\&city="+ splitQuery[0] +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
@@ -220,7 +223,8 @@ $(document).ready(function() {
                   "state" : data.state,
                   "zip" : data.zip,
                   "placeType" : data["place-type"],
-                  "icon" : "marker"
+                  "icon" : "circle",
+                  "color" : '#FFE33D'
                 }};
 
             thisAddJsonArray.push(thisJSON);
@@ -243,12 +247,19 @@ $(document).ready(function() {
             map.addLayer({
                 id: 'addresses',
                 source: 'addresses',
-                type: 'symbol',
-                layout: {
-                    'icon-image': '{icon}-15'
+                type: 'circle',
+                paint: {
+                  'circle-color': '#FFE33D',
+                  'circle-radius': 8
                 },
             });
         }
+        
+        //show popup
+        var popup = new mapboxgl.Popup()
+            .setLngLat([data.lon,data.lat])
+            .setHTML("<center><b><p style=\"font-size:12px\">" + data.address + "</p></b>\n" + data.city + ", " + data.state + " " + data.zip + "\n<p>" + data.placeType+ "</p><center>")
+            .addTo(map);
     }
     
     //marker click detection
