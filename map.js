@@ -1,6 +1,8 @@
 $(document).ready(function() {
     mapboxgl.accessToken = 'pk.eyJ1IjoicGFya291cm1ldGhvZCIsImEiOiI5Y2JmOGJhMDYzZDgyODBhYzQ3OTFkZWE3NGFiMmUzYiJ9.kp_5LMwcR79TKOERpkilAQ';
     
+    var googleAPI = 'AIzaSyALB5yXEHcbkr51lCbrPeCdVf60SbWENtU';
+    
     // Set bounds to DMV
     var bounds = [
         [-77.247255, 38.764495], // Southwest coordinates
@@ -378,6 +380,7 @@ $(document).ready(function() {
                     console.log("start: " + startResult.lat + ", " + startResult.lon + "\n end: " + myArr[0].lat + ", " + myArr[0].lon);
 
                    callMapboxDirections(startResult, myArr[0]);
+                   googleDirections(startResult, myArr[0]);
                }else{
                    console.log("no data found");
                    alert("No Matching Address found for your destination. Please try another address.");
@@ -398,7 +401,6 @@ $(document).ready(function() {
                var response = JSON.parse(xhttp.responseText);
                
                reverseMapboxDirections(startResult, endResult, response);
-//               readDirections(response, startResult, endResult);
            }  
          };
         
@@ -421,6 +423,40 @@ $(document).ready(function() {
         xhttp.open('GET', "https://api.mapbox.com/directions/v5/mapbox/" + transitType + "/" + endResult.lon + "," + endResult.lat + ";" + startResult.lon + "," + startResult.lat + "?steps=true&access_token=" + mapboxgl.accessToken, true);
         
          xhttp.send();
+    }
+    
+    function googleDirections(startResult, endResult){
+        
+        var xhttp = new XMLHttpRequest();
+        
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+               
+               readGoogleDirections(response);
+           }  
+         };
+                
+        var start = startResult.address + " " + startResult.city + " " + startResult.state;
+        var end = endResult.address + " " + endResult.city + " " + endResult.state;
+        
+        //convert addresses
+        for(var i = 0; i < start.length; i++) {
+         start = start.replace(" ", "+");
+        }
+        
+        for(var e = 0; e < end.length; e++) {
+         end = end.replace(" ", "+");
+        }
+                
+        if(transitType.valueOf() == "cycling"){
+            xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + "bicycling" +"&key=" + googleAPI, true);
+        }else{
+            xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + transitType +"&key=" + googleAPI, true);
+        }
+        
+        xhttp.setRequestHeader('Access-Control-Allow-Headers', '*');
+        xhttp.send();
     }
     
     function readDirections(correctResponse, reverseResponse, startResult, endResult){
@@ -458,14 +494,39 @@ $(document).ready(function() {
                 
                 //add our last location
                 locationArray.push(endLoc);
-                
-                drawRoute(geometryArray);
+                 
+                drawRoute(locationArray);
             }
         }
         
         console.log("duration: " + duration + " seconds \n distance: " + distance + " meters");
         
         fillInDetails(distance, duration);
+    }
+    
+    function readGoogleDirections(response){
+        
+        console.log("google response: " + JSON.stringify(response) );
+        
+        var routes = response.routes;
+        var bounds = routes[0].bounds;
+        var polyline = routes[0]["overview_polyline"];
+        
+        //fit google bounds
+        map.fitBounds([[
+            bounds.southwest.lng,
+            bounds.southwest.lat
+        ], [
+            bounds.northeast.lng,
+            bounds.northeast.lat
+        ]]);
+        
+        var googleArray = decode(polyline.points, 5);
+        
+         console.log("googleArray: " + googleArray);
+        
+        drawGoogle(googleArray);
+        
     }
     
     function drawRoute(locationArray){
@@ -497,17 +558,47 @@ $(document).ready(function() {
                     "line-cap": "round"
                 },
                 "paint": {
-                    "line-color": "#EA8E18",
+                    "line-color": "#4DD10F",
                     "line-width": 8
                 }
             });
         }
+    }
+    
+    function drawGoogle(locationArray){
         
-        map.flyTo({
-            center: locationArray[0],
-            zoom: 16,
-            speed: 1.5
-        });
+        var gRoute = map.getSource('gRoute');
+        var locData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": locationArray
+                }
+        }
+
+        if(gRoute){
+            map.getSource('gRoute').setData(locData);
+        }else{
+            map.addSource('gRoute',{
+                type: 'geojson',
+                data: locData
+            });
+            
+            map.addLayer({
+                "id": "gRoute",
+                "type": "line",
+                "source": "gRoute",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#D10F0F",
+                    "line-width": 14
+                }
+            });
+        }
     }
     
     function fillInDetails(meters, seconds){
@@ -526,5 +617,61 @@ $(document).ready(function() {
         return ((h > 0 ? h + " h " + (m < 10 ? "0" : "") : "") + m + " min"); 
     }
     
+    //decode polyline
+    function decode(str, precision) {
+                
+        var index = 0,
+            lat = 0,
+            lng = 0,
+            coordinates = [],
+            shift = 0,
+            result = 0,
+            byte = null,
+            latitude_change,
+            longitude_change,
+            factor = Math.pow(10, precision || 5);
+
+        // Coordinates have variable length when encoded, so just keep
+        // track of whether we've hit the end of the string. In each
+        // loop iteration, a single coordinate is decoded.
+        while (index < str.length) {
+
+            // Reset shift, result, and byte
+            byte = null;
+            shift = 0;
+            result = 0;
+
+            do {
+                byte = str.charCodeAt(index++) - 63;
+                result |= (byte & 0x1f) << shift;
+                shift += 5;
+            } while (byte >= 0x20);
+
+            latitude_change = ((result & 1) ? ~(result >> 1) : (result >> 1));
+
+            shift = result = 0;
+
+            do {
+                byte = str.charCodeAt(index++) - 63;
+                result |= (byte & 0x1f) << shift;
+                shift += 5;
+            } while (byte >= 0x20);
+
+            longitude_change = ((result & 1) ? ~(result >> 1) : (result >> 1));
+
+            lat += latitude_change;
+            lng += longitude_change;
+                        
+            var theseCoords = [];
+            theseCoords.push(lng / factor);
+            theseCoords.push(lat/factor);
+
+            coordinates.push(theseCoords);
+        }
+
+        return coordinates;
+    };
+    
+    //test
 });
 
