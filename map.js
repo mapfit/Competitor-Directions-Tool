@@ -278,7 +278,8 @@ $(document).ready(function() {
     $('.close').on('click', function(e) {
         document.getElementById("menu").style.marginLeft = "-387px";
         
-        map.removeLayer("route");
+//        map.removeLayer("route");
+//        map.removeLayer("gRoute");
     });
     
     $('.swap').on('click', function(e) {        
@@ -460,10 +461,12 @@ $(document).ready(function() {
     }
     
     function readDirections(correctResponse, reverseResponse, startResult, endResult){
+        
         var routes = correctResponse.routes;
         var revRoutes = reverseResponse.routes;
         var duration = routes[0].duration;
         var distance = routes[0].distance;
+        var polyline = routes[0].geometry;
         
         //format start and stop coordinates
         var startLoc = [startResult.lon, startResult.lat];
@@ -478,36 +481,20 @@ $(document).ready(function() {
         //add first location
         locationArray.push(startLoc);
         
-        for(var i = 0; i < steps.length; i++){
-            var thisStep = steps[i];
-            var thisLoc = thisStep.maneuver.location;
-            var thisGeo = thisStep.geometry;
-                        
-            locationArray.push(thisLoc);
-            geometryArray.push(thisGeo);
-            
-            if(i == steps.length - 1){
-                //add reverse mapbox point for better path
-                var revStep = revSteps[0];
-                var revLoc = revStep.maneuver.location;
-                locationArray.push(revLoc);
-                
-                //add our last location
-                locationArray.push(endLoc);
-                 
-                drawRoute(locationArray);
-            }
-        }
+        //test
+        var polylineArray = decode(polyline, 5);
         
-        console.log("duration: " + duration + " seconds \n distance: " + distance + " meters");
+        //add first and last points
+        polylineArray.unshift(startLoc);
+        polylineArray.push(endLoc);
+                
+        drawRoute(polylineArray);
         
         fillInDetails(distance, duration);
     }
     
     function readGoogleDirections(response){
-        
-        console.log("google response: " + JSON.stringify(response) );
-        
+                
         var routes = response.routes;
         var bounds = routes[0].bounds;
         var polyline = routes[0]["overview_polyline"];
@@ -522,9 +509,7 @@ $(document).ready(function() {
         ]]);
         
         var googleArray = decode(polyline.points, 5);
-        
-         console.log("googleArray: " + googleArray);
-        
+                
         drawGoogle(googleArray);
         
     }
@@ -559,7 +544,7 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#4DD10F",
-                    "line-width": 8
+                    "line-width": 6
                 }
             });
         }
