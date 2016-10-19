@@ -490,7 +490,7 @@ $(document).ready(function() {
                 
                 //add our last location
                 locationArray.push(endLoc);
-                
+                 
                 drawRoute(locationArray);
             }
         }
@@ -668,5 +668,6 @@ $(document).ready(function() {
         return coordinates;
     };
     
+    //test
 });
 
