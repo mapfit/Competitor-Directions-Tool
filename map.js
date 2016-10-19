@@ -436,8 +436,20 @@ $(document).ready(function() {
                readGoogleDirections(response);
            }  
          };
+                
+        var start = startResult.address + " " + startResult.city + " " + startResult.state;
+        var end = endResult.address + " " + endResult.city + " " + endResult.state;
         
-        xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ startResult.lat + "," + startResult.lon + "&destination=" + endResult.lat + "," + endResult.lon + "&mode=" + transitType +"&key=" + googleAPI, true);
+        //convert addresses
+        for(var i = 0; i < start.length; i++) {
+         start = start.replace(" ", "+");
+        }
+        
+        for(var e = 0; e < end.length; e++) {
+         end = end.replace(" ", "+");
+        }
+        
+        xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + transitType +"&key=" + googleAPI, true);
         
         xhttp.setRequestHeader('Access-Control-Allow-Headers', '*');
         xhttp.send();
@@ -489,6 +501,8 @@ $(document).ready(function() {
     }
     
     function readGoogleDirections(response){
+        
+        console.log("google response: " + JSON.stringify(response) );
         
         var routes = response.routes;
         var bounds = routes[0].bounds;
@@ -601,9 +615,7 @@ $(document).ready(function() {
     
     //decode polyline
     function decode(str, precision) {
-        
-        console.log("polyline: " + str);
-        
+                
         var index = 0,
             lat = 0,
             lng = 0,
@@ -645,9 +657,7 @@ $(document).ready(function() {
 
             lat += latitude_change;
             lng += longitude_change;
-            
-            console.log("coordinates: " + lat + ", " + lng);
-            
+                        
             var theseCoords = [];
             theseCoords.push(lng / factor);
             theseCoords.push(lat/factor);
