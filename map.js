@@ -367,7 +367,9 @@ $(document).ready(function() {
                    console.log("no data found");
                    alert("No Matching Address found for your start location. Please try another address.");
                }
-           }  
+           }else if(xhttp.status == 500){
+               alert("There was an error. Please try your request again");
+           }
          };
         
         xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + startAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
@@ -397,7 +399,9 @@ $(document).ready(function() {
                    console.log("no data found");
                    alert("No Matching Address found for your destination. Please try another address.");
                }
-           }  
+           }else if(xhttp.status == 500){
+               alert("There was an error. Please try your request again");
+           }
          };
         
         xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + endAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
