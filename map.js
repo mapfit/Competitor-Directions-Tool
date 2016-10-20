@@ -544,19 +544,7 @@ $(document).ready(function() {
         
         console.log(JSON.stringify(polyline));
         
-        //fit google bounds
-//        map.fitBounds([[
-//            bounds.southwest.lng,
-//            bounds.southwest.lat
-//        ], [
-//            bounds.northeast.lng,
-//            bounds.northeast.lat
-//        ]]);
-        
         var googleArray = decode(polyline, 5);
-        
-//        googleArray.unshift(startPoint);
-//        googleArray.push(endPoint);
         
         drawGoogle(googleArray);
         drawGoogleEnds(googleArray, startPoint, endPoint);
@@ -630,7 +618,7 @@ $(document).ready(function() {
                     "line-color": "#D10F0F",
                     "line-width": 10,
                 }
-            });
+            }, 'route');
         }
     }
     
