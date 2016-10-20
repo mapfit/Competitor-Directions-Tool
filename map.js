@@ -9,16 +9,6 @@ $(document).ready(function() {
         [-76.851141, 39.032550]  // Northeast coordinates
     ];
     
-//    var directionsService;
-//    
-//
-//    
-//    function initialize() {
-//      var directionsService = new google.maps.DirectionsService();
-//    }
-
-//        initialize();
-    
     var map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/parkourmethod/cim5hb9c600jza0m473wrw6y6',
@@ -29,9 +19,7 @@ $(document).ready(function() {
     });
 
     map.dragRotate.disable();
-    
-    //zoom in from search to 18
-    
+        
     var defLoc = "DC";
     
     //initial button focus
@@ -247,6 +235,7 @@ $(document).ready(function() {
 
         if(addresses){
             map.getSource('addresses').setData(geoJson);
+            map.setLayoutProperty("addresses", 'visibility', 'visible');
         }else{
             map.addSource('addresses',{
                 type: 'geojson',
@@ -286,20 +275,22 @@ $(document).ready(function() {
         var popup = new mapboxgl.Popup()
             .setLngLat(feature.geometry.coordinates)
             .setHTML("<center><b><p style=\"font-size:12px\">" + feature.properties.address + "</p></b>\n" + feature.properties.city + ", " + feature.properties.state + " " + feature.properties.zip + "\n<p>" + feature.properties.placeType+ "</p><center>")
-            .addTo(map);
-            
+            .addTo(map);            
     });
         
     //directions button
     $('.open-Directions').on('click', function(e) {
+        map.setLayoutProperty("addresses", 'visibility', 'none');
         document.getElementById("menu").style.marginLeft = "0px";
     });
     
     $('.close').on('click', function(e) {
         document.getElementById("menu").style.marginLeft = "-387px";
         
-//        map.removeLayer("route");
-//        map.removeLayer("gRoute");
+        map.setLayoutProperty("route", 'visibility', 'none');
+        map.setLayoutProperty("gRoute", 'visibility', 'none');
+        map.setLayoutProperty("gStart", 'visibility', 'none');
+        map.setLayoutProperty("gEnd", 'visibility', 'none');
     });
     
     $('.swap').on('click', function(e) {        
@@ -564,6 +555,7 @@ $(document).ready(function() {
 
         if(route){
             map.getSource('route').setData(locData);
+            map.setLayoutProperty("route", 'visibility', 'visible');
         }else{
             map.addSource('route',{
                 type: 'geojson',
@@ -600,6 +592,7 @@ $(document).ready(function() {
 
         if(gRoute){
             map.getSource('gRoute').setData(locData);
+            map.setLayoutProperty("gRoute", 'visibility', 'visible');
         }else{
             map.addSource('gRoute',{
                 type: 'geojson',
@@ -636,6 +629,7 @@ $(document).ready(function() {
 
         if(gStart){
             map.getSource('gStart').setData(startLocData);
+            map.setLayoutProperty("gStart", 'visibility', 'visible');
         }else{
             map.addSource('gStart',{
                 type: 'geojson',
@@ -671,6 +665,7 @@ $(document).ready(function() {
 
         if(gEnd){
             map.getSource('gEnd').setData(endLocData);
+            map.setLayoutProperty("gEnd", 'visibility', 'visible');
         }else{
             map.addSource('gEnd',{
                 type: 'geojson',
