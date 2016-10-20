@@ -628,16 +628,16 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#D10F0F",
-                    "line-width": 6,
+                    "line-width": 10,
                 }
             });
         }
     }
     
     function drawGoogleEnds(locationArray, start, end){
-        
+        //start line
         var gStart = map.getSource('gStart');
-        var locData = {
+        var startLocData = {
                 "type": "Feature",
                 "properties": {},
                 "geometry": {
@@ -647,17 +647,52 @@ $(document).ready(function() {
         }
 
         if(gStart){
-            map.getSource('gStart').setData(locData);
+            map.getSource('gStart').setData(startLocData);
         }else{
-            map.addSource('gRoute',{
+            map.addSource('gStart',{
                 type: 'geojson',
-                data: locData
+                data: startLocData
             });
             
             map.addLayer({
-                "id": "gRoute",
+                "id": "gStart",
                 "type": "line",
-                "source": "gRoute",
+                "source": "gStart",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#D10F0F",
+                    "line-width": 6,
+                    "line-dasharray": [1, 2]
+                }
+            });
+        }
+        
+        //end line
+        var gEnd = map.getSource('gEnd');
+        var endLocData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [locationArray[locationArray.length -1 ], end]
+                }
+        }
+
+        if(gEnd){
+            map.getSource('gEnd').setData(endLocData);
+        }else{
+            map.addSource('gEnd',{
+                type: 'geojson',
+                data: endLocData
+            });
+            
+            map.addLayer({
+                "id": "gEnd",
+                "type": "line",
+                "source": "gEnd",
                 "layout": {
                     "line-join": "round",
                     "line-cap": "round"
