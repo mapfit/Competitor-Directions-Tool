@@ -580,7 +580,7 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#4DD10F",
-                    "line-width": 6
+                    "line-width": 8
                 }
             });
         }
@@ -617,7 +617,7 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#D10F0F",
-                    "line-width": 10,
+                    "line-width": 14,
                 }
             }, 'route');
         }
@@ -655,7 +655,7 @@ $(document).ready(function() {
                 "paint": {
                     "line-color": "#D10F0F",
                     "line-width": 6,
-                    "line-dasharray": [1, 2]
+                    "line-dasharray": [.5, 1.5]
                 }
             });
         }
@@ -691,7 +691,7 @@ $(document).ready(function() {
                 "paint": {
                     "line-color": "#D10F0F",
                     "line-width": 6,
-                    "line-dasharray": [1, 2]
+                    "line-dasharray": [.5, 1.5]
                 }
             });
         }
@@ -714,10 +714,7 @@ $(document).ready(function() {
     }
     
     //decode polyline
-    function decode(str, precision) {
-        
-        console.log("decode: " + str);
-        
+    function decode(str, precision) {        
         var index = 0,
             lat = 0,
             lng = 0,
