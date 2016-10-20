@@ -460,67 +460,20 @@ $(document).ready(function() {
          end = end.replace(" ", "+");
         }
         
-//        if(transitType.valueOf() == "cycling"){
-//            $.ajax({
-//              url:"https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + "bicycling" +"&key=" + googleAPI,
-//              type: 'GET',
-//              dataType: 'json'
-//            })
-//            .done(function(data){
-//                readGoogleDirections(response);
-//                googleGeocode(start, end, response);
-//            });
-//        }else{
-//            $.ajax({
-//              url:"https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + transitType +"&key=" + googleAPI,
-//              type: 'GET',
-//              dataType: 'json'
-//            })
-//            .done(function(data){
-////                readGoogleDirections(response);
-//                googleGeocode(start, end, data);
-//            });
-//        }
+        var gTransit = "DRIVING";
         
-//        var xhttp = new XDomainRequest();
-//        
-//        xhttp.onreadystatechange = function(){
-//           if(xhttp.readyState == 4 && xhttp.status == 200){
-//               var response = JSON.parse(xhttp.responseText);
-//               
-////               readGoogleDirections(response);
-//               googleGeocode(start, end, response);
-//           }  
-//         };
-//                
-//        if(transitType.valueOf() == "cycling"){
-//            xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + "bicycling" +"&key=" + googleAPI, true);
-//        }else{
-//            xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + transitType +"&key=" + googleAPI, true);
-//        }
-//        
-//        xhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-//        xhttp.setRequestHeader('origin', 'https://geofi.io');
-//        xhttp.setRequestHeader("Access-Control-Allow-Headers", "origin, X-Requested-With");
-//        xhttp.send();
-        
-        //test
-//        function jsonCallback(json){
-////          console.log(json);
-//            googleGeocode(start, end, json);
-//        }
-//
-//        $.ajax({
-//          url: "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + transitType +"&key=" + googleAPI,
-//          dataType: "jsonp"
-//        });
+        if(transitType.valueOf() == "cycling"){
+            gTransit = "BICYCLING";
+        }else if(transitType.valueOf() == "walking"){
+            gTransit = "WALKING";
+        }
         
         //google js api
         var directionsService = new google.maps.DirectionsService;
         directionsService.route({
           origin: start,
           destination: end,
-          travelMode: 'DRIVING'
+          travelMode: gTransit
         }, function(response, status) {
           if (status === 'OK') {
             googleGeocode(start, end, response);
@@ -591,22 +544,10 @@ $(document).ready(function() {
         
         console.log(JSON.stringify(polyline));
         
-        //fit google bounds
-//        map.fitBounds([[
-//            bounds.southwest.lng,
-//            bounds.southwest.lat
-//        ], [
-//            bounds.northeast.lng,
-//            bounds.northeast.lat
-//        ]]);
-        
         var googleArray = decode(polyline, 5);
         
-        googleArray.unshift(startPoint);
-        googleArray.push(endPoint);
-        
         drawGoogle(googleArray);
-        
+        drawGoogleEnds(googleArray, startPoint, endPoint);
     }
     
     function drawRoute(locationArray){
@@ -675,7 +616,79 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#D10F0F",
-                    "line-width": 6
+                    "line-width": 10,
+                }
+            }, 'route');
+        }
+    }
+    
+    function drawGoogleEnds(locationArray, start, end){
+        //start line
+        var gStart = map.getSource('gStart');
+        var startLocData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [start, locationArray[0]]
+                }
+        }
+
+        if(gStart){
+            map.getSource('gStart').setData(startLocData);
+        }else{
+            map.addSource('gStart',{
+                type: 'geojson',
+                data: startLocData
+            });
+            
+            map.addLayer({
+                "id": "gStart",
+                "type": "line",
+                "source": "gStart",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#D10F0F",
+                    "line-width": 6,
+                    "line-dasharray": [1, 2]
+                }
+            });
+        }
+        
+        //end line
+        var gEnd = map.getSource('gEnd');
+        var endLocData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [locationArray[locationArray.length -1 ], end]
+                }
+        }
+
+        if(gEnd){
+            map.getSource('gEnd').setData(endLocData);
+        }else{
+            map.addSource('gEnd',{
+                type: 'geojson',
+                data: endLocData
+            });
+            
+            map.addLayer({
+                "id": "gEnd",
+                "type": "line",
+                "source": "gEnd",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#D10F0F",
+                    "line-width": 6,
+                    "line-dasharray": [1, 2]
                 }
             });
         }
