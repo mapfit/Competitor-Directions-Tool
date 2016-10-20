@@ -1,14 +1,23 @@
 $(document).ready(function() {
     mapboxgl.accessToken = 'pk.eyJ1IjoicGFya291cm1ldGhvZCIsImEiOiI5Y2JmOGJhMDYzZDgyODBhYzQ3OTFkZWE3NGFiMmUzYiJ9.kp_5LMwcR79TKOERpkilAQ';
     
-    var googleAPI = 'AIzaSyB180iKzn-TG327SQ4_enjpEGH9n5TTj1I';
+    var googleAPI = 'AIzaSyALB5yXEHcbkr51lCbrPeCdVf60SbWENtU';
     
     // Set bounds to DMV
     var bounds = [
         [-77.247255, 38.764495], // Southwest coordinates
         [-76.851141, 39.032550]  // Northeast coordinates
     ];
+    
+//    var directionsService;
+//    
+//
+//    
+//    function initialize() {
+//      var directionsService = new google.maps.DirectionsService();
+//    }
 
+//        initialize();
     
     var map = new mapboxgl.Map({
         container: 'map',
@@ -451,28 +460,74 @@ $(document).ready(function() {
          end = end.replace(" ", "+");
         }
         
+//        if(transitType.valueOf() == "cycling"){
+//            $.ajax({
+//              url:"https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + "bicycling" +"&key=" + googleAPI,
+//              type: 'GET',
+//              dataType: 'json'
+//            })
+//            .done(function(data){
+//                readGoogleDirections(response);
+//                googleGeocode(start, end, response);
+//            });
+//        }else{
+//            $.ajax({
+//              url:"https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + transitType +"&key=" + googleAPI,
+//              type: 'GET',
+//              dataType: 'json'
+//            })
+//            .done(function(data){
+////                readGoogleDirections(response);
+//                googleGeocode(start, end, data);
+//            });
+//        }
         
-        var xhttp = new XMLHttpRequest();
+//        var xhttp = new XDomainRequest();
+//        
+//        xhttp.onreadystatechange = function(){
+//           if(xhttp.readyState == 4 && xhttp.status == 200){
+//               var response = JSON.parse(xhttp.responseText);
+//               
+////               readGoogleDirections(response);
+//               googleGeocode(start, end, response);
+//           }  
+//         };
+//                
+//        if(transitType.valueOf() == "cycling"){
+//            xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + "bicycling" +"&key=" + googleAPI, true);
+//        }else{
+//            xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + transitType +"&key=" + googleAPI, true);
+//        }
+//        
+//        xhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+//        xhttp.setRequestHeader('origin', 'https://geofi.io');
+//        xhttp.setRequestHeader("Access-Control-Allow-Headers", "origin, X-Requested-With");
+//        xhttp.send();
         
-        xhttp.onreadystatechange = function(){
-           if(xhttp.readyState == 4 && xhttp.status == 200){
-               var response = JSON.parse(xhttp.responseText);
-               
-//               readGoogleDirections(response);
-               googleGeocode(start, end, response);
-           }  
-         };
-                
-
-                
-        if(transitType.valueOf() == "cycling"){
-            xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + "bicycling" +"&key=" + googleAPI, true);
-        }else{
-            xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + transitType +"&key=" + googleAPI, true);
-        }
+        //test
+//        function jsonCallback(json){
+////          console.log(json);
+//            googleGeocode(start, end, json);
+//        }
+//
+//        $.ajax({
+//          url: "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + transitType +"&key=" + googleAPI,
+//          dataType: "jsonp"
+//        });
         
-        xhttp.setRequestHeader('Access-Control-Allow-Headers', '*');
-        xhttp.send();
+        //google js api
+        var directionsService = new google.maps.DirectionsService;
+        directionsService.route({
+          origin: start,
+          destination: end,
+          travelMode: 'DRIVING'
+        }, function(response, status) {
+          if (status === 'OK') {
+            googleGeocode(start, end, response);
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
     }
     
     function readDirections(correctResponse, reverseResponse, startResult, endResult){
@@ -506,6 +561,12 @@ $(document).ready(function() {
         drawRoute(polylineArray);
         
         fillInDetails(distance, duration);
+        
+        map.flyTo({
+            center: endLoc,
+            zoom: 16,
+            speed: 1.5
+        });
     }
     
     function readGoogleDirections(directions, startResponse, endResponse){
@@ -528,18 +589,18 @@ $(document).ready(function() {
         endPoint.push(endLoc.lng);
         endPoint.push(endLoc.lat);
         
-        console.log(JSON.stringify(startLoc));
+        console.log(JSON.stringify(polyline));
         
         //fit google bounds
-        map.fitBounds([[
-            bounds.southwest.lng,
-            bounds.southwest.lat
-        ], [
-            bounds.northeast.lng,
-            bounds.northeast.lat
-        ]]);
+//        map.fitBounds([[
+//            bounds.southwest.lng,
+//            bounds.southwest.lat
+//        ], [
+//            bounds.northeast.lng,
+//            bounds.northeast.lat
+//        ]]);
         
-        var googleArray = decode(polyline.points, 5);
+        var googleArray = decode(polyline, 5);
         
         googleArray.unshift(startPoint);
         googleArray.push(endPoint);
@@ -638,7 +699,9 @@ $(document).ready(function() {
     
     //decode polyline
     function decode(str, precision) {
-                
+        
+        console.log("decode: " + str);
+        
         var index = 0,
             lat = 0,
             lng = 0,
