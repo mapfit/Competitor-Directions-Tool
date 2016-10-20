@@ -8,7 +8,16 @@ $(document).ready(function() {
         [-77.247255, 38.764495], // Southwest coordinates
         [-76.851141, 39.032550]  // Northeast coordinates
     ];
+    
+//    var directionsService;
+//    
+//
+//    
+//    function initialize() {
+//      var directionsService = new google.maps.DirectionsService();
+//    }
 
+//        initialize();
     
     var map = new mapboxgl.Map({
         container: 'map',
@@ -439,16 +448,6 @@ $(document).ready(function() {
     
     function googleDirections(startResult, endResult){
         
-        var xhttp = new XMLHttpRequest();
-        
-        xhttp.onreadystatechange = function(){
-           if(xhttp.readyState == 4 && xhttp.status == 200){
-               var response = JSON.parse(xhttp.responseText);
-               
-               readGoogleDirections(response);
-           }  
-         };
-                
         var start = startResult.address + " " + startResult.city + " " + startResult.state;
         var end = endResult.address + " " + endResult.city + " " + endResult.state;
         
@@ -460,15 +459,75 @@ $(document).ready(function() {
         for(var e = 0; e < end.length; e++) {
          end = end.replace(" ", "+");
         }
-                
-        if(transitType.valueOf() == "cycling"){
-            xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + "bicycling" +"&key=" + googleAPI, true);
-        }else{
-            xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + transitType +"&key=" + googleAPI, true);
-        }
         
-        xhttp.setRequestHeader('Access-Control-Allow-Headers', '*');
-        xhttp.send();
+//        if(transitType.valueOf() == "cycling"){
+//            $.ajax({
+//              url:"https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + "bicycling" +"&key=" + googleAPI,
+//              type: 'GET',
+//              dataType: 'json'
+//            })
+//            .done(function(data){
+//                readGoogleDirections(response);
+//                googleGeocode(start, end, response);
+//            });
+//        }else{
+//            $.ajax({
+//              url:"https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + transitType +"&key=" + googleAPI,
+//              type: 'GET',
+//              dataType: 'json'
+//            })
+//            .done(function(data){
+////                readGoogleDirections(response);
+//                googleGeocode(start, end, data);
+//            });
+//        }
+        
+//        var xhttp = new XDomainRequest();
+//        
+//        xhttp.onreadystatechange = function(){
+//           if(xhttp.readyState == 4 && xhttp.status == 200){
+//               var response = JSON.parse(xhttp.responseText);
+//               
+////               readGoogleDirections(response);
+//               googleGeocode(start, end, response);
+//           }  
+//         };
+//                
+//        if(transitType.valueOf() == "cycling"){
+//            xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + "bicycling" +"&key=" + googleAPI, true);
+//        }else{
+//            xhttp.open('GET', "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + transitType +"&key=" + googleAPI, true);
+//        }
+//        
+//        xhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+//        xhttp.setRequestHeader('origin', 'https://geofi.io');
+//        xhttp.setRequestHeader("Access-Control-Allow-Headers", "origin, X-Requested-With");
+//        xhttp.send();
+        
+        //test
+//        function jsonCallback(json){
+////          console.log(json);
+//            googleGeocode(start, end, json);
+//        }
+//
+//        $.ajax({
+//          url: "https://maps.googleapis.com/maps/api/directions/json?origin="+ start + "&destination=" + end + "&mode=" + transitType +"&key=" + googleAPI,
+//          dataType: "jsonp"
+//        });
+        
+        //google js api
+        var directionsService = new google.maps.DirectionsService;
+        directionsService.route({
+          origin: start,
+          destination: end,
+          travelMode: 'DRIVING'
+        }, function(response, status) {
+          if (status === 'OK') {
+            googleGeocode(start, end, response);
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
     }
     
     function readDirections(correctResponse, reverseResponse, startResult, endResult){
@@ -502,25 +561,50 @@ $(document).ready(function() {
         drawRoute(polylineArray);
         
         fillInDetails(distance, duration);
+        
+        map.flyTo({
+            center: endLoc,
+            zoom: 16,
+            speed: 1.5
+        });
     }
     
-    function readGoogleDirections(response){
-                
-        var routes = response.routes;
+    function readGoogleDirections(directions, startResponse, endResponse){
+        
+        var routes = directions.routes;
         var bounds = routes[0].bounds;
         var polyline = routes[0]["overview_polyline"];
         
-        //fit google bounds
-        map.fitBounds([[
-            bounds.southwest.lng,
-            bounds.southwest.lat
-        ], [
-            bounds.northeast.lng,
-            bounds.northeast.lat
-        ]]);
+        //get start point
+        var startResult = startResponse.results;
+        var startLoc = startResult[0].geometry.location;
+        var startPoint = [];
+        startPoint.push(startLoc.lng);
+        startPoint.push(startLoc.lat);
         
-        var googleArray = decode(polyline.points, 5);
-                
+        //get start point
+        var endResult = endResponse.results;
+        var endLoc = endResult[0].geometry.location;
+        var endPoint = [];
+        endPoint.push(endLoc.lng);
+        endPoint.push(endLoc.lat);
+        
+        console.log(JSON.stringify(polyline));
+        
+        //fit google bounds
+//        map.fitBounds([[
+//            bounds.southwest.lng,
+//            bounds.southwest.lat
+//        ], [
+//            bounds.northeast.lng,
+//            bounds.northeast.lat
+//        ]]);
+        
+        var googleArray = decode(polyline, 5);
+        
+        googleArray.unshift(startPoint);
+        googleArray.push(endPoint);
+        
         drawGoogle(googleArray);
         
     }
@@ -591,7 +675,7 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#D10F0F",
-                    "line-width": 14
+                    "line-width": 6
                 }
             });
         }
@@ -615,7 +699,9 @@ $(document).ready(function() {
     
     //decode polyline
     function decode(str, precision) {
-                
+        
+        console.log("decode: " + str);
+        
         var index = 0,
             lat = 0,
             lng = 0,
@@ -668,6 +754,37 @@ $(document).ready(function() {
         return coordinates;
     };
     
-    //test
+    //google geocode
+    function googleGeocode(start, end, directions){
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+
+               googleGeocode2(response, end, directions);
+           }  
+         };
+        
+        xhttp.open('GET', "https://maps.googleapis.com/maps/api/geocode/json?address=" + start + "&key=" + googleAPI, true);
+        
+        xhttp.send();
+    }
+    
+    function googleGeocode2(startResponse, end, directions){
+        var xhttp = new XMLHttpRequest();
+        
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+            
+               readGoogleDirections(directions, startResponse, response);
+           }  
+         };
+        
+        xhttp.open('GET', "https://maps.googleapis.com/maps/api/geocode/json?address=" + end + "&key=" + googleAPI, true);
+        
+        xhttp.send();
+    }
 });
 
