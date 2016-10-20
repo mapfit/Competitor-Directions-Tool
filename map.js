@@ -280,7 +280,11 @@ $(document).ready(function() {
         
     //directions button
     $('.open-Directions').on('click', function(e) {
-        map.setLayoutProperty("addresses", 'visibility', 'none');
+        var addresses = map.getSource('addresses')
+
+        if(addresses){
+            map.setLayoutProperty("addresses", 'visibility', 'none');
+        }
         document.getElementById("menu").style.marginLeft = "0px";
     });
     
