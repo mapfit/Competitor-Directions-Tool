@@ -19,9 +19,7 @@ $(document).ready(function() {
     });
 
     map.dragRotate.disable();
-    
-    //zoom in from search to 18
-    
+        
     var defLoc = "DC";
     
     //initial button focus
@@ -237,6 +235,7 @@ $(document).ready(function() {
 
         if(addresses){
             map.getSource('addresses').setData(geoJson);
+            map.setLayoutProperty("addresses", 'visibility', 'visible');
         }else{
             map.addSource('addresses',{
                 type: 'geojson',
@@ -276,12 +275,12 @@ $(document).ready(function() {
         var popup = new mapboxgl.Popup()
             .setLngLat(feature.geometry.coordinates)
             .setHTML("<center><b><p style=\"font-size:12px\">" + feature.properties.address + "</p></b>\n" + feature.properties.city + ", " + feature.properties.state + " " + feature.properties.zip + "\n<p>" + feature.properties.placeType+ "</p><center>")
-            .addTo(map);
-            
+            .addTo(map);            
     });
         
     //directions button
     $('.open-Directions').on('click', function(e) {
+        map.setLayoutProperty("addresses", 'visibility', 'none');
         document.getElementById("menu").style.marginLeft = "0px";
     });
     
