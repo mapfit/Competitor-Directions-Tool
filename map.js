@@ -293,20 +293,26 @@ $(document).ready(function() {
         var addresses = map.getSource('addresses')
 
         if(addresses){
-            map.getSource('addresses').setData(geoJson);
-            map.setLayoutProperty("addresses", 'visibility', 'visible');
-        }else{
+            map.removeSource('addresses');
+            map.removeLayer('addresses');
+//            map.getSource('addresses').setData(geoJson);
+//            map.setLayoutProperty("addresses", 'visibility', 'visible');
+        }
+//        }else{
             map.addSource('addresses',{
                 type: 'geojson',
                 data: geoJson
             });
 
+        var marker = new mapboxgl.Marker()
+          .setLngLat([data.lon, data.lat])
+          .addTo(map);
             map.addLayer({
                 id: 'addresses',
                 source: 'addresses',
                 type: 'symbol',
                 "layout": {
-                    "icon-image": "circle-15",
+                    "icon-image": "marker-green-15",
                     "icon-allow-overlap": true,
                     "text-field": "GeoFi\n" + data.address,
                     "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
@@ -318,7 +324,7 @@ $(document).ready(function() {
                   "text-color": "#4DD10F"
                 }
             });
-        }
+//        }
     }
     
     //drop google point
@@ -345,9 +351,12 @@ $(document).ready(function() {
         var gAdd = map.getSource('gAddress')
 
         if(gAdd){
-            map.getSource('gAddress').setData(geoJson);
-            map.setLayoutProperty("gAddress", 'visibility', 'visible');
-        }else{
+            map.removeLayer('gAddress');
+            map.removeSource('gAddress');
+//            map.getSource('gAddress').setData(geoJson);
+//            map.setLayoutProperty("gAddress", 'visibility', 'visible');
+        }
+//        else{
             map.addSource('gAddress',{
                 type: 'geojson',
                 data: geoJson
@@ -358,19 +367,19 @@ $(document).ready(function() {
                 source: 'gAddress',
                 type: 'symbol',
                 "layout": {
-                    "icon-image": "circle-15",
+                    "icon-image": "marker-red-15",
                     "icon-allow-overlap": true,
                     "text-field": "Google\n" + calcDist(location.lat, location.lng, currentAddress.lat, currentAddress.lon) + "m",
                     "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
                     "text-size": 11,
                     "text-letter-spacing": 0.05,
-                    "text-offset": [0, 3]
+                    "text-offset": [0, 2]
                 },
                 paint: {
                   "text-color": "#D10F0F"
                 }
             });
-        }
+//        }
         
         drawGLine(location);
     }
@@ -408,8 +417,8 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#D10F0F",
-                    "line-width": 5,
-                    "line-dasharray": [.5, 3]
+                    "line-width": 3,
+                    "line-dasharray": [.5, 1.5]
                 }
             }, 'addresses', 'gAddress');
         }
@@ -439,9 +448,12 @@ $(document).ready(function() {
         var openAdd = map.getSource('openAddress')
 
         if(openAdd){
-            map.getSource('openAddress').setData(geoJson);
-            map.setLayoutProperty("openAddress", 'visibility', 'visible');
-        }else{
+            map.removeLayer('openAddress');
+            map.removeSource('openAddress');
+//            map.getSource('openAddress').setData(geoJson);
+//            map.setLayoutProperty("openAddress", 'visibility', 'visible');
+        }
+//        else{
             map.addSource('openAddress',{
                 type: 'geojson',
                 data: geoJson
@@ -452,19 +464,19 @@ $(document).ready(function() {
                 source: 'openAddress',
                 type: 'symbol',
                 "layout": {
-                    "icon-image": "circle-15",
+                    "icon-image": "marker-yellow-15",
                     "icon-allow-overlap": true,
                     "text-field": "OSM\n" + calcDist(location[1], location[0], currentAddress.lat, currentAddress.lon) + "m",
                     "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
                     "text-size": 11,
                     "text-letter-spacing": 0.05,
-                    "text-offset": [0, 1.5]
+                    "text-offset": [0, 2]
                 },
                 paint: {
                   'text-color': '#F4F41C',
                 },
             });
-        }
+//        }
         
         drawOPENLine(location);
     }
@@ -502,7 +514,7 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#F4F41C",
-                    "line-width": 5,
+                    "line-width": 3,
                     "line-dasharray": [.5, 1.5]
                 }
             }, 'addresses', 'openAddress');
