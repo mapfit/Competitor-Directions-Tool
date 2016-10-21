@@ -415,7 +415,7 @@ $(document).ready(function() {
                     "line-width": 5,
                     "line-dasharray": [.5, 1.5]
                 }
-            }, 'addresses');
+            }, 'addresses', 'gAddress');
         }
     }
     
@@ -516,7 +516,7 @@ $(document).ready(function() {
                     "line-width": 5,
                     "line-dasharray": [.5, 1.5]
                 }
-            }, 'addresses');
+            }, 'addresses', 'openAddress');
         }
     }
     
