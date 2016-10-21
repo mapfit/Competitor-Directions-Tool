@@ -304,19 +304,21 @@ $(document).ready(function() {
             map.addLayer({
                 id: 'addresses',
                 source: 'addresses',
-                type: 'circle',
-                paint: {
-                  'circle-color': '#4DD10F',
-                  'circle-radius': 7
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "circle-15",
+                    "icon-allow-overlap": true,
+                    "text-field": "GeoFi\n" + data.address,
+                    "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+                    "text-size": 11,
+                    "text-letter-spacing": 0.05,
+                    "text-offset": [0, 3]
                 },
+                paint: {
+                  "text-color": "#4DD10F"
+                }
             });
         }
-        
-        //show popup
-        var popup = new mapboxgl.Popup()
-            .setLngLat([data.lon,data.lat])
-            .setHTML("<center><b><p style=\"font-size:12px\">" + data.address + "</p></b>\n" + data.city + ", " + data.state + " " + data.zip + "<center>")
-            .addTo(map);
     }
     
     //drop google point
@@ -361,7 +363,6 @@ $(document).ready(function() {
                     "text-field": "Google",
                     "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
                     "text-size": 11,
-                    "text-transform": "uppercase",
                     "text-letter-spacing": 0.05,
                     "text-offset": [0, 1.5]
                 },
@@ -372,11 +373,6 @@ $(document).ready(function() {
         }
         
         drawGLine(location);
-        
-//        var popup = new mapboxgl.Popup()
-//            .setLngLat([location.lng,location.lat])
-//            .setHTML("Google")
-//            .addTo(map);
     }
     
     function drawGLine(location){
@@ -461,23 +457,16 @@ $(document).ready(function() {
                     "text-field": "OSM",
                     "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
                     "text-size": 11,
-                    "text-transform": "uppercase",
                     "text-letter-spacing": 0.05,
                     "text-offset": [0, 1.5]
                 },
                 paint: {
                   'text-color': '#F4F41C',
-//                  'circle-radius': 6
                 },
             });
         }
         
         drawOPENLine(location);
-//        
-//        var popup = new mapboxgl.Popup()
-//            .setLngLat([location[0],location[1]])
-//            .setHTML("OSM")
-//            .addTo(map);
     }
     
     function drawOPENLine(location){
@@ -522,20 +511,20 @@ $(document).ready(function() {
     
     //marker click detection
     map.on('click', function(e) {
-        var features = map.queryRenderedFeatures(e.point, { layers: ['addresses'] });
-    
-        if (!features.length) {
-            return;
-        }
-
-        var feature = features[0];
-        latestSearchArray = features;
-
-        // Populate the popup and set its coordinates
-        var popup = new mapboxgl.Popup()
-            .setLngLat([data.lon,data.lat])
-            .setHTML("<center><b><p style=\"font-size:12px\">" + data.address + "</p></b>\n" + data.city + ", " + data.state + " " + data.zip + "<center>")
-            .addTo(map);            
+//        var features = map.queryRenderedFeatures(e.point, { layers: ['addresses'] });
+//    
+//        if (!features.length) {
+//            return;
+//        }
+//
+//        var feature = features[0];
+//        latestSearchArray = features;
+//
+//        // Populate the popup and set its coordinates
+//        var popup = new mapboxgl.Popup()
+//            .setLngLat([data.lon,data.lat])
+//            .setHTML("<center><b><p style=\"font-size:12px\">" + data.address + "</p></b>\n" + data.city + ", " + data.state + " " + data.zip + "<center>")
+//            .addTo(map);            
     });
         
     //***********************DIRECTIONS*********************************************
