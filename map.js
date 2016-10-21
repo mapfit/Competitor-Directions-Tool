@@ -516,7 +516,7 @@ $(document).ready(function() {
         
         map.flyTo({
             center: endLoc,
-            zoom: 16,
+            zoom: 14,
             speed: 1.5
         });
     }
