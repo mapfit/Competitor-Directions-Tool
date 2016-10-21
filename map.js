@@ -9,6 +9,8 @@ $(document).ready(function() {
         [-76.851141, 39.032550]  // Northeast coordinates
     ];
     
+    var currentAddress;
+    
     var map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/parkourmethod/cim5hb9c600jza0m473wrw6y6',
@@ -133,8 +135,8 @@ $(document).ready(function() {
             stateSearch(query, cityState);
         }
         
-        googleSearch(query + " " + cityState);
-        openSearch(query + " " + cityState);
+//        googleSearch(query + " " + cityState);
+//        openSearch(query + " " + cityState);
     });
     
     function stateSearch(thisQuery, cityState){
@@ -152,6 +154,10 @@ $(document).ready(function() {
 
                if(myArr[0]){
                    readLocation(myArr);
+                   
+                   //setup additional searches
+                   googleSearch(thisQuery + " " + cityState);
+                   openSearch(thisQuery + " " + cityState);
                }else{
                    console.log("no data found");
                    alert("No Matching Address found. Please try another address.");
@@ -250,6 +256,8 @@ $(document).ready(function() {
             zoom: 17,
             speed: 1.5
         });
+        
+        currentAddress = {"lat": lat, "lon": lon};
      }
     
     //drop marker
@@ -352,7 +360,49 @@ $(document).ready(function() {
                   'circle-radius': 6
                 },
             });
-        } 
+        }
+        
+        drawGLine(location);
+    }
+    
+    function drawGLine(location){
+        
+        var locationArray = [[location.lng, location.lat], [currentAddress.lon, currentAddress.lat]];
+        
+        var gDist = map.getSource('gDist');
+        var locData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": locationArray
+                }
+        }
+
+        if(gDist){
+            map.getSource('gDist').setData(locData);
+            map.setLayoutProperty("gDist", 'visibility', 'visible');
+        }else{
+            map.addSource('gDist',{
+                type: 'geojson',
+                data: locData
+            });
+            
+            map.addLayer({
+                "id": "gDist",
+                "type": "line",
+                "source": "gDist",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#D10F0F",
+                    "line-width": 5,
+                    "line-dasharray": [.5, 1.5]
+                }
+            }, 'addresses');
+        }
     }
     
     //drop OPEN point
