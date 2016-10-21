@@ -354,15 +354,29 @@ $(document).ready(function() {
             map.addLayer({
                 id: 'gAddress',
                 source: 'gAddress',
-                type: 'circle',
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "circle-15",
+                    "icon-allow-overlap": true,
+                    "text-field": "Google",
+                    "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+                    "text-size": 11,
+                    "text-transform": "uppercase",
+                    "text-letter-spacing": 0.05,
+                    "text-offset": [0, 1.5]
+                },
                 paint: {
-                  'circle-color': '#D10F0F',
-                  'circle-radius': 6
+                  "text-color": "#D10F0F"
                 }
             });
         }
         
         drawGLine(location);
+        
+//        var popup = new mapboxgl.Popup()
+//            .setLngLat([location.lng,location.lat])
+//            .setHTML("Google")
+//            .addTo(map);
     }
     
     function drawGLine(location){
@@ -440,15 +454,30 @@ $(document).ready(function() {
             map.addLayer({
                 id: 'openAddress',
                 source: 'openAddress',
-                type: 'circle',
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "circle-15",
+                    "icon-allow-overlap": true,
+                    "text-field": "OSM",
+                    "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+                    "text-size": 11,
+                    "text-transform": "uppercase",
+                    "text-letter-spacing": 0.05,
+                    "text-offset": [0, 1.5]
+                },
                 paint: {
-                  'circle-color': '#F4F41C',
-                  'circle-radius': 6
+                  'text-color': '#F4F41C',
+//                  'circle-radius': 6
                 },
             });
         }
         
         drawOPENLine(location);
+//        
+//        var popup = new mapboxgl.Popup()
+//            .setLngLat([location[0],location[1]])
+//            .setHTML("OSM")
+//            .addTo(map);
     }
     
     function drawOPENLine(location){
