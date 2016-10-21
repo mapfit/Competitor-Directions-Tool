@@ -256,7 +256,7 @@ $(document).ready(function() {
         //show popup
         var popup = new mapboxgl.Popup()
             .setLngLat([data.lon,data.lat])
-            .setHTML("<center><b><p style=\"font-size:12px\">" + data.address + "</p></b>\n" + data.city + ", " + data.state + " " + data.zip + "\n<p>" + data.placeType+ "</p><center>")
+            .setHTML("<center><b><p style=\"font-size:12px\">" + data.address + "</p></b>\n" + data.city + ", " + data.state + " " + data.zip + "<center>")
             .addTo(map);
     }
     
@@ -273,11 +273,13 @@ $(document).ready(function() {
 
         // Populate the popup and set its coordinates
         var popup = new mapboxgl.Popup()
-            .setLngLat(feature.geometry.coordinates)
-            .setHTML("<center><b><p style=\"font-size:12px\">" + feature.properties.address + "</p></b>\n" + feature.properties.city + ", " + feature.properties.state + " " + feature.properties.zip + "\n<p>" + feature.properties.placeType+ "</p><center>")
+            .setLngLat([data.lon,data.lat])
+            .setHTML("<center><b><p style=\"font-size:12px\">" + data.address + "</p></b>\n" + data.city + ", " + data.state + " " + data.zip + "<center>")
             .addTo(map);            
     });
         
+    //***********************DIRECTIONS*********************************************
+    
     //directions button
     $('.open-Directions').on('click', function(e) {
         var addresses = map.getSource('addresses')
@@ -329,7 +331,7 @@ $(document).ready(function() {
         document.getElementById("walk").style.backgroundColor = "#FFFFFF";
         document.getElementById("car").style.backgroundColor = "#FFFFFF";
     });
-    
+        
     $('.get-directions').on('click', function(e) {        
         console.log("get " + transitType + " directions");
         
@@ -480,6 +482,39 @@ $(document).ready(function() {
             window.alert('Directions request failed due to ' + status);
           }
         });
+    }
+    
+    //google geocode
+    function googleGeocode(start, end, directions){
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+
+               googleGeocode2(response, end, directions);
+           }  
+         };
+        
+        xhttp.open('GET', "https://maps.googleapis.com/maps/api/geocode/json?address=" + start + "&key=" + googleAPI, true);
+        
+        xhttp.send();
+    }
+    
+    function googleGeocode2(startResponse, end, directions){
+        var xhttp = new XMLHttpRequest();
+        
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+            
+               readGoogleDirections(directions, startResponse, response);
+           }  
+         };
+        
+        xhttp.open('GET', "https://maps.googleapis.com/maps/api/geocode/json?address=" + end + "&key=" + googleAPI, true);
+        
+        xhttp.send();
     }
     
     function readDirections(correctResponse, reverseResponse, startResult, endResult){
@@ -766,38 +801,5 @@ $(document).ready(function() {
 
         return coordinates;
     };
-    
-    //google geocode
-    function googleGeocode(start, end, directions){
-        var xhttp = new XMLHttpRequest();
-
-        xhttp.onreadystatechange = function(){
-           if(xhttp.readyState == 4 && xhttp.status == 200){
-               var response = JSON.parse(xhttp.responseText);
-
-               googleGeocode2(response, end, directions);
-           }  
-         };
-        
-        xhttp.open('GET', "https://maps.googleapis.com/maps/api/geocode/json?address=" + start + "&key=" + googleAPI, true);
-        
-        xhttp.send();
-    }
-    
-    function googleGeocode2(startResponse, end, directions){
-        var xhttp = new XMLHttpRequest();
-        
-        xhttp.onreadystatechange = function(){
-           if(xhttp.readyState == 4 && xhttp.status == 200){
-               var response = JSON.parse(xhttp.responseText);
-            
-               readGoogleDirections(directions, startResponse, response);
-           }  
-         };
-        
-        xhttp.open('GET', "https://maps.googleapis.com/maps/api/geocode/json?address=" + end + "&key=" + googleAPI, true);
-        
-        xhttp.send();
-    }
 });
 
