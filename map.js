@@ -360,11 +360,11 @@ $(document).ready(function() {
                 "layout": {
                     "icon-image": "circle-15",
                     "icon-allow-overlap": true,
-                    "text-field": "Google",
+                    "text-field": "Google\n" + calcDist(location.lat, location.lng, currentAddress.lat, currentAddress.lon) + "m",
                     "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
                     "text-size": 11,
                     "text-letter-spacing": 0.05,
-                    "text-offset": [0, 1.5]
+                    "text-offset": [0, 3]
                 },
                 paint: {
                   "text-color": "#D10F0F"
@@ -409,7 +409,7 @@ $(document).ready(function() {
                 "paint": {
                     "line-color": "#D10F0F",
                     "line-width": 5,
-                    "line-dasharray": [.5, 1.5]
+                    "line-dasharray": [.5, 3]
                 }
             }, 'addresses', 'gAddress');
         }
@@ -454,7 +454,7 @@ $(document).ready(function() {
                 "layout": {
                     "icon-image": "circle-15",
                     "icon-allow-overlap": true,
-                    "text-field": "OSM",
+                    "text-field": "OSM\n" + calcDist(location[1], location[0], currentAddress.lat, currentAddress.lon) + "m",
                     "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
                     "text-size": 11,
                     "text-letter-spacing": 0.05,
@@ -507,6 +507,25 @@ $(document).ready(function() {
                 }
             }, 'addresses', 'openAddress');
         }
+    }
+    
+    //distance calculation
+    function calcDist(lat1,lon1,lat2,lon2) {
+      var R = 6371; // Radius of the earth in km
+      var dLat = deg2rad(lat2-lat1);  // deg2rad below
+      var dLon = deg2rad(lon2-lon1); 
+      var a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2)
+        ; 
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+      var d = R * c;
+      return Math.round( (d*1000) * 10 ) / 10;
+    }
+    
+    function deg2rad(deg) {
+      return deg * (Math.PI/180)
     }
     
     //marker click detection
