@@ -253,7 +253,7 @@ $(document).ready(function() {
 
         map.flyTo({
             center: [lon, lat],
-            zoom: 17,
+            zoom: 18,
             speed: 1.5
         });
         
@@ -566,6 +566,10 @@ $(document).ready(function() {
 
         if(addresses){
             map.setLayoutProperty("addresses", 'visibility', 'none');
+            map.setLayoutProperty("openAddress", 'visibility', 'none');
+            map.setLayoutProperty("gAddress", 'visibility', 'none');
+            map.setLayoutProperty("gDist", 'visibility', 'none');
+            map.setLayoutProperty("openDist", 'visibility', 'none');
         }
         document.getElementById("menu").style.marginLeft = "0px";
     });
@@ -577,6 +581,10 @@ $(document).ready(function() {
         map.setLayoutProperty("gRoute", 'visibility', 'none');
         map.setLayoutProperty("gStart", 'visibility', 'none');
         map.setLayoutProperty("gEnd", 'visibility', 'none');
+        map.setLayoutProperty("googleStart", 'visibility', 'none');
+        map.setLayoutProperty("googleEnd", 'visibility', 'none');
+        map.setLayoutProperty("routeStart", 'visibility', 'none');
+        map.setLayoutProperty("routeEnd", 'visibility', 'none');
     });
     
     $('.swap').on('click', function(e) {        
@@ -829,9 +837,13 @@ $(document).ready(function() {
         
         fillInDetails(distance, duration);
         
+        //drop end marker
+        routeEnd(endLoc);
+        routeStart(startLoc);
+        
         map.flyTo({
             center: endLoc,
-            zoom: 16,
+            zoom: 18,
             speed: 1.5
         });
     }
@@ -855,13 +867,14 @@ $(document).ready(function() {
         var endPoint = [];
         endPoint.push(endLoc.lng);
         endPoint.push(endLoc.lat);
-        
-        console.log(JSON.stringify(polyline));
-        
+                
         var googleArray = decode(polyline, 5);
         
         drawGoogle(googleArray);
         drawGoogleEnds(googleArray, startPoint, endPoint);
+        
+        googleEnd(endPoint);
+        googleStart(startPoint);
     }
     
     function drawRoute(locationArray){
@@ -895,7 +908,7 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#4DD10F",
-                    "line-width": 8
+                    "line-width": 4
                 }
             });
         }
@@ -932,7 +945,7 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#D10F0F",
-                    "line-width": 12,
+                    "line-width": 6,
                 }
             }, 'route');
         }
@@ -969,7 +982,7 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#D10F0F",
-                    "line-width": 8,
+                    "line-width": 5,
                     "line-dasharray": [.25, 1.5]
                 }
             }, 'route');
@@ -1005,7 +1018,7 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#D10F0F",
-                    "line-width": 8,
+                    "line-width": 5,
                     "line-dasharray": [.25, 1.5]
                 }
             }, 'route');
@@ -1081,5 +1094,170 @@ $(document).ready(function() {
 
         return coordinates;
     };
+    
+    //drop our end point
+    function routeEnd(location){
+        var thisAddJsonArray = new Array;
+        
+        var thisJSON = {"type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": location
+                }
+            }
+                        
+            thisAddJsonArray.push(thisJSON);
+    
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
+
+        var addresses = map.getSource('routeEnd')
+
+        if(addresses){
+            map.removeSource('routeEnd');
+            map.removeLayer('routeEnd');
+        }
+            map.addSource('routeEnd',{
+                type: 'geojson',
+                data: geoJson
+            });
+
+            map.addLayer({
+                id: 'routeEnd',
+                source: 'routeEnd',
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "marker-green-15",
+                },
+                paint: {
+                  "text-color": "#4DD10F"
+                }
+            });
+    }
+    
+    function googleEnd(location){
+        var thisAddJsonArray = new Array;
+        
+        var thisJSON = {"type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": location
+                }
+            }
+                        
+            thisAddJsonArray.push(thisJSON);
+    
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
+
+        var addresses = map.getSource('googleEnd')
+
+        if(addresses){
+            map.removeSource('googleEnd');
+            map.removeLayer('googleEnd');
+        }
+            map.addSource('googleEnd',{
+                type: 'geojson',
+                data: geoJson
+            });
+
+            map.addLayer({
+                id: 'googleEnd',
+                source: 'googleEnd',
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "marker-red-15",
+                },
+                paint: {
+                  "text-color": "#4DD10F"
+                }
+            });
+    }
+    
+    function routeStart(location){
+        var thisAddJsonArray = new Array;
+        
+        var thisJSON = {"type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": location
+                }
+            }
+                        
+            thisAddJsonArray.push(thisJSON);
+    
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
+
+        var addresses = map.getSource('routeStart')
+
+        if(addresses){
+            map.removeSource('routeStart');
+            map.removeLayer('routeStart');
+        }
+            map.addSource('routeStart',{
+                type: 'geojson',
+                data: geoJson
+            });
+
+            map.addLayer({
+                id: 'routeStart',
+                source: 'routeStart',
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "marker-green-15",
+                },
+                paint: {
+                  "text-color": "#4DD10F"
+                }
+            });
+    }
+    
+    function googleStart(location){
+        var thisAddJsonArray = new Array;
+        
+        var thisJSON = {"type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": location
+                }
+            }
+                        
+            thisAddJsonArray.push(thisJSON);
+    
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
+
+        var addresses = map.getSource('googleStart')
+
+        if(addresses){
+            map.removeSource('googleStart');
+            map.removeLayer('googleStart');
+        }
+            map.addSource('googleStart',{
+                type: 'geojson',
+                data: geoJson
+            });
+
+            map.addLayer({
+                id: 'googleStart',
+                source: 'googleStart',
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "marker-red-15",
+                },
+                paint: {
+                  "text-color": "#4DD10F"
+                }
+            });
+    }
 });
 
