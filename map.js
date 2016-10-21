@@ -307,7 +307,7 @@ $(document).ready(function() {
                 type: 'circle',
                 paint: {
                   'circle-color': '#4DD10F',
-                  'circle-radius': 6
+                  'circle-radius': 7
                 },
             });
         }
@@ -358,7 +358,7 @@ $(document).ready(function() {
                 paint: {
                   'circle-color': '#D10F0F',
                   'circle-radius': 6
-                },
+                }
             });
         }
         
@@ -446,7 +446,49 @@ $(document).ready(function() {
                   'circle-radius': 6
                 },
             });
-        } 
+        }
+        
+        drawOPENLine(location);
+    }
+    
+    function drawOPENLine(location){
+        
+        var locationArray = [[location[0], location[1]], [currentAddress.lon, currentAddress.lat]];
+        
+        var openDist = map.getSource('openDist');
+        var locData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": locationArray
+                }
+        }
+
+        if(openDist){
+            map.getSource('openDist').setData(locData);
+            map.setLayoutProperty("openDist", 'visibility', 'visible');
+        }else{
+            map.addSource('openDist',{
+                type: 'geojson',
+                data: locData
+            });
+            
+            map.addLayer({
+                "id": "openDist",
+                "type": "line",
+                "source": "openDist",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#F4F41C",
+                    "line-width": 5,
+                    "line-dasharray": [.5, 1.5]
+                }
+            }, 'addresses');
+        }
     }
     
     //marker click detection
