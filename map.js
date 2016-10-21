@@ -811,7 +811,7 @@ $(document).ready(function() {
         
         map.flyTo({
             center: endLoc,
-            zoom: 14,
+            zoom: 16,
             speed: 1.5
         });
     }
@@ -912,7 +912,7 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#D10F0F",
-                    "line-width": 14,
+                    "line-width": 12,
                 }
             }, 'route');
         }
@@ -949,10 +949,10 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#D10F0F",
-                    "line-width": 6,
-                    "line-dasharray": [.5, 1.5]
+                    "line-width": 8,
+                    "line-dasharray": [.25, 1.5]
                 }
-            });
+            }, 'route');
         }
         
         //end line
@@ -985,10 +985,10 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#D10F0F",
-                    "line-width": 6,
-                    "line-dasharray": [.5, 1.5]
+                    "line-width": 8,
+                    "line-dasharray": [.25, 1.5]
                 }
-            });
+            }, 'route');
         }
     }
     
