@@ -133,6 +133,8 @@ $(document).ready(function() {
             stateSearch(query, cityState);
         }
         
+        googleSearch(query + " " + cityState);
+        openSearch(query + " " + cityState);
     });
     
     function stateSearch(thisQuery, cityState){
@@ -187,6 +189,55 @@ $(document).ready(function() {
          xhttp.send();
     }
     
+    function googleSearch(thisQuery){
+        
+        for(var i = 0; i < thisQuery.length; i++) {
+         thisQuery = thisQuery.replace(" ", "+");
+        }
+        
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+               
+               //get start point
+                var result = response.results;
+                var thisLoc = result[0].geometry.location;
+
+               dropGoogle(thisLoc);
+           }  
+         };
+        
+        xhttp.open('GET', "https://maps.googleapis.com/maps/api/geocode/json?address=" + thisQuery + "&key=" + googleAPI, true);
+        
+        xhttp.send();
+    }
+    
+    function openSearch(thisQuery){
+        
+        for(var i = 0; i < thisQuery.length; i++) {
+            thisQuery = thisQuery.replace(" ", "+");
+        }
+        
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+                              
+                var features = response.features;
+                var center = features[0].center;
+
+               dropOpen(center);
+           }  
+         };
+        
+        xhttp.open('GET', "https://api.mapbox.com/geocoding/v5/mapbox.places/" + thisQuery + ".json?access_token=" + mapboxgl.accessToken, true);
+        
+        xhttp.send();
+    }
+    
     function readLocation(arr){
          var lat = arr[0].lat;
          var lon = arr[0].lon;
@@ -221,7 +272,7 @@ $(document).ready(function() {
                   "zip" : data.zip,
                   "placeType" : data["place-type"],
                   "icon" : "circle",
-                  "color" : '#FFE33D'
+                  "color" : '#4DD10F'
                 }};
 
             thisAddJsonArray.push(thisJSON);
@@ -247,8 +298,8 @@ $(document).ready(function() {
                 source: 'addresses',
                 type: 'circle',
                 paint: {
-                  'circle-color': '#FFE33D',
-                  'circle-radius': 8
+                  'circle-color': '#4DD10F',
+                  'circle-radius': 6
                 },
             });
         }
@@ -258,6 +309,94 @@ $(document).ready(function() {
             .setLngLat([data.lon,data.lat])
             .setHTML("<center><b><p style=\"font-size:12px\">" + data.address + "</p></b>\n" + data.city + ", " + data.state + " " + data.zip + "<center>")
             .addTo(map);
+    }
+    
+    //drop google point
+    function dropGoogle(location){
+        var thisAddJsonArray = new Array;
+
+        var thisJSON = {"type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                location.lng,
+                location.lat
+              ]
+            }
+        }
+        
+        thisAddJsonArray.push(thisJSON);
+        
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
+        
+        var gAdd = map.getSource('gAddress')
+
+        if(gAdd){
+            map.getSource('gAddress').setData(geoJson);
+            map.setLayoutProperty("gAddress", 'visibility', 'visible');
+        }else{
+            map.addSource('gAddress',{
+                type: 'geojson',
+                data: geoJson
+            });
+
+            map.addLayer({
+                id: 'gAddress',
+                source: 'gAddress',
+                type: 'circle',
+                paint: {
+                  'circle-color': '#D10F0F',
+                  'circle-radius': 6
+                },
+            });
+        } 
+    }
+    
+    //drop OPEN point
+    function dropOpen(location){
+        var thisAddJsonArray = new Array;
+
+        var thisJSON = {"type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                location[0],
+                location[1]
+              ]
+            }
+        }
+        
+        thisAddJsonArray.push(thisJSON);
+        
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
+        
+        var openAdd = map.getSource('openAddress')
+
+        if(openAdd){
+            map.getSource('openAddress').setData(geoJson);
+            map.setLayoutProperty("openAddress", 'visibility', 'visible');
+        }else{
+            map.addSource('openAddress',{
+                type: 'geojson',
+                data: geoJson
+            });
+
+            map.addLayer({
+                id: 'openAddress',
+                source: 'openAddress',
+                type: 'circle',
+                paint: {
+                  'circle-color': '#F4F41C',
+                  'circle-radius': 6
+                },
+            });
+        } 
     }
     
     //marker click detection
