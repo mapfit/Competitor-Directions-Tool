@@ -566,6 +566,12 @@ $(document).ready(function() {
         map.setLayoutProperty("googleEnd", 'visibility', 'none');
         map.setLayoutProperty("routeStart", 'visibility', 'none');
         map.setLayoutProperty("routeEnd", 'visibility', 'none');
+        
+        map.setLayoutProperty("openRoute", 'visibility', 'none');
+        map.setLayoutProperty("openStart", 'visibility', 'none');
+        map.setLayoutProperty("openEnd", 'visibility', 'none');
+        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
+        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
     });
     
     $('.swap').on('click', function(e) {        
@@ -1323,9 +1329,6 @@ $(document).ready(function() {
                 
         drawOpenRoute(polylineArray);
         dropOpenEnds(startPoint, endPoint);
-        
-//        var startLine = [startPoint, polylineArray[0]];
-//        var endLine = [polylineArray[polylineArray.length - 1], endPoint];
         
         drawOpenEndsRoutes(polylineArray, startPoint, endPoint);
     }
