@@ -134,9 +134,6 @@ $(document).ready(function() {
             
             stateSearch(query, cityState);
         }
-        
-//        googleSearch(query + " " + cityState);
-//        openSearch(query + " " + cityState);
     });
     
     function stateSearch(thisQuery, cityState){
@@ -542,20 +539,7 @@ $(document).ready(function() {
     
     //marker click detection
     map.on('click', function(e) {
-//        var features = map.queryRenderedFeatures(e.point, { layers: ['addresses'] });
-//    
-//        if (!features.length) {
-//            return;
-//        }
-//
-//        var feature = features[0];
-//        latestSearchArray = features;
-//
-//        // Populate the popup and set its coordinates
-//        var popup = new mapboxgl.Popup()
-//            .setLngLat([data.lon,data.lat])
-//            .setHTML("<center><b><p style=\"font-size:12px\">" + data.address + "</p></b>\n" + data.city + ", " + data.state + " " + data.zip + "<center>")
-//            .addTo(map);            
+          
     });
         
     //***********************DIRECTIONS*********************************************
@@ -640,6 +624,7 @@ $(document).ready(function() {
         }
         
         startSearch(startAddress, startCityState, endAddress, endCityState);
+        openStart(startAddress, startCityState, endAddress, endCityState);
     });
     
     function startSearch(startAddress, startCityState, endAddress, endCityState){
@@ -1259,5 +1244,79 @@ $(document).ready(function() {
                 }
             });
     }
+    
+    //*****************************Open Street Map Directions *************************//
+    
+    function openStart(startAddress, startCityState, endAddress, endCityState){
+        
+        var thisQuery = startAddress + " " + startCityState;
+        
+        for(var i = 0; i < thisQuery.length; i++) {
+            thisQuery = thisQuery.replace(" ", "+");
+        }
+        
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+                              
+                var features = response.features;
+                var center = features[0].center;
+
+               openEnd(center, endAddress, endCityState);
+           }  
+         };
+        
+        xhttp.open('GET', "https://api.mapbox.com/geocoding/v5/mapbox.places/" + thisQuery + ".json?access_token=" + mapboxgl.accessToken, true);
+        
+        xhttp.send();
+    }
+    
+    function openEnd(startPoint, endAddress, endCityState){
+        
+        var thisQuery = endAddress + " " + endCityState;
+        
+        for(var i = 0; i < thisQuery.length; i++) {
+            thisQuery = thisQuery.replace(" ", "+");
+        }
+        
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+                              
+                var features = response.features;
+                var center = features[0].center;
+
+//               console.log("open start: " + startPoint + "\n open end: " + center);
+               openDirections(startPoint, center);
+           }  
+         };
+        
+        xhttp.open('GET', "https://api.mapbox.com/geocoding/v5/mapbox.places/" + thisQuery + ".json?access_token=" + mapboxgl.accessToken, true);
+        
+        xhttp.send();
+    }
+    
+    function openDirections(startResult, endResult){
+        var xhttp = new XMLHttpRequest();
+        
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+               
+//               reverseMapboxDirections(startResult, endResult, response);
+           }  
+         };
+        
+        xhttp.open('GET', "https://api.mapbox.com/directions/v5/mapbox/" + transitType + "/" + startResult + ";" + endResult + "?steps=true&access_token=" + mapboxgl.accessToken, true);
+        
+         xhttp.send();
+    }
+    
+    
+    
 });
 
