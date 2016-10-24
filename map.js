@@ -246,7 +246,6 @@ $(document).ready(function() {
     function readLocation(arr){
          var lat = arr[0].lat;
          var lon = arr[0].lon;
-         console.log("data - lat: " + lat + ", lon: " + lon);
         
         dropMarker(arr[0]);
 
@@ -562,7 +561,60 @@ $(document).ready(function() {
     }
     
     geocodeCallback = function(result){   
-        console.log("Bing: " + JSON.stringify(result));
+        var resources = result.resourceSets[0].resources[0];
+        var point = resources.point.coordinates;
+        dropBing(point);
+    }
+    
+    function dropBing(coords){
+        var thisBingJsonArray = new Array;
+
+        var thisJSON = {"type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                coords[1],
+                coords[0]
+              ]
+            }
+        }
+        
+        thisBingJsonArray.push(thisJSON);
+        
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisBingJsonArray
+        }
+        
+        var bingAddress = map.getSource('bingAddress')
+
+        if(bingAddress){
+            map.removeLayer('bingAddress');
+            map.removeSource('bingAddress');
+        }
+            
+        map.addSource('bingAddress',{
+            type: 'geojson',
+            data: geoJson
+        });
+
+        map.addLayer({
+            id: 'bingAddress',
+            source: 'bingAddress',
+            type: 'symbol',
+            "layout": {
+                "icon-image": "marker-orange-15",
+                "icon-allow-overlap": true,
+                "text-field": "Bing\n" + calcDist(coords[0], coords[1], currentAddress.lat, currentAddress.lon) + "m",
+                "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+                "text-size": 11,
+                "text-letter-spacing": 0.05,
+                "text-offset": [0, 2]
+            },
+            paint: {
+              "text-color": "#FFA500"
+            }
+        });
     }
         
     //***********************DIRECTIONS*********************************************
