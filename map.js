@@ -1,7 +1,8 @@
 $(document).ready(function() {
-    mapboxgl.accessToken = 'pk.eyJ1IjoicGFya291cm1ldGhvZCIsImEiOiI5Y2JmOGJhMDYzZDgyODBhYzQ3OTFkZWE3NGFiMmUzYiJ9.kp_5LMwcR79TKOERpkilAQ';
     
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFya291cm1ldGhvZCIsImEiOiI5Y2JmOGJhMDYzZDgyODBhYzQ3OTFkZWE3NGFiMmUzYiJ9.kp_5LMwcR79TKOERpkilAQ';
     var googleAPI = 'AIzaSyALB5yXEHcbkr51lCbrPeCdVf60SbWENtU';
+    var bingAPI = 'Aks14rX10AqP9GDWoreX8d-Mw-lD1d13TkKKLvgXIGEvr8Ke4Iuni6w5wRUxaKj1';
     
     // Set bounds to DMV
     var bounds = [
@@ -155,6 +156,7 @@ $(document).ready(function() {
                    //setup additional searches
                    googleSearch(thisQuery + " " + cityState);
                    openSearch(thisQuery + " " + cityState);
+                   bingSearch(thisQuery + " " + cityState);
                }else{
                    console.log("no data found");
                    alert("No Matching Address found. Please try another address.");
@@ -538,6 +540,30 @@ $(document).ready(function() {
     map.on('click', function(e) {
           
     });
+    
+    //***********************Bing Geocoding****************************************
+    
+    function bingSearch(thisQuery){
+        
+        for(var i = 0; i < thisQuery.length; i++) {
+            thisQuery = thisQuery.replace(" ", "+");
+        }
+        
+        var geocodeRequest = "http://dev.virtualearth.net/REST/v1/Locations?query=" + encodeURI(thisQuery) + "&output=json&jsonp=geocodeCallback&suppressStatus=true&key=" + bingAPI;
+        
+        callRestService(geocodeRequest);
+    }
+    
+    function callRestService(request){
+       var script = document.createElement("script");
+       script.setAttribute("type", "text/javascript");
+       script.setAttribute("src", request);
+       document.body.appendChild(script);
+    }
+    
+    geocodeCallback = function(result){   
+        console.log("Bing: " + JSON.stringify(result));
+    }
         
     //***********************DIRECTIONS*********************************************
     
