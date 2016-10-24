@@ -612,7 +612,7 @@ $(document).ready(function() {
             paint: {
               "text-color": "#FFA500"
             }
-        });
+        }, 'addresses');
         
         drawBingLine(coords);
     }
