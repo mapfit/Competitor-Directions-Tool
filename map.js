@@ -1290,7 +1290,6 @@ $(document).ready(function() {
                 var features = response.features;
                 var center = features[0].center;
 
-//               console.log("open start: " + startPoint + "\n open end: " + center);
                openDirections(startPoint, center);
            }  
          };
@@ -1307,7 +1306,7 @@ $(document).ready(function() {
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var response = JSON.parse(xhttp.responseText);
                
-//               reverseMapboxDirections(startResult, endResult, response);
+               readOpenDirections(response);
            }  
          };
         
@@ -1316,7 +1315,53 @@ $(document).ready(function() {
          xhttp.send();
     }
     
+    function readOpenDirections(directions){
+        
+        var routes = directions.routes;
+        var polyline = routes[0].geometry;        
+
+        var steps = routes[0].legs[0].steps;
+
+        var polylineArray = decode(polyline, 5);
+                
+        drawOpenRoute(polylineArray);
+    }
     
+    function drawOpenRoute(polylineArray){
+        var openRoute = map.getSource('openRoute');
+        var locData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": polylineArray
+                }
+        }
+
+        if(openRoute){
+            map.getSource('openRoute').setData(locData);
+            map.setLayoutProperty("openRoute", 'visibility', 'visible');
+        }else{
+            map.addSource('openRoute',{
+                type: 'geojson',
+                data: locData
+            });
+            
+            map.addLayer({
+                "id": "openRoute",
+                "type": "line",
+                "source": "openRoute",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#F4F41C",
+                    "line-width": 10
+                }
+            }, 'route');
+        }
+    }
     
 });
 
