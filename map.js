@@ -134,9 +134,6 @@ $(document).ready(function() {
             
             stateSearch(query, cityState);
         }
-        
-//        googleSearch(query + " " + cityState);
-//        openSearch(query + " " + cityState);
     });
     
     function stateSearch(thisQuery, cityState){
@@ -450,33 +447,30 @@ $(document).ready(function() {
         if(openAdd){
             map.removeLayer('openAddress');
             map.removeSource('openAddress');
-//            map.getSource('openAddress').setData(geoJson);
-//            map.setLayoutProperty("openAddress", 'visibility', 'visible');
         }
-//        else{
-            map.addSource('openAddress',{
-                type: 'geojson',
-                data: geoJson
-            });
+        
+        map.addSource('openAddress',{
+            type: 'geojson',
+            data: geoJson
+        });
 
-            map.addLayer({
-                id: 'openAddress',
-                source: 'openAddress',
-                type: 'symbol',
-                "layout": {
-                    "icon-image": "marker-yellow-15",
-                    "icon-allow-overlap": true,
-                    "text-field": "OSM\n" + calcDist(location[1], location[0], currentAddress.lat, currentAddress.lon) + "m",
-                    "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-                    "text-size": 11,
-                    "text-letter-spacing": 0.05,
-                    "text-offset": [0, 2]
-                },
-                paint: {
-                  'text-color': '#F4F41C',
-                },
-            });
-//        }
+        map.addLayer({
+            id: 'openAddress',
+            source: 'openAddress',
+            type: 'symbol',
+            "layout": {
+                "icon-image": "marker-yellow-15",
+                "icon-allow-overlap": true,
+                "text-field": "OSM\n" + calcDist(location[1], location[0], currentAddress.lat, currentAddress.lon) + "m",
+                "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+                "text-size": 11,
+                "text-letter-spacing": 0.05,
+                "text-offset": [0, 2]
+            },
+            paint: {
+              'text-color': '#F4F41C',
+            },
+        });
         
         drawOPENLine(location);
     }
@@ -542,20 +536,7 @@ $(document).ready(function() {
     
     //marker click detection
     map.on('click', function(e) {
-//        var features = map.queryRenderedFeatures(e.point, { layers: ['addresses'] });
-//    
-//        if (!features.length) {
-//            return;
-//        }
-//
-//        var feature = features[0];
-//        latestSearchArray = features;
-//
-//        // Populate the popup and set its coordinates
-//        var popup = new mapboxgl.Popup()
-//            .setLngLat([data.lon,data.lat])
-//            .setHTML("<center><b><p style=\"font-size:12px\">" + data.address + "</p></b>\n" + data.city + ", " + data.state + " " + data.zip + "<center>")
-//            .addTo(map);            
+          
     });
         
     //***********************DIRECTIONS*********************************************
@@ -585,6 +566,12 @@ $(document).ready(function() {
         map.setLayoutProperty("googleEnd", 'visibility', 'none');
         map.setLayoutProperty("routeStart", 'visibility', 'none');
         map.setLayoutProperty("routeEnd", 'visibility', 'none');
+        
+        map.setLayoutProperty("openRoute", 'visibility', 'none');
+        map.setLayoutProperty("openStart", 'visibility', 'none');
+        map.setLayoutProperty("openEnd", 'visibility', 'none');
+        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
+        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
     });
     
     $('.swap').on('click', function(e) {        
@@ -640,6 +627,7 @@ $(document).ready(function() {
         }
         
         startSearch(startAddress, startCityState, endAddress, endCityState);
+        openStart(startAddress, startCityState, endAddress, endCityState);
     });
     
     function startSearch(startAddress, startCityState, endAddress, endCityState){
@@ -1259,5 +1247,286 @@ $(document).ready(function() {
                 }
             });
     }
+    
+    //*****************************Open Street Map Directions *************************//
+    
+    function openStart(startAddress, startCityState, endAddress, endCityState){
+        
+        var thisQuery = startAddress + " " + startCityState;
+        
+        for(var i = 0; i < thisQuery.length; i++) {
+            thisQuery = thisQuery.replace(" ", "+");
+        }
+        
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+                              
+                var features = response.features;
+                var center = features[0].center;
+
+               openEnd(center, endAddress, endCityState);
+           }  
+         };
+        
+        xhttp.open('GET', "https://api.mapbox.com/geocoding/v5/mapbox.places/" + thisQuery + ".json?access_token=" + mapboxgl.accessToken, true);
+        
+        xhttp.send();
+    }
+    
+    function openEnd(startPoint, endAddress, endCityState){
+        
+        var thisQuery = endAddress + " " + endCityState;
+        
+        for(var i = 0; i < thisQuery.length; i++) {
+            thisQuery = thisQuery.replace(" ", "+");
+        }
+        
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+                              
+                var features = response.features;
+                var center = features[0].center;
+
+               openDirections(startPoint, center);
+           }  
+         };
+        
+        xhttp.open('GET', "https://api.mapbox.com/geocoding/v5/mapbox.places/" + thisQuery + ".json?access_token=" + mapboxgl.accessToken, true);
+        
+        xhttp.send();
+    }
+    
+    function openDirections(startResult, endResult){
+        var xhttp = new XMLHttpRequest();
+        
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+               
+               readOpenDirections(response, startResult, endResult);
+           }  
+         };
+        
+        xhttp.open('GET', "https://api.mapbox.com/directions/v5/mapbox/" + transitType + "/" + startResult + ";" + endResult + "?steps=true&access_token=" + mapboxgl.accessToken, true);
+        
+         xhttp.send();
+    }
+    
+    function readOpenDirections(directions, startPoint, endPoint){
+        
+        var routes = directions.routes;
+        var polyline = routes[0].geometry;        
+
+        var steps = routes[0].legs[0].steps;
+
+        var polylineArray = decode(polyline, 5);
+                
+        drawOpenRoute(polylineArray);
+        dropOpenEnds(startPoint, endPoint);
+        
+        drawOpenEndsRoutes(polylineArray, startPoint, endPoint);
+    }
+    
+    function drawOpenRoute(polylineArray){
+        var openRoute = map.getSource('openRoute');
+        var locData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": polylineArray
+                }
+        }
+
+        if(openRoute){
+            map.getSource('openRoute').setData(locData);
+            map.setLayoutProperty("openRoute", 'visibility', 'visible');
+        }else{
+            map.addSource('openRoute',{
+                type: 'geojson',
+                data: locData
+            });
+            
+            map.addLayer({
+                "id": "openRoute",
+                "type": "line",
+                "source": "openRoute",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#F4F41C",
+                    "line-width": 8
+                }
+            }, 'route');
+        }
+    }
+    
+    function dropOpenEnds(start, end){
+        
+        var thisStartJsonArray = new Array;
+
+        var startJson = {"type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                start[0],
+                start[1]
+              ]
+            }
+        }
+        
+        thisStartJsonArray.push(startJson);
+        
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisStartJsonArray
+        }
+        
+        var openStart = map.getSource('openStart')
+
+        if(openStart){
+            map.removeLayer('openStart');
+            map.removeSource('openStart');
+        }
+        
+        map.addSource('openStart',{
+            type: 'geojson',
+            data: geoJson
+        });
+
+        map.addLayer({
+            id: 'openStart',
+            source: 'openStart',
+            type: 'symbol',
+            "layout": {
+                "icon-image": "marker-yellow-15",
+            }
+        });
+        
+        var thisEndJsonArray = new Array;
+
+        var endJson = {"type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                end[0],
+                end[1]
+              ]
+            }
+        }
+        
+        thisEndJsonArray.push(endJson);
+        
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisEndJsonArray
+        }
+        
+        var openEnd = map.getSource('openEnd')
+
+        if(openEnd){
+            map.removeLayer('openEnd');
+            map.removeSource('openEnd');
+        }
+        
+        map.addSource('openEnd',{
+            type: 'geojson',
+            data: geoJson
+        });
+
+        map.addLayer({
+            id: 'openEnd',
+            source: 'openEnd',
+            type: 'symbol',
+            "layout": {
+                "icon-image": "marker-yellow-15",
+            }
+        });
+    }
+    
+    function drawOpenEndsRoutes(points, start, end){
+        console.log("points");
+        
+        //start line
+        var openRouteStart = map.getSource('openRouteStart');
+        var startLocData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [start, points[0]]
+                }
+        }
+
+        if(openRouteStart){
+            map.getSource('openRouteStart').setData(startLocData);
+            map.setLayoutProperty("openRouteStart", 'visibility', 'visible');
+        }else{
+            map.addSource('openRouteStart',{
+                type: 'geojson',
+                data: startLocData
+            });
+            
+            map.addLayer({
+                "id": "openRouteStart",
+                "type": "line",
+                "source": "openRouteStart",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#F4F41C",
+                    "line-width": 5,
+                    "line-dasharray": [.25, 1.5]
+                }
+            }, 'route');
+        }
+        
+        //end line
+        var openRouteEnd = map.getSource('openRouteEnd');
+        var endLocData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [points[points.length -1 ], end]
+                }
+        }
+
+        if(openRouteEnd){
+            map.getSource('openRouteEnd').setData(endLocData);
+            map.setLayoutProperty("openRouteEnd", 'visibility', 'visible');
+        }else{
+            map.addSource('openRouteEnd',{
+                type: 'geojson',
+                data: endLocData
+            });
+            
+            map.addLayer({
+                "id": "openRouteEnd",
+                "type": "line",
+                "source": "openRouteEnd",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#F4F41C",
+                    "line-width": 5,
+                    "line-dasharray": [.25, 1.5]
+                }
+            }, 'route');
+        }
+    }
+    
 });
 
