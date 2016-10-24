@@ -293,36 +293,34 @@ $(document).ready(function() {
         if(addresses){
             map.removeSource('addresses');
             map.removeLayer('addresses');
-//            map.getSource('addresses').setData(geoJson);
-//            map.setLayoutProperty("addresses", 'visibility', 'visible');
         }
-//        }else{
-            map.addSource('addresses',{
-                type: 'geojson',
-                data: geoJson
-            });
+
+        map.addSource('addresses',{
+            type: 'geojson',
+            data: geoJson
+        });
 
         var marker = new mapboxgl.Marker()
           .setLngLat([data.lon, data.lat])
           .addTo(map);
-            map.addLayer({
-                id: 'addresses',
-                source: 'addresses',
-                type: 'symbol',
-                "layout": {
-                    "icon-image": "marker-green-15",
-                    "icon-allow-overlap": true,
-                    "text-field": "GeoFi\n" + data.address,
-                    "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-                    "text-size": 11,
-                    "text-letter-spacing": 0.05,
-                    "text-offset": [0, 3]
-                },
-                paint: {
-                  "text-color": "#4DD10F"
-                }
-            });
-//        }
+
+        map.addLayer({
+            id: 'addresses',
+            source: 'addresses',
+            type: 'symbol',
+            "layout": {
+                "icon-image": "marker-green-15",
+                "icon-allow-overlap": true,
+                "text-field": "GeoFi\n" + data.address,
+                "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+                "text-size": 11,
+                "text-letter-spacing": 0.05,
+                "text-offset": [0, 3]
+            },
+            paint: {
+              "text-color": "#4DD10F"
+            }
+        });
     }
     
     //drop google point
@@ -615,6 +613,48 @@ $(document).ready(function() {
               "text-color": "#FFA500"
             }
         });
+        
+        drawBingLine(coords);
+    }
+    
+    function drawBingLine(location){
+        
+        var locationArray = [[location[1], location[0]], [currentAddress.lon, currentAddress.lat]];
+        
+        var bingDist = map.getSource('bingDist');
+        var locData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": locationArray
+                }
+        }
+
+        if(bingDist){
+            map.getSource('bingDist').setData(locData);
+            map.setLayoutProperty("bingDist", 'visibility', 'visible');
+        }else{
+            map.addSource('bingDist',{
+                type: 'geojson',
+                data: locData
+            });
+            
+            map.addLayer({
+                "id": "bingDist",
+                "type": "line",
+                "source": "bingDist",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#FFA500",
+                    "line-width": 3,
+                    "line-dasharray": [.5, 1.5]
+                }
+            }, 'addresses', 'bingAddress');
+        }
     }
         
     //***********************DIRECTIONS*********************************************
