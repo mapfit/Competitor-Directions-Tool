@@ -669,6 +669,8 @@ $(document).ready(function() {
             map.setLayoutProperty("gAddress", 'visibility', 'none');
             map.setLayoutProperty("gDist", 'visibility', 'none');
             map.setLayoutProperty("openDist", 'visibility', 'none');
+            map.setLayoutProperty("bingAddress", 'visibility', 'none');
+            map.setLayoutProperty("bingDist", 'visibility', 'none');
         }
         document.getElementById("menu").style.marginLeft = "0px";
     });
