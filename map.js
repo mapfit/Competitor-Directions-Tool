@@ -9,6 +9,8 @@ $(document).ready(function() {
         [-76.851141, 39.032550]  // Northeast coordinates
     ];
     
+    var currentAddress;
+    
     var map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/parkourmethod/cim5hb9c600jza0m473wrw6y6',
@@ -133,6 +135,8 @@ $(document).ready(function() {
             stateSearch(query, cityState);
         }
         
+//        googleSearch(query + " " + cityState);
+//        openSearch(query + " " + cityState);
     });
     
     function stateSearch(thisQuery, cityState){
@@ -150,6 +154,10 @@ $(document).ready(function() {
 
                if(myArr[0]){
                    readLocation(myArr);
+                   
+                   //setup additional searches
+                   googleSearch(thisQuery + " " + cityState);
+                   openSearch(thisQuery + " " + cityState);
                }else{
                    console.log("no data found");
                    alert("No Matching Address found. Please try another address.");
@@ -187,6 +195,55 @@ $(document).ready(function() {
          xhttp.send();
     }
     
+    function googleSearch(thisQuery){
+        
+        for(var i = 0; i < thisQuery.length; i++) {
+         thisQuery = thisQuery.replace(" ", "+");
+        }
+        
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+               
+               //get start point
+                var result = response.results;
+                var thisLoc = result[0].geometry.location;
+
+               dropGoogle(thisLoc);
+           }  
+         };
+        
+        xhttp.open('GET', "https://maps.googleapis.com/maps/api/geocode/json?address=" + thisQuery + "&key=" + googleAPI, true);
+        
+        xhttp.send();
+    }
+    
+    function openSearch(thisQuery){
+        
+        for(var i = 0; i < thisQuery.length; i++) {
+            thisQuery = thisQuery.replace(" ", "+");
+        }
+        
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+                              
+                var features = response.features;
+                var center = features[0].center;
+
+               dropOpen(center);
+           }  
+         };
+        
+        xhttp.open('GET', "https://api.mapbox.com/geocoding/v5/mapbox.places/" + thisQuery + ".json?access_token=" + mapboxgl.accessToken, true);
+        
+        xhttp.send();
+    }
+    
     function readLocation(arr){
          var lat = arr[0].lat;
          var lon = arr[0].lon;
@@ -196,9 +253,11 @@ $(document).ready(function() {
 
         map.flyTo({
             center: [lon, lat],
-            zoom: 17,
+            zoom: 18,
             speed: 1.5
         });
+        
+        currentAddress = {"lat": lat, "lon": lon};
      }
     
     //drop marker
@@ -221,7 +280,7 @@ $(document).ready(function() {
                   "zip" : data.zip,
                   "placeType" : data["place-type"],
                   "icon" : "circle",
-                  "color" : '#FFE33D'
+                  "color" : '#4DD10F'
                 }};
 
             thisAddJsonArray.push(thisJSON);
@@ -234,56 +293,283 @@ $(document).ready(function() {
         var addresses = map.getSource('addresses')
 
         if(addresses){
-            map.getSource('addresses').setData(geoJson);
-            map.setLayoutProperty("addresses", 'visibility', 'visible');
-        }else{
+            map.removeSource('addresses');
+            map.removeLayer('addresses');
+//            map.getSource('addresses').setData(geoJson);
+//            map.setLayoutProperty("addresses", 'visibility', 'visible');
+        }
+//        }else{
             map.addSource('addresses',{
                 type: 'geojson',
                 data: geoJson
             });
 
+        var marker = new mapboxgl.Marker()
+          .setLngLat([data.lon, data.lat])
+          .addTo(map);
             map.addLayer({
                 id: 'addresses',
                 source: 'addresses',
-                type: 'circle',
-                paint: {
-                  'circle-color': '#FFE33D',
-                  'circle-radius': 8
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "marker-green-15",
+                    "icon-allow-overlap": true,
+                    "text-field": "GeoFi\n" + data.address,
+                    "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+                    "text-size": 11,
+                    "text-letter-spacing": 0.05,
+                    "text-offset": [0, 3]
                 },
+                paint: {
+                  "text-color": "#4DD10F"
+                }
             });
+//        }
+    }
+    
+    //drop google point
+    function dropGoogle(location){
+        var thisAddJsonArray = new Array;
+
+        var thisJSON = {"type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                location.lng,
+                location.lat
+              ]
+            }
         }
         
-        //show popup
-        var popup = new mapboxgl.Popup()
-            .setLngLat([data.lon,data.lat])
-            .setHTML("<center><b><p style=\"font-size:12px\">" + data.address + "</p></b>\n" + data.city + ", " + data.state + " " + data.zip + "\n<p>" + data.placeType+ "</p><center>")
-            .addTo(map);
+        thisAddJsonArray.push(thisJSON);
+        
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
+        
+        var gAdd = map.getSource('gAddress')
+
+        if(gAdd){
+            map.removeLayer('gAddress');
+            map.removeSource('gAddress');
+//            map.getSource('gAddress').setData(geoJson);
+//            map.setLayoutProperty("gAddress", 'visibility', 'visible');
+        }
+//        else{
+            map.addSource('gAddress',{
+                type: 'geojson',
+                data: geoJson
+            });
+
+            map.addLayer({
+                id: 'gAddress',
+                source: 'gAddress',
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "marker-red-15",
+                    "icon-allow-overlap": true,
+                    "text-field": "Google\n" + calcDist(location.lat, location.lng, currentAddress.lat, currentAddress.lon) + "m",
+                    "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+                    "text-size": 11,
+                    "text-letter-spacing": 0.05,
+                    "text-offset": [0, 2]
+                },
+                paint: {
+                  "text-color": "#D10F0F"
+                }
+            });
+//        }
+        
+        drawGLine(location);
+    }
+    
+    function drawGLine(location){
+        
+        var locationArray = [[location.lng, location.lat], [currentAddress.lon, currentAddress.lat]];
+        
+        var gDist = map.getSource('gDist');
+        var locData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": locationArray
+                }
+        }
+
+        if(gDist){
+            map.getSource('gDist').setData(locData);
+            map.setLayoutProperty("gDist", 'visibility', 'visible');
+        }else{
+            map.addSource('gDist',{
+                type: 'geojson',
+                data: locData
+            });
+            
+            map.addLayer({
+                "id": "gDist",
+                "type": "line",
+                "source": "gDist",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#D10F0F",
+                    "line-width": 3,
+                    "line-dasharray": [.5, 1.5]
+                }
+            }, 'addresses', 'gAddress');
+        }
+    }
+    
+    //drop OPEN point
+    function dropOpen(location){
+        var thisAddJsonArray = new Array;
+
+        var thisJSON = {"type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                location[0],
+                location[1]
+              ]
+            }
+        }
+        
+        thisAddJsonArray.push(thisJSON);
+        
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
+        
+        var openAdd = map.getSource('openAddress')
+
+        if(openAdd){
+            map.removeLayer('openAddress');
+            map.removeSource('openAddress');
+//            map.getSource('openAddress').setData(geoJson);
+//            map.setLayoutProperty("openAddress", 'visibility', 'visible');
+        }
+//        else{
+            map.addSource('openAddress',{
+                type: 'geojson',
+                data: geoJson
+            });
+
+            map.addLayer({
+                id: 'openAddress',
+                source: 'openAddress',
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "marker-yellow-15",
+                    "icon-allow-overlap": true,
+                    "text-field": "OSM\n" + calcDist(location[1], location[0], currentAddress.lat, currentAddress.lon) + "m",
+                    "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+                    "text-size": 11,
+                    "text-letter-spacing": 0.05,
+                    "text-offset": [0, 2]
+                },
+                paint: {
+                  'text-color': '#F4F41C',
+                },
+            });
+//        }
+        
+        drawOPENLine(location);
+    }
+    
+    function drawOPENLine(location){
+        
+        var locationArray = [[location[0], location[1]], [currentAddress.lon, currentAddress.lat]];
+        
+        var openDist = map.getSource('openDist');
+        var locData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": locationArray
+                }
+        }
+
+        if(openDist){
+            map.getSource('openDist').setData(locData);
+            map.setLayoutProperty("openDist", 'visibility', 'visible');
+        }else{
+            map.addSource('openDist',{
+                type: 'geojson',
+                data: locData
+            });
+            
+            map.addLayer({
+                "id": "openDist",
+                "type": "line",
+                "source": "openDist",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#F4F41C",
+                    "line-width": 3,
+                    "line-dasharray": [.5, 1.5]
+                }
+            }, 'addresses', 'openAddress');
+        }
+    }
+    
+    //distance calculation
+    function calcDist(lat1,lon1,lat2,lon2) {
+      var R = 6371; // Radius of the earth in km
+      var dLat = deg2rad(lat2-lat1);  // deg2rad below
+      var dLon = deg2rad(lon2-lon1); 
+      var a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2)
+        ; 
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+      var d = R * c;
+      return Math.round( (d*1000) * 10 ) / 10;
+    }
+    
+    function deg2rad(deg) {
+      return deg * (Math.PI/180)
     }
     
     //marker click detection
     map.on('click', function(e) {
-        var features = map.queryRenderedFeatures(e.point, { layers: ['addresses'] });
-    
-        if (!features.length) {
-            return;
-        }
-
-        var feature = features[0];
-        latestSearchArray = features;
-
-        // Populate the popup and set its coordinates
-        var popup = new mapboxgl.Popup()
-            .setLngLat(feature.geometry.coordinates)
-            .setHTML("<center><b><p style=\"font-size:12px\">" + feature.properties.address + "</p></b>\n" + feature.properties.city + ", " + feature.properties.state + " " + feature.properties.zip + "\n<p>" + feature.properties.placeType+ "</p><center>")
-            .addTo(map);            
+//        var features = map.queryRenderedFeatures(e.point, { layers: ['addresses'] });
+//    
+//        if (!features.length) {
+//            return;
+//        }
+//
+//        var feature = features[0];
+//        latestSearchArray = features;
+//
+//        // Populate the popup and set its coordinates
+//        var popup = new mapboxgl.Popup()
+//            .setLngLat([data.lon,data.lat])
+//            .setHTML("<center><b><p style=\"font-size:12px\">" + data.address + "</p></b>\n" + data.city + ", " + data.state + " " + data.zip + "<center>")
+//            .addTo(map);            
     });
         
+    //***********************DIRECTIONS*********************************************
+    
     //directions button
     $('.open-Directions').on('click', function(e) {
         var addresses = map.getSource('addresses')
 
         if(addresses){
             map.setLayoutProperty("addresses", 'visibility', 'none');
+            map.setLayoutProperty("openAddress", 'visibility', 'none');
+            map.setLayoutProperty("gAddress", 'visibility', 'none');
+            map.setLayoutProperty("gDist", 'visibility', 'none');
+            map.setLayoutProperty("openDist", 'visibility', 'none');
         }
         document.getElementById("menu").style.marginLeft = "0px";
     });
@@ -295,6 +581,10 @@ $(document).ready(function() {
         map.setLayoutProperty("gRoute", 'visibility', 'none');
         map.setLayoutProperty("gStart", 'visibility', 'none');
         map.setLayoutProperty("gEnd", 'visibility', 'none');
+        map.setLayoutProperty("googleStart", 'visibility', 'none');
+        map.setLayoutProperty("googleEnd", 'visibility', 'none');
+        map.setLayoutProperty("routeStart", 'visibility', 'none');
+        map.setLayoutProperty("routeEnd", 'visibility', 'none');
     });
     
     $('.swap').on('click', function(e) {        
@@ -329,7 +619,7 @@ $(document).ready(function() {
         document.getElementById("walk").style.backgroundColor = "#FFFFFF";
         document.getElementById("car").style.backgroundColor = "#FFFFFF";
     });
-    
+        
     $('.get-directions').on('click', function(e) {        
         console.log("get " + transitType + " directions");
         
@@ -482,6 +772,39 @@ $(document).ready(function() {
         });
     }
     
+    //google geocode
+    function googleGeocode(start, end, directions){
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+
+               googleGeocode2(response, end, directions);
+           }  
+         };
+        
+        xhttp.open('GET', "https://maps.googleapis.com/maps/api/geocode/json?address=" + start + "&key=" + googleAPI, true);
+        
+        xhttp.send();
+    }
+    
+    function googleGeocode2(startResponse, end, directions){
+        var xhttp = new XMLHttpRequest();
+        
+        xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var response = JSON.parse(xhttp.responseText);
+            
+               readGoogleDirections(directions, startResponse, response);
+           }  
+         };
+        
+        xhttp.open('GET', "https://maps.googleapis.com/maps/api/geocode/json?address=" + end + "&key=" + googleAPI, true);
+        
+        xhttp.send();
+    }
+    
     function readDirections(correctResponse, reverseResponse, startResult, endResult){
         
         var routes = correctResponse.routes;
@@ -514,9 +837,13 @@ $(document).ready(function() {
         
         fillInDetails(distance, duration);
         
+        //drop end marker
+        routeEnd(endLoc);
+        routeStart(startLoc);
+        
         map.flyTo({
             center: endLoc,
-            zoom: 14,
+            zoom: 18,
             speed: 1.5
         });
     }
@@ -540,13 +867,14 @@ $(document).ready(function() {
         var endPoint = [];
         endPoint.push(endLoc.lng);
         endPoint.push(endLoc.lat);
-        
-        console.log(JSON.stringify(polyline));
-        
+                
         var googleArray = decode(polyline, 5);
         
         drawGoogle(googleArray);
         drawGoogleEnds(googleArray, startPoint, endPoint);
+        
+        googleEnd(endPoint);
+        googleStart(startPoint);
     }
     
     function drawRoute(locationArray){
@@ -580,7 +908,7 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#4DD10F",
-                    "line-width": 8
+                    "line-width": 4
                 }
             });
         }
@@ -617,7 +945,7 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#D10F0F",
-                    "line-width": 14,
+                    "line-width": 6,
                 }
             }, 'route');
         }
@@ -654,10 +982,10 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#D10F0F",
-                    "line-width": 6,
-                    "line-dasharray": [.5, 1.5]
+                    "line-width": 5,
+                    "line-dasharray": [.25, 1.5]
                 }
-            });
+            }, 'route');
         }
         
         //end line
@@ -690,10 +1018,10 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#D10F0F",
-                    "line-width": 6,
-                    "line-dasharray": [.5, 1.5]
+                    "line-width": 5,
+                    "line-dasharray": [.25, 1.5]
                 }
-            });
+            }, 'route');
         }
     }
     
@@ -767,37 +1095,169 @@ $(document).ready(function() {
         return coordinates;
     };
     
-    //google geocode
-    function googleGeocode(start, end, directions){
-        var xhttp = new XMLHttpRequest();
-
-        xhttp.onreadystatechange = function(){
-           if(xhttp.readyState == 4 && xhttp.status == 200){
-               var response = JSON.parse(xhttp.responseText);
-
-               googleGeocode2(response, end, directions);
-           }  
-         };
+    //drop our end point
+    function routeEnd(location){
+        var thisAddJsonArray = new Array;
         
-        xhttp.open('GET', "https://maps.googleapis.com/maps/api/geocode/json?address=" + start + "&key=" + googleAPI, true);
-        
-        xhttp.send();
+        var thisJSON = {"type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": location
+                }
+            }
+                        
+            thisAddJsonArray.push(thisJSON);
+    
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
+
+        var addresses = map.getSource('routeEnd')
+
+        if(addresses){
+            map.removeSource('routeEnd');
+            map.removeLayer('routeEnd');
+        }
+            map.addSource('routeEnd',{
+                type: 'geojson',
+                data: geoJson
+            });
+
+            map.addLayer({
+                id: 'routeEnd',
+                source: 'routeEnd',
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "marker-green-15",
+                },
+                paint: {
+                  "text-color": "#4DD10F"
+                }
+            });
     }
     
-    function googleGeocode2(startResponse, end, directions){
-        var xhttp = new XMLHttpRequest();
+    function googleEnd(location){
+        var thisAddJsonArray = new Array;
         
-        xhttp.onreadystatechange = function(){
-           if(xhttp.readyState == 4 && xhttp.status == 200){
-               var response = JSON.parse(xhttp.responseText);
-            
-               readGoogleDirections(directions, startResponse, response);
-           }  
-         };
+        var thisJSON = {"type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": location
+                }
+            }
+                        
+            thisAddJsonArray.push(thisJSON);
+    
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
+
+        var addresses = map.getSource('googleEnd')
+
+        if(addresses){
+            map.removeSource('googleEnd');
+            map.removeLayer('googleEnd');
+        }
+            map.addSource('googleEnd',{
+                type: 'geojson',
+                data: geoJson
+            });
+
+            map.addLayer({
+                id: 'googleEnd',
+                source: 'googleEnd',
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "marker-red-15",
+                },
+                paint: {
+                  "text-color": "#4DD10F"
+                }
+            });
+    }
+    
+    function routeStart(location){
+        var thisAddJsonArray = new Array;
         
-        xhttp.open('GET', "https://maps.googleapis.com/maps/api/geocode/json?address=" + end + "&key=" + googleAPI, true);
+        var thisJSON = {"type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": location
+                }
+            }
+                        
+            thisAddJsonArray.push(thisJSON);
+    
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
+
+        var addresses = map.getSource('routeStart')
+
+        if(addresses){
+            map.removeSource('routeStart');
+            map.removeLayer('routeStart');
+        }
+            map.addSource('routeStart',{
+                type: 'geojson',
+                data: geoJson
+            });
+
+            map.addLayer({
+                id: 'routeStart',
+                source: 'routeStart',
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "marker-green-15",
+                },
+                paint: {
+                  "text-color": "#4DD10F"
+                }
+            });
+    }
+    
+    function googleStart(location){
+        var thisAddJsonArray = new Array;
         
-        xhttp.send();
+        var thisJSON = {"type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": location
+                }
+            }
+                        
+            thisAddJsonArray.push(thisJSON);
+    
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
+
+        var addresses = map.getSource('googleStart')
+
+        if(addresses){
+            map.removeSource('googleStart');
+            map.removeLayer('googleStart');
+        }
+            map.addSource('googleStart',{
+                type: 'geojson',
+                data: geoJson
+            });
+
+            map.addLayer({
+                id: 'googleStart',
+                source: 'googleStart',
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "marker-red-15",
+                },
+                paint: {
+                  "text-color": "#4DD10F"
+                }
+            });
     }
 });
 

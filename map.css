@@ -81,6 +81,8 @@ html, body {
     text-transform: uppercase;
 	border-radius: 0 3px 3px 0;
 	text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
+    border: 1px white;
+    border-style: solid;
 /*    margin-left: 5px;*/
 }
 
@@ -550,15 +552,15 @@ html, body {
 .segmented-control {
 	position: absolute;
 	width: 300px;
-	left: 25%;
+	left: 5%;
 	top: 200px;
 	z-index: 5;
     display: table;
 }
 
 .transit {
-	width: 50px;
-    height: 50px;
+	width: 40px;
+    height: 40px;
 	z-index: 5;
     background: #fff;
 	color: #0F0C27;
@@ -568,13 +570,55 @@ html, body {
 
 .get-directions {
 	position: absolute;
-	width: 310px;
-    height: 50px;
-	left: 5%;
-	top: 325px;
+	width: 250;
+    height: 40px;
+	left: 45%;
+	top: 250px;
 	z-index: 5;
     font-size: 20px;
     font-style: oblique;
+}
+
+.details-header {
+	position: absolute;
+	width: 300px;
+    height: 50px;
+	left: 5%;
+	top: 320px;
+	z-index: 5;
+}
+
+.details-header label {
+    height: 50px;
+	width: 300px;
+    left: 0%;
+	background: #0F0C27;
+	color: white;
+    font-size: 20px;
+    padding: 5px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.google-header {
+	position: absolute;
+	width: 300px;
+    height: 50px;
+	left: 5%;
+	top: 475px;
+	z-index: 5;
+}
+
+.google-header label {
+    height: 50px;
+	width: 300px;
+    left: 0%;
+	background: #0F0C27;
+	color: white;
+    font-size: 20px;
+    padding: 5px;
+    margin-bottom: 5px;
+    margin-top: 10px;
 }
 
 .details {
@@ -582,7 +626,7 @@ html, body {
 	width: 300px;
     height: 50px;
 	left: 5%;
-	top: 420px;
+	top: 370px;
 	z-index: 5;
 }
 
@@ -592,7 +636,6 @@ html, body {
     left: 0%;
 	background: #0F0C27;
 	color: white;
-	text-transform: uppercase;
     font-size: 20px;
     padding: 5px;
     margin-bottom: 5px;
@@ -604,7 +647,7 @@ html, body {
 	width: 300px;
     height: 50px;
 	left: 5%;
-	top: 480px;
+	top: 410px;
 	z-index: 5;
 }
 
@@ -614,7 +657,6 @@ html, body {
     left: 0%;
 	background: #0F0C27;
 	color: white;
-	text-transform: uppercase;
     font-size: 20px;
     padding: 5px;
     margin-bottom: 5px;
