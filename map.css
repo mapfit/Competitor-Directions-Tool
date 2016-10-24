@@ -621,6 +621,27 @@ html, body {
     margin-top: 10px;
 }
 
+.open-header {
+	position: absolute;
+	width: 300px;
+    height: 50px;
+	left: 5%;
+	top: 510px;
+	z-index: 5;
+}
+
+.open-header label {
+    height: 50px;
+	width: 300px;
+    left: 0%;
+	background: #0F0C27;
+	color: white;
+    font-size: 20px;
+    padding: 5px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
 .details {
 	position: absolute;
 	width: 300px;
