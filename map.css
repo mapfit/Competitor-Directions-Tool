@@ -584,7 +584,7 @@ html, body {
 	width: 300px;
     height: 50px;
 	left: 5%;
-	top: 320px;
+	top: 420px;
 	z-index: 5;
 }
 
@@ -594,7 +594,7 @@ html, body {
     left: 0%;
 	background: #0F0C27;
 	color: white;
-    font-size: 20px;
+    font-size: 17px;
     padding: 5px;
     margin-bottom: 5px;
     margin-top: 10px;
@@ -605,7 +605,7 @@ html, body {
 	width: 300px;
     height: 50px;
 	left: 5%;
-	top: 475px;
+	top: 460px;
 	z-index: 5;
 }
 
@@ -615,7 +615,7 @@ html, body {
     left: 0%;
 	background: #0F0C27;
 	color: white;
-    font-size: 20px;
+    font-size: 17px;
     padding: 5px;
     margin-bottom: 5px;
     margin-top: 10px;
@@ -626,7 +626,7 @@ html, body {
 	width: 300px;
     height: 50px;
 	left: 5%;
-	top: 510px;
+	top: 500px;
 	z-index: 5;
 }
 
@@ -636,7 +636,28 @@ html, body {
     left: 0%;
 	background: #0F0C27;
 	color: white;
-    font-size: 20px;
+    font-size: 17px;
+    padding: 5px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.bing-header {
+	position: absolute;
+	width: 300px;
+    height: 50px;
+	left: 5%;
+	top: 540px;
+	z-index: 5;
+}
+
+.bing-header label {
+    height: 50px;
+	width: 300px;
+    left: 0%;
+	background: #0F0C27;
+	color: white;
+    font-size: 17px;
     padding: 5px;
     margin-bottom: 5px;
     margin-top: 10px;
@@ -647,7 +668,7 @@ html, body {
 	width: 300px;
     height: 50px;
 	left: 5%;
-	top: 370px;
+	top: 320px;
 	z-index: 5;
 }
 
@@ -668,7 +689,7 @@ html, body {
 	width: 300px;
     height: 50px;
 	left: 5%;
-	top: 410px;
+	top: 360px;
 	z-index: 5;
 }
 
