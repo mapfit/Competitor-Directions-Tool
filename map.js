@@ -748,6 +748,7 @@ $(document).ready(function() {
         
         startSearch(startAddress, startCityState, endAddress, endCityState);
         openStart(startAddress, startCityState, endAddress, endCityState);
+        bingStart(startAddress, startCityState, endAddress, endCityState);
     });
     
     function startSearch(startAddress, startCityState, endAddress, endCityState){
@@ -1648,5 +1649,37 @@ $(document).ready(function() {
         }
     }
     
+    ///******************************* BING Directions ***************************///
+    
+    function bingStart(startAddress, startCityState, endAddress, endCityState){
+        
+        var start = startAddress + " " + startCityState;
+        var end = endAddress + " " + endCityState;
+        
+        for(var i = 0; i < start.length; i++) {
+            start = start.replace(" ", "+");
+        }
+        
+        for(var i = 0; i < end.length; i++) {
+            end = end.replace(" ", "+");
+        }
+        
+        var directionsRequest = "http://dev.virtualearth.net/REST/V1/Routes/"+ transitType +"?wp.0="+ encodeURI(start) +"&wp.1=" + encodeURI(end) + "&output=json&jsonp=directionsCallback&suppressStatus=true&routeAttributes=routePath&key=" + bingAPI;
+        
+        directionsRestService(directionsRequest);
+    }
+    
+    function directionsRestService(request){
+       var script = document.createElement("script");
+       script.setAttribute("type", "text/javascript");
+       script.setAttribute("src", request);
+       document.body.appendChild(script);
+    }
+    
+    directionsCallback = function(result){   
+        var resources = result.resourceSets[0].resources[0];
+        var path = resources.routepath;
+        console.log("directions: " + JSON.stringify(path));
+    }
 });
 
