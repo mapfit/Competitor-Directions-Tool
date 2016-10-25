@@ -1678,8 +1678,61 @@ $(document).ready(function() {
     
     directionsCallback = function(result){   
         var resources = result.resourceSets[0].resources[0];
-        var path = resources.routepath;
-        console.log("directions: " + JSON.stringify(path));
+        var coords = resources["routePath"].line.coordinates;
+                
+//        console.log("reversed coords: " + reverseCoords(coords));
+        
+        drawBingRoute(reverseCoords(coords));
+    }
+    
+    function reverseCoords(coords){
+        
+        var revCoords = [];
+        
+        for(var i = 0; i < coords.length; i++){
+            var thisCoord = coords[i];
+            var newCoord = [thisCoord[1], thisCoord[0]];
+            
+            revCoords.push(newCoord);
+        }
+        
+        return revCoords;
+    }
+    
+    function drawBingRoute(polylineArray){
+        var bingRoute = map.getSource('bingRoute');
+        var locData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": polylineArray
+                }
+        }
+
+        if(bingRoute){
+            map.getSource('bingRoute').setData(locData);
+            map.setLayoutProperty("bingRoute", 'visibility', 'visible');
+        }else{
+            map.addSource('bingRoute',{
+                type: 'geojson',
+                data: locData
+            });
+            
+            map.addLayer({
+                "id": "bingRoute",
+                "type": "line",
+                "source": "bingRoute",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#FFA500",
+                    "line-width": 6
+                }
+            }, 'route');
+        }
     }
 });
 
