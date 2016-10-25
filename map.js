@@ -1664,7 +1664,13 @@ $(document).ready(function() {
             end = end.replace(" ", "+");
         }
         
-        var directionsRequest = "http://dev.virtualearth.net/REST/V1/Routes/"+ transitType +"?wp.0="+ encodeURI(start) +"&wp.1=" + encodeURI(end) + "&output=json&jsonp=directionsCallback&suppressStatus=true&routeAttributes=routePath&key=" + bingAPI;
+        var sentTransit = transitType;
+        
+        if(transitType == "cycling"){
+            sentTransit = "walking";
+        }
+        
+        var directionsRequest = "http://dev.virtualearth.net/REST/V1/Routes/"+ sentTransit +"?wp.0="+ encodeURI(start) +"&wp.1=" + encodeURI(end) + "&output=json&jsonp=directionsCallback&suppressStatus=true&routeAttributes=routePath&key=" + bingAPI;
         
         directionsRestService(directionsRequest);
     }
@@ -1678,11 +1684,19 @@ $(document).ready(function() {
     
     directionsCallback = function(result){   
         var resources = result.resourceSets[0].resources[0];
-        var coords = resources["routePath"].line.coordinates;
-                
-//        console.log("reversed coords: " + reverseCoords(coords));
         
-        drawBingRoute(reverseCoords(coords));
+        //get main route
+        var coords = resources["routePath"].line.coordinates;
+        var revCoords = reverseCoords(coords);
+        drawBingRoute(revCoords);
+        
+        //get endpoints
+        var routeLegs = resources["routeLegs"][0];
+        var endLocation = routeLegs["endLocation"].point.coordinates;
+        var startLocation = routeLegs["startLocation"].point.coordinates;
+        
+        drawBingStart(startLocation, revCoords[0]);
+        drawBingEnd(endLocation, revCoords[revCoords.length-1]);
     }
     
     function reverseCoords(coords){
@@ -1729,7 +1743,172 @@ $(document).ready(function() {
                 },
                 "paint": {
                     "line-color": "#FFA500",
-                    "line-width": 6
+                    "line-width": 8
+                }
+            }, 'route');
+        }
+    }
+    
+    function drawBingStart(startPoint, routeStart){
+        
+        //draw start point
+        var thisBingJsonArray = new Array;
+
+        var thisJSON = {"type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                startPoint[1],
+                startPoint[0]
+              ]
+            }
+        }
+        
+        thisBingJsonArray.push(thisJSON);
+        
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisBingJsonArray
+        }
+        
+        var bingStart = map.getSource('bingStart')
+
+        if(bingStart){
+            map.removeLayer('bingStart');
+            map.removeSource('bingStart');
+        }
+            
+        map.addSource('bingStart',{
+            type: 'geojson',
+            data: geoJson
+        });
+
+        map.addLayer({
+            id: 'bingStart',
+            source: 'bingStart',
+            type: 'symbol',
+            "layout": {
+                "icon-image": "marker-orange-15",
+            }
+        }, 'route');
+        
+        //bing start route
+        var bingStartRoute = map.getSource('bingStartRoute');
+        var locData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [startPoint[1], startPoint[0]],
+                        [routeStart[0], routeStart[1]]
+                    ]
+                }
+        }
+
+        if(bingStartRoute){
+            map.getSource('bingStartRoute').setData(locData);
+            map.setLayoutProperty("bingStartRoute", 'visibility', 'visible');
+        }else{
+            map.addSource('bingStartRoute',{
+                type: 'geojson',
+                data: locData
+            });
+            
+            map.addLayer({
+                "id": "bingStartRoute",
+                "type": "line",
+                "source": "bingStartRoute",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#FFA500",
+                    "line-width": 5,
+                    "line-dasharray": [.25, 1.5]
+                }
+            }, 'route');
+        }
+    }
+    
+    function drawBingEnd(endPoint, routeEnd){
+        //draw end point
+        var thisBingJsonArray = new Array;
+
+        var thisJSON = {"type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                endPoint[1],
+                endPoint[0]
+              ]
+            }
+        }
+        
+        thisBingJsonArray.push(thisJSON);
+        
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisBingJsonArray
+        }
+        
+        var bingEnd = map.getSource('bingEnd')
+
+        if(bingEnd){
+            map.removeLayer('bingEnd');
+            map.removeSource('bingEnd');
+        }
+            
+        map.addSource('bingEnd',{
+            type: 'geojson',
+            data: geoJson
+        });
+
+        map.addLayer({
+            id: 'bingEnd',
+            source: 'bingEnd',
+            type: 'symbol',
+            "layout": {
+                "icon-image": "marker-orange-15",
+            }
+        }, 'route');
+        
+        //bing start route
+        var bingEndRoute = map.getSource('bingEndRoute');
+        var locData = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": [
+                        [endPoint[1], endPoint[0]],
+                        [routeEnd[0], routeEnd[1]]
+                    ]
+                }
+        }
+
+        if(bingEndRoute){
+            map.getSource('bingEndRoute').setData(locData);
+            map.setLayoutProperty("bingEndRoute", 'visibility', 'visible');
+        }else{
+            map.addSource('bingEndRoute',{
+                type: 'geojson',
+                data: locData
+            });
+            
+            map.addLayer({
+                "id": "bingEndRoute",
+                "type": "line",
+                "source": "bingEndRoute",
+                "layout": {
+                    "line-join": "round",
+                    "line-cap": "round"
+                },
+                "paint": {
+                    "line-color": "#FFA500",
+                    "line-width": 5,
+                    "line-dasharray": [.25, 1.5]
                 }
             }, 'route');
         }
