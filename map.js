@@ -692,6 +692,12 @@ $(document).ready(function() {
         map.setLayoutProperty("openEnd", 'visibility', 'none');
         map.setLayoutProperty("openRouteStart", 'visibility', 'none');
         map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
+        
+        map.setLayoutProperty("bingRoute", 'visibility', 'none');
+        map.setLayoutProperty("bingStart", 'visibility', 'none');
+        map.setLayoutProperty("bingEnd", 'visibility', 'none');
+        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
+        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
     });
     
     $('.swap').on('click', function(e) {        
