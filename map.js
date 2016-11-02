@@ -957,7 +957,7 @@ $(document).ready(function() {
         routeStart(startLoc);
         
         map.flyTo({
-            center: endLoc,
+            center: startLoc,
             zoom: 18,
             speed: 1.5
         });
@@ -1925,9 +1925,11 @@ $(document).ready(function() {
     }
     
     ///******************************* Nav Simulator ***************************///    
+    var navCounter = 1;
+    
     function setupSimulation(thisRoute){
 
-        var point = {
+        var navPoint = {
             "type": "FeatureCollection",
             "features": [{
                 "type": "Feature",
@@ -1938,20 +1940,72 @@ $(document).ready(function() {
             }]
         };
         
-        map.addSource('point', {
+        map.addSource('navPoint', {
             "type": "geojson",
-            "data": point
+            "data": navPoint
         });
         
         map.addLayer({
             "id": "navPoint",
-            "source": "point",
+            "source": "navPoint",
             "type": "symbol",
             "layout": {
                 "icon-image": "triangle-15",
             }
         });
+                
+        
+        //second route
+        var route = {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": thisRoute
+                }
+            }]
+        };
+        
+        var lineDistance = turf.lineDistance(route, 'kilometers');        
+        var denserRoute = [];
+        
+        for (var i = 0.0005; i < lineDistance; i=i+0.0005) {
+            var segment = turf.along(route.features[0], i, 'kilometers');
+            denserRoute.push(segment.geometry.coordinates);
+        }
+        
+        animate(denserRoute);
     }
     
+    //change camera angle to follow at driving angle
+    
+    function animate(route){
+         var point = {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": route[navCounter]
+                }
+            }]
+        };
+        
+        map.getSource('navPoint').setData(point);
+        
+        map.flyTo({
+            center: route[navCounter],
+            zoom: 18,
+            speed: 2.0
+        });
+        
+        if (navCounter !== route.length - 1) {
+            setTimeout(function() {animate(route); }, 5);
+        }
+
+        navCounter = navCounter + 1;
+    }
+
 });
 
