@@ -961,6 +961,8 @@ $(document).ready(function() {
             zoom: 18,
             speed: 1.5
         });
+        
+        setupSimulation(polylineArray);
     }
     
     function readGoogleDirections(directions, startResponse, endResponse){
@@ -1027,6 +1029,8 @@ $(document).ready(function() {
                 }
             });
         }
+        
+//        setupSimulation();
     }
     
     function drawGoogle(locationArray){
@@ -1919,5 +1923,35 @@ $(document).ready(function() {
             }, 'route');
         }
     }
+    
+    ///******************************* Nav Simulator ***************************///    
+    function setupSimulation(thisRoute){
+
+        var point = {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": thisRoute[0]
+                }
+            }]
+        };
+        
+        map.addSource('point', {
+            "type": "geojson",
+            "data": point
+        });
+        
+        map.addLayer({
+            "id": "navPoint",
+            "source": "point",
+            "type": "symbol",
+            "layout": {
+                "icon-image": "triangle-15",
+            }
+        });
+    }
+    
 });
 
