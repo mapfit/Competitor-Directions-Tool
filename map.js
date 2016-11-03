@@ -186,7 +186,9 @@ $(document).ready(function() {
                    console.log("no data found");
                    alert("No Matching Address found. Please try another address.");
                }
-           }  
+           }else if(xhttp.readyState == 4){
+               alert('API Server is being updated -- please try again later');
+           }
          };
 
          xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
