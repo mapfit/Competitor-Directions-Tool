@@ -162,7 +162,7 @@ $(document).ready(function() {
                    alert("No Matching Address found. Please try another address.");
                }
            }else if(xhttp.readyState == 4){
-               alert(xhttp.responseText);
+               alert('API Server is being updated -- please try again later');
            }
              
          };
