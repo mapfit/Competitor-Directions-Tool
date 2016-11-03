@@ -700,6 +700,15 @@ $(document).ready(function() {
         map.setLayoutProperty("bingEnd", 'visibility', 'none');
         map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
         map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
+        
+        //stop navigation
+        navCounter = -1;
+        map.setLayoutProperty("navPoint", 'visibility', 'none');
+        
+        //change camera zoom/pitch/bearing
+        map.setZoom(15);
+        map.setPitch(0);
+        map.setBearing(0);
     });
     
     $('.swap').on('click', function(e) {        
@@ -1928,13 +1937,15 @@ $(document).ready(function() {
     }
     
     ///******************************* Nav Simulator ***************************///    
-    var navCounter = 1;
+    var navCounter = 0;
     
     function setupSimulation(thisRoute){
+        navCounter = 1;
         
         map.setPitch(80);
-//        map.setBearing(-60);
 
+        var nav = map.getSource('navPoint');
+        
         var navPoint = {
             "type": "FeatureCollection",
             "features": [{
@@ -1946,19 +1957,24 @@ $(document).ready(function() {
             }]
         };
         
-        map.addSource('navPoint', {
-            "type": "geojson",
-            "data": navPoint
-        });
-        
-        map.addLayer({
-            "id": "navPoint",
-            "source": "navPoint",
-            "type": "symbol",
-            "layout": {
-                "icon-image": "triangle-15",
-            }
-        });
+        if(nav){
+            map.getSource('navPoint').setData(navPoint);
+            map.setLayoutProperty("navPoint", 'visibility', 'visible');
+        }else{
+            map.addSource('navPoint', {
+                "type": "geojson",
+                "data": navPoint
+            });
+
+            map.addLayer({
+                "id": "navPoint",
+                "source": "navPoint",
+                "type": "symbol",
+                "layout": {
+                    "icon-image": "triangle-15",
+                }
+            });
+        }
         
         //second route
         var route = {
@@ -2005,7 +2021,7 @@ $(document).ready(function() {
         map.setCenter(route[navCounter]);
         map.setZoom(22);
         
-        if (navCounter !== route.length - 1) {
+        if (navCounter !== route.length - 1 || navCounter !== -1) {
             setTimeout(function() {animate(route); }, 5);
             
             var point1 = {
