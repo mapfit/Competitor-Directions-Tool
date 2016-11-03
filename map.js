@@ -355,10 +355,7 @@ $(document).ready(function() {
         if(gAdd){
             map.removeLayer('gAddress');
             map.removeSource('gAddress');
-//            map.getSource('gAddress').setData(geoJson);
-//            map.setLayoutProperty("gAddress", 'visibility', 'visible');
         }
-//        else{
             map.addSource('gAddress',{
                 type: 'geojson',
                 data: geoJson
@@ -978,7 +975,6 @@ $(document).ready(function() {
         });
         
         ourRoute = polylineArray;
-//        setupSimulation(polylineArray);
     }
     
     function readGoogleDirections(directions, startResponse, endResponse){
@@ -1045,8 +1041,6 @@ $(document).ready(function() {
                 }
             });
         }
-        
-//        setupSimulation();
     }
     
     function drawGoogle(locationArray){
@@ -2017,12 +2011,7 @@ $(document).ready(function() {
         };
         
         map.getSource('navPoint').setData(point);
-        
-//        map.flyTo({
-//            center: route[navCounter],
-//            zoom: 20,
-//            speed: 2.0
-//        });
+
         map.setCenter(route[navCounter]);
         map.setZoom(22);
         
