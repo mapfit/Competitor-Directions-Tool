@@ -120,6 +120,10 @@ $(document).ready(function() {
         map.setZoom(zoom - 1);
     });
     
+    $('.demo').on('click', function(e) {
+        setupSimulation();
+    });
+    
     //search
     $('.address-search').on('click', function(e) {
          var query = document.getElementById('address-query').value;
@@ -967,14 +971,14 @@ $(document).ready(function() {
         routeEnd(endLoc);
         routeStart(startLoc);
         
-//        map.flyTo({
-//            center: startLoc,
-//            zoom: 18,
-//            speed: 1.5
-//        });
-        map.setCenter(startLoc);
+        map.flyTo({
+            center: endLoc,
+            zoom: 18,
+            speed: 1.5
+        });
         
-        setupSimulation(polylineArray);
+        ourRoute = polylineArray;
+//        setupSimulation(polylineArray);
     }
     
     function readGoogleDirections(directions, startResponse, endResponse){
@@ -1938,8 +1942,9 @@ $(document).ready(function() {
     
     ///******************************* Nav Simulator ***************************///    
     var navCounter = 0;
+    var ourRoute = [];
     
-    function setupSimulation(thisRoute){
+    function setupSimulation(){
         navCounter = 1;
         
         map.setPitch(80);
@@ -1952,7 +1957,7 @@ $(document).ready(function() {
                 "type": "Feature",
                 "geometry": {
                     "type": "Point",
-                    "coordinates": thisRoute[0]
+                    "coordinates": ourRoute[0]
                 }
             }]
         };
@@ -1983,7 +1988,7 @@ $(document).ready(function() {
                 "type": "Feature",
                 "geometry": {
                     "type": "LineString",
-                    "coordinates": thisRoute
+                    "coordinates": ourRoute
                 }
             }]
         };
