@@ -1956,10 +1956,26 @@ $(document).ready(function() {
             }]
         };
         
+        //transit
+        var navIcon = "car-nav";
+        
+        if(transitType == "driving"){
+            navIcon = "car-nav";
+        }else if(transitType == "walking"){
+            navIcon = "walk-nav";
+        }else if(transitType == "cycling"){
+            navIcon = "bike-nav";
+        }
+        
         if(nav){
-            map.getSource('navPoint').setData(navPoint);
-            map.setLayoutProperty("navPoint", 'visibility', 'visible');
-        }else{
+            map.removeSource('navPoint');
+            map.removeLayer('navPoint');
+        }
+//            map.getSource('navPoint').setData(navPoint);
+////            map.getLayer('navPoint').layout["icon-image"] = navIcon;
+//            map.setLayoutProperty("navPoint", 'visibility', 'visible');
+//        }else{
+//            map.setLayoutProperty("navPoint", 'visibility', 'visible');
             map.addSource('navPoint', {
                 "type": "geojson",
                 "data": navPoint
@@ -1970,10 +1986,10 @@ $(document).ready(function() {
                 "source": "navPoint",
                 "type": "symbol",
                 "layout": {
-                    "icon-image": "triangle-15",
+                    "icon-image": navIcon,
                 }
             });
-        }
+//        }
         
         //second route
         var route = {
