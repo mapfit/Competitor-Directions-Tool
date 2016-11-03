@@ -958,11 +958,12 @@ $(document).ready(function() {
         routeEnd(endLoc);
         routeStart(startLoc);
         
-        map.flyTo({
-            center: startLoc,
-            zoom: 18,
-            speed: 1.5
-        });
+//        map.flyTo({
+//            center: startLoc,
+//            zoom: 18,
+//            speed: 1.5
+//        });
+        map.setCenter(startLoc);
         
         setupSimulation(polylineArray);
     }
@@ -1930,6 +1931,9 @@ $(document).ready(function() {
     var navCounter = 1;
     
     function setupSimulation(thisRoute){
+        
+        map.setPitch(80);
+//        map.setBearing(-60);
 
         var navPoint = {
             "type": "FeatureCollection",
@@ -1955,7 +1959,6 @@ $(document).ready(function() {
                 "icon-image": "triangle-15",
             }
         });
-                
         
         //second route
         var route = {
@@ -1979,9 +1982,7 @@ $(document).ready(function() {
         
         animate(denserRoute);
     }
-    
-    //change camera angle to follow at driving angle
-    
+        
     function animate(route){
          var point = {
             "type": "FeatureCollection",
@@ -1996,14 +1997,36 @@ $(document).ready(function() {
         
         map.getSource('navPoint').setData(point);
         
-        map.flyTo({
-            center: route[navCounter],
-            zoom: 18,
-            speed: 2.0
-        });
+//        map.flyTo({
+//            center: route[navCounter],
+//            zoom: 20,
+//            speed: 2.0
+//        });
+        map.setCenter(route[navCounter]);
+        map.setZoom(22);
         
         if (navCounter !== route.length - 1) {
             setTimeout(function() {animate(route); }, 5);
+            
+            var point1 = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": route[navCounter]
+                    }
+                };
+            
+            var point2 = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": route[navCounter + 1]
+                    }
+                };
+            
+            //change bearing
+            var bearing = turf.bearing(point1, point2);
+            map.setBearing(bearing);
         }
 
         navCounter = navCounter + 1;
