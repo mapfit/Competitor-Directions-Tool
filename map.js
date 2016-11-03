@@ -120,8 +120,29 @@ $(document).ready(function() {
         map.setZoom(zoom - 1);
     });
     
+    //demo stuff
+    var demoRunning = false;
+    
     $('.demo').on('click', function(e) {
-        setupSimulation();
+        var $this = $(this);
+        
+        if(demoRunning){
+            $this.text('Run Demo');
+            demoRunning = false;
+            
+            //stop navigation
+            navCounter = -1;
+            map.setLayoutProperty("navPoint", 'visibility', 'none');
+
+            //change camera zoom/pitch/bearing
+            map.setZoom(15);
+            map.setPitch(0);
+            map.setBearing(0);
+        }else{
+            $this.text('Stop Demo');
+            demoRunning = true;
+            setupSimulation();  
+        }
     });
     
     //search
@@ -2006,7 +2027,7 @@ $(document).ready(function() {
         var lineDistance = turf.lineDistance(route, 'kilometers');        
         var denserRoute = [];
         
-        for (var i = 0.0005; i < lineDistance; i=i+0.0005) {
+        for (var i = 0.001; i < lineDistance; i=i+0.001) {
             var segment = turf.along(route.features[0], i, 'kilometers');
             denserRoute.push(segment.geometry.coordinates);
         }
@@ -2029,10 +2050,10 @@ $(document).ready(function() {
         map.getSource('navPoint').setData(point);
 
         map.setCenter(route[navCounter]);
-        map.setZoom(22);
+        map.setZoom(18);
         
         if (navCounter !== route.length - 1 || navCounter !== -1) {
-            setTimeout(function() {animate(route); }, 5);
+            setTimeout(function() {animate(route); }, 1);
             
             var point1 = {
                     "type": "Feature",
