@@ -407,13 +407,77 @@ html, body {
     border: none;
 }
 
+/******************** Gear Button ********************/
+
+.gear {
+	position: absolute;
+	left: -3%;
+	z-index: 5;
+	bottom: -40px;
+}
+
+.gear img {
+	height: 25px;
+	width: 25px;
+}
+
+.gear button {
+	height: 100px;
+	width: 100px;
+	background: #0F0C27;
+	color: #fff;
+	text-transform: uppercase;
+	cursor: pointer;
+	margin: 1px;
+    border: 2px solid #fff;
+    border-radius: 50px;
+    outline: none;
+}
+
+.gear .open-gear {
+	position: relative;
+	float: left;
+}
+
+/******************** Sat Button ********************/
+
+.sat {
+	position: absolute;
+	left: 0%;
+	z-index: 5;
+	bottom: 5px;
+}
+
+.sat img {
+	height: 25px;
+	width: 25px;
+}
+
+.sat button {
+	height: 50px;
+	width: 50px;
+	background: #0F0C27;
+	color: #fff;
+	text-transform: uppercase;
+	cursor: pointer;
+	margin: 1px;
+    border: none;
+    border-radius: 25px;
+    outline: none;
+}
+
+.sat .toggle-sat {
+	position: relative;
+	float: left;
+}
+
 /******************** Direction Button ********************/
 
 .direction {
 	position: absolute;
-	left: 2%;
+	left: 0%;
 	z-index: 5;
-	bottom: 20px;
+	bottom: 5px;
 }
 
 .direction img {
