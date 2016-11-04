@@ -2063,17 +2063,33 @@ $(document).ready(function() {
                     }
                 };
             
-            var point2 = {
+            var pt2Counter = navCounter + 10;
+            
+            var counterDiff = route.length - 1 - navCounter;
+                        
+            if(counterDiff < 10){
+                pt2Counter = navCounter + 5;
+            }
+            
+            if(counterDiff < 5){
+                pt2Counter = navCounter + 1;
+            }
+            
+            if(counterDiff == 0){
+                //do nothing
+            }else{
+                var point2 = {
                     "type": "Feature",
                     "geometry": {
                         "type": "Point",
-                        "coordinates": route[navCounter + 1]
+                        "coordinates": route[pt2Counter]
                     }
                 };
             
-            //change bearing
-            var bearing = turf.bearing(point1, point2);
-            map.setBearing(bearing);
+                //change bearing
+                var bearing = turf.bearing(point1, point2);
+                map.setBearing(bearing);
+            }
         }
 
         navCounter = navCounter + 1;
