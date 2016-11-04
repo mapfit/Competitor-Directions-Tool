@@ -160,6 +160,7 @@ $(document).ready(function() {
             
             stateSearch(query, cityState);
         }
+        
     });
     
     function stateSearch(thisQuery, cityState){
@@ -764,6 +765,70 @@ $(document).ready(function() {
         document.getElementById("bike").style.backgroundColor = "#3A5391";
         document.getElementById("walk").style.backgroundColor = "#FFFFFF";
         document.getElementById("car").style.backgroundColor = "#FFFFFF";
+    });
+    
+    //settings button stuff
+    var gearOut = false;
+    
+    $('.open-gear').on('click', function(e) {
+        
+        if(gearOut){
+            gearOut = false;
+            var elem = document.getElementById("direction-butt");
+            var elem2 = document.getElementById("toggle-sat");
+            var pos = 40;
+            var id = setInterval(frame, 5);
+            function frame() {
+                if (pos == 0) {
+                    clearInterval(id);
+                } else {
+                    pos--;
+                    elem.style.bottom = 2 * pos + 'px';
+                    elem.style.left = .5 * pos + 'px';
+
+                    elem2.style.bottom = .5 * pos + 'px';
+                    elem2.style.left = 2 * pos + 'px';
+                }
+            }
+        }else{
+            gearOut = true;
+            var elem = document.getElementById("direction-butt");
+            var elem2 = document.getElementById("toggle-sat");
+            var pos = 0;
+            var id = setInterval(frame, 5);
+            function frame() {
+                if (pos == 40) {
+                    clearInterval(id);
+                } else {
+                    pos++;
+                    elem.style.bottom = 2 * pos + 'px';
+                    elem.style.left = .5 * pos + 'px';
+
+                    elem2.style.bottom = .5 * pos + 'px';
+                    elem2.style.left = 2 * pos + 'px';
+                }
+            }
+        }
+        
+    });
+    
+    //sat button toggle
+    var satOn = false;
+    
+    $('.toggle-sat').on('click', function(e) {
+        if(satOn){
+            satOn = false;
+            map.setLayoutProperty("mapbox-mapbox-satellite", 'visibility', 'none');
+            
+            $('.toggle-sat').css("background", "url(satMap.png) no-repeat");
+            $('.toggle-sat').css("background-size", "50px 50px");
+        }else{
+            satOn = true;
+            map.setLayoutProperty("mapbox-mapbox-satellite", 'visibility', 'visible');
+            
+            $('.toggle-sat').css("background", "url(normMap.png) no-repeat");
+            $('.toggle-sat').css("background-size", "50px 50px");
+        }
     });
         
     $('.get-directions').on('click', function(e) {        
@@ -1992,11 +2057,7 @@ $(document).ready(function() {
             map.removeSource('navPoint');
             map.removeLayer('navPoint');
         }
-//            map.getSource('navPoint').setData(navPoint);
-////            map.getLayer('navPoint').layout["icon-image"] = navIcon;
-//            map.setLayoutProperty("navPoint", 'visibility', 'visible');
-//        }else{
-//            map.setLayoutProperty("navPoint", 'visibility', 'visible');
+
             map.addSource('navPoint', {
                 "type": "geojson",
                 "data": navPoint
@@ -2010,7 +2071,6 @@ $(document).ready(function() {
                     "icon-image": navIcon,
                 }
             });
-//        }
         
         //second route
         var route = {
