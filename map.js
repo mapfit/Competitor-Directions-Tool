@@ -120,6 +120,31 @@ $(document).ready(function() {
         map.setZoom(zoom - 1);
     });
     
+    //demo stuff
+    var demoRunning = false;
+    
+    $('.demo').on('click', function(e) {
+        var $this = $(this);
+        
+        if(demoRunning){
+            $this.text('Run Demo');
+            demoRunning = false;
+            
+            //stop navigation
+            navCounter = -1;
+            map.setLayoutProperty("navPoint", 'visibility', 'none');
+
+            //change camera zoom/pitch/bearing
+            map.setZoom(15);
+            map.setPitch(0);
+            map.setBearing(0);
+        }else{
+            $this.text('Stop Demo');
+            demoRunning = true;
+            setupSimulation();  
+        }
+    });
+    
     //search
     $('.address-search').on('click', function(e) {
          var query = document.getElementById('address-query').value;
@@ -162,7 +187,7 @@ $(document).ready(function() {
                    alert("No Matching Address found. Please try another address.");
                }
            }else if(xhttp.readyState == 4){
-               alert(xhttp.responseText);
+               alert('API Server is being updated -- please try again later');
            }
              
          };
@@ -186,7 +211,9 @@ $(document).ready(function() {
                    console.log("no data found");
                    alert("No Matching Address found. Please try another address.");
                }
-           }  
+           }else if(xhttp.readyState == 4){
+               alert('API Server is being updated -- please try again later');
+           }
          };
 
          xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
@@ -349,10 +376,7 @@ $(document).ready(function() {
         if(gAdd){
             map.removeLayer('gAddress');
             map.removeSource('gAddress');
-//            map.getSource('gAddress').setData(geoJson);
-//            map.setLayoutProperty("gAddress", 'visibility', 'visible');
         }
-//        else{
             map.addSource('gAddress',{
                 type: 'geojson',
                 data: geoJson
@@ -698,6 +722,15 @@ $(document).ready(function() {
         map.setLayoutProperty("bingEnd", 'visibility', 'none');
         map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
         map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
+        
+        //stop navigation
+        navCounter = -1;
+        map.setLayoutProperty("navPoint", 'visibility', 'none');
+        
+        //change camera zoom/pitch/bearing
+        map.setZoom(15);
+        map.setPitch(0);
+        map.setBearing(0);
     });
     
     $('.swap').on('click', function(e) {        
@@ -961,6 +994,8 @@ $(document).ready(function() {
             zoom: 18,
             speed: 1.5
         });
+        
+        ourRoute = polylineArray;
     }
     
     function readGoogleDirections(directions, startResponse, endResponse){
@@ -1919,5 +1954,146 @@ $(document).ready(function() {
             }, 'route');
         }
     }
+    
+    ///******************************* Nav Simulator ***************************///    
+    var navCounter = 0;
+    var ourRoute = [];
+    
+    function setupSimulation(){
+        navCounter = 1;
+        
+        map.setPitch(80);
+
+        var nav = map.getSource('navPoint');
+        
+        var navPoint = {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": ourRoute[0]
+                }
+            }]
+        };
+        
+        //transit
+        var navIcon = "car-nav";
+        
+        if(transitType == "driving"){
+            navIcon = "car-nav";
+        }else if(transitType == "walking"){
+            navIcon = "walk-nav";
+        }else if(transitType == "cycling"){
+            navIcon = "bike-nav";
+        }
+        
+        if(nav){
+            map.removeSource('navPoint');
+            map.removeLayer('navPoint');
+        }
+//            map.getSource('navPoint').setData(navPoint);
+////            map.getLayer('navPoint').layout["icon-image"] = navIcon;
+//            map.setLayoutProperty("navPoint", 'visibility', 'visible');
+//        }else{
+//            map.setLayoutProperty("navPoint", 'visibility', 'visible');
+            map.addSource('navPoint', {
+                "type": "geojson",
+                "data": navPoint
+            });
+
+            map.addLayer({
+                "id": "navPoint",
+                "source": "navPoint",
+                "type": "symbol",
+                "layout": {
+                    "icon-image": navIcon,
+                }
+            });
+//        }
+        
+        //second route
+        var route = {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": ourRoute
+                }
+            }]
+        };
+        
+        var lineDistance = turf.lineDistance(route, 'kilometers');        
+        var denserRoute = [];
+        
+        for (var i = 0.001; i < lineDistance; i=i+0.001) {
+            var segment = turf.along(route.features[0], i, 'kilometers');
+            denserRoute.push(segment.geometry.coordinates);
+        }
+        
+        animate(denserRoute);
+    }
+        
+    function animate(route){
+         var point = {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": route[navCounter]
+                }
+            }]
+        };
+        
+        map.getSource('navPoint').setData(point);
+
+        map.setCenter(route[navCounter]);
+        map.setZoom(18);
+        
+        if (navCounter !== route.length - 1 || navCounter !== -1) {
+            setTimeout(function() {animate(route); }, 1);
+            
+            var point1 = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": route[navCounter]
+                    }
+                };
+            
+            var pt2Counter = navCounter + 10;
+            
+            var counterDiff = route.length - 1 - navCounter;
+                        
+            if(counterDiff < 10){
+                pt2Counter = navCounter + 5;
+            }
+            
+            if(counterDiff < 5){
+                pt2Counter = navCounter + 1;
+            }
+            
+            if(counterDiff == 0){
+                //do nothing
+            }else{
+                var point2 = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": route[pt2Counter]
+                    }
+                };
+            
+                //change bearing
+                var bearing = turf.bearing(point1, point2);
+                map.setBearing(bearing);
+            }
+        }
+
+        navCounter = navCounter + 1;
+    }
+
 });
 
