@@ -456,12 +456,13 @@ html, body {
 .sat button {
 	height: 50px;
 	width: 50px;
-	background: #0F0C27;
+	background: url(satMap.png) no-repeat;
+    background-size: 50px 50px;
 	color: #fff;
 	text-transform: uppercase;
 	cursor: pointer;
 	margin: 1px;
-    border: none;
+    border: 2px solid #fff;
     border-radius: 25px;
     outline: none;
 }
@@ -493,7 +494,7 @@ html, body {
 	text-transform: uppercase;
 	cursor: pointer;
 	margin: 1px;
-    border: none;
+    border: 2px solid #fff;
     border-radius: 25px;
     outline: none;
 }

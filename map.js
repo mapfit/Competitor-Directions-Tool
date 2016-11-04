@@ -819,9 +819,15 @@ $(document).ready(function() {
         if(satOn){
             satOn = false;
             map.setLayoutProperty("mapbox-mapbox-satellite", 'visibility', 'none');
+            
+            $('.toggle-sat').css("background", "url(satMap.png) no-repeat");
+            $('.toggle-sat').css("background-size", "50px 50px");
         }else{
             satOn = true;
             map.setLayoutProperty("mapbox-mapbox-satellite", 'visibility', 'visible');
+            
+            $('.toggle-sat').css("background", "url(normMap.png) no-repeat");
+            $('.toggle-sat').css("background-size", "50px 50px");
         }
     });
         
