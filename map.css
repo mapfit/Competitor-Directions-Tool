@@ -445,7 +445,7 @@ html, body {
 	position: absolute;
 	left: 0%;
 	z-index: 5;
-	bottom: 5px;
+	bottom: 0px;
 }
 
 .sat img {
@@ -478,7 +478,7 @@ html, body {
 	position: absolute;
 	left: 0%;
 	z-index: 5;
-	bottom: 5px;
+	bottom: 0px;
 }
 
 .direction img {
