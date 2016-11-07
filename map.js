@@ -14,7 +14,7 @@ $(document).ready(function() {
     
     var map = new mapboxgl.Map({
         container: 'map',
-        style: 'http://127.0.0.1:8080/cim5hb9c600jza0m473wrw6y6/style.json',
+        style: 'http://127.0.0.1:8080/Offline-Stuff/cim5hb9c600jza0m473wrw6y6/style.json',
         center: [-77.043132, 38.902705],
         zoom: 16,
         minZoom: 4,

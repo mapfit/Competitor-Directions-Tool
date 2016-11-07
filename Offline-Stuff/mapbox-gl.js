@@ -207,7 +207,7 @@
 },{}],104:[function(require,module,exports){
 "use strict";function compareAreas(e,r){return r.area-e.area}var quickselect=require("quickselect"),calculateSignedArea=require("./util").calculateSignedArea;module.exports=function(e,r){var a=e.length;if(a<=1)return[e];for(var t,u,c=[],i=0;i<a;i++){var l=calculateSignedArea(e[i]);0!==l&&(e[i].area=Math.abs(l),void 0===u&&(u=l<0),u===l<0?(t&&c.push(t),t=[e[i]]):t.push(e[i]))}if(t&&c.push(t),r>1)for(var n=0;n<c.length;n++)c[n].length<=r||(quickselect(c[n],r,1,c[n].length-1,compareAreas),c[n]=c[n].slice(0,r));return c};
 },{"./util":118,"quickselect":185}],105:[function(require,module,exports){
-"use strict";module.exports={API_URL:"https://api.mapbox.com",REQUIRE_ACCESS_TOKEN:!0};
+"use strict";module.exports={API_URL:"http://127.0.0.1:8080/Offline-Stuff"};
 },{}],106:[function(require,module,exports){
 "use strict";function DictionaryCoder(r){this._stringToNumber={},this._numberToString=[];for(var t=0;t<r.length;t++){var o=r[t];this._stringToNumber[o]=t,this._numberToString[t]=o}}module.exports=DictionaryCoder,DictionaryCoder.prototype.encode=function(r){return this._stringToNumber[r]},DictionaryCoder.prototype.decode=function(r){return this._numberToString[r]};
 },{}],107:[function(require,module,exports){
