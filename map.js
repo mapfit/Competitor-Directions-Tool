@@ -169,6 +169,7 @@ $(document).ready(function() {
         //split address
         var splitQuery = cityState.split(",");
         
+        var city = splitQuery[0].replace(/\s/g, '');
         var state = splitQuery[1].replace(/\s/g, '');
         
         var center = map.getCenter();
@@ -193,7 +194,7 @@ $(document).ready(function() {
              
          };
         
-        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + thisQuery + "\&city="+ splitQuery[0] +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
+        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
         
          xhttp.send();
     }
