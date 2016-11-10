@@ -34,7 +34,7 @@
             </form>
             
             <div class="search-directions">
-                <button id="search-directions" type="button" hidden="true">Directions To Here</button>
+                <button id="search-directions" class="call-search-directions" type="button" hidden="true">Directions To Here</button>
             </div>
             
             <div class="zoom">
@@ -66,8 +66,8 @@
                     <input id="start-address" type="text" placeholder="Address" required>
                     <input id="start-city-state" type="text" placeholder="City, State" required>
                     <label class="stop-label">End</label>
-                    <input id="end-address" type="text" placeholder="Address" required>
-                    <input id="end-city-state" type="text" placeholder="City, State" required>
+                    <input class="end-address" id="end-address" type="text" placeholder="Address" required>
+                    <input class="end-city-state" id="end-city-state" type="text" placeholder="City, State" required>
                 </form>
 
                 <div class="segmented-control">

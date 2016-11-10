@@ -738,6 +738,17 @@ $(document).ready(function() {
         
     //***********************DIRECTIONS*********************************************
     
+    $('.call-search-directions').on('click', function(e) {
+         var query = document.getElementById('address-query').value;
+        var cityState = document.getElementById('city-state').value;
+            
+        document.getElementById('search-directions').hidden = true;
+        $('.open-Directions').click();
+        
+        $('.end-address').val(query);
+        $('.end-city-state').val(cityState);
+    });
+    
     //directions button
     $('.open-Directions').on('click', function(e) {
         var addresses = map.getSource('addresses')
