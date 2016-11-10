@@ -23,16 +23,46 @@ $(document).ready(function() {
 
     map.dragRotate.disable();
         
-    var defLoc = "DC";
+    var defLoc = "cities";
     
     //initial button focus
-    document.getElementById("DC").focus();
+    document.getElementById("cities").focus();
     
     //initialize car for transit
     var transitType = "driving";
     document.getElementById("car").style.backgroundColor = "#3A5391";
         
     //fly to cities
+    var citiesOut = false;
+    $('.cities').on('click', function(e) {
+        defLoc = "cities";
+         var $this = $(this);
+        
+        if(citiesOut){
+            citiesOut = false;
+            $this.html('<i class="fa fa-caret-down fa-1x" aria-hidden="true"></i> Cities');
+            document.getElementById('DC').hidden = true;
+            document.getElementById('NYC').hidden = true;
+            document.getElementById('SF').hidden = true;
+            document.getElementById('PA').hidden = true;
+            document.getElementById('SM').hidden = true;
+            document.getElementById('CHI').hidden = true;
+            document.getElementById('SEA').hidden = true;
+            document.getElementById('BOS').hidden = true;
+        }else{
+            citiesOut = true;
+            $this.html('<i class="fa fa-caret-up fa-1x" aria-hidden="true"></i> Cities');
+            document.getElementById('DC').hidden = false;
+            document.getElementById('NYC').hidden = false;
+            document.getElementById('SF').hidden = false;
+            document.getElementById('PA').hidden = false;
+            document.getElementById('SM').hidden = false;
+            document.getElementById('CHI').hidden = false;
+            document.getElementById('SEA').hidden = false;
+            document.getElementById('BOS').hidden = false;
+        }
+    });
+    
     $('.DC').on('click', function(e) {
         map.flyTo({
             center: [-77.043132, 38.902705],
@@ -91,6 +121,26 @@ $(document).ready(function() {
         });
         
         defLoc = "CHI";
+    });
+    
+    $('.SEA').on('click', function() {
+        map.flyTo({
+            center: [-122.332067, 47.606928],
+            zoom: 16,
+            speed: 1.5
+        });
+        
+        defLoc = "SEA";
+    });
+    
+    $('.BOS').on('click', function() {
+        map.flyTo({
+            center: [-71.058835, 42.360162],
+            zoom: 16,
+            speed: 1.5
+        });
+        
+        defLoc = "BOS";
     });
     
     //keep focus on the buttons so they stay highlighted
@@ -285,6 +335,9 @@ $(document).ready(function() {
         });
         
         currentAddress = {"lat": lat, "lon": lon};
+        
+        //show directions button
+        document.getElementById('search-directions').hidden = false;
      }
     
     //drop marker
@@ -684,6 +737,17 @@ $(document).ready(function() {
     }
         
     //***********************DIRECTIONS*********************************************
+    
+    $('.call-search-directions').on('click', function(e) {
+         var query = document.getElementById('address-query').value;
+        var cityState = document.getElementById('city-state').value;
+            
+        document.getElementById('search-directions').hidden = true;
+        $('.open-Directions').click();
+        
+        $('.end-address').val(query);
+        $('.end-city-state').val(cityState);
+    });
     
     //directions button
     $('.open-Directions').on('click', function(e) {

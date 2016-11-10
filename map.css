@@ -90,6 +90,38 @@ html, body {
     background-color: #231D4D;
 }
 
+/********************* Search Directions *****************/
+.search-directions {
+	position: absolute;
+	width: 400px;
+	left: 1%;
+	top: 90px;
+	z-index: 5;
+}
+
+.search-directions button{
+    overflow: visible;
+	position: absolute;
+	float: right;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+	height: 45px;
+	width: 375px;
+	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+    background: #0F0C27;
+	color: #fff;
+    text-transform: uppercase;
+	border-radius: 0 3px 3px 0;
+	text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
+    border: 1px white;
+    border-style: solid;
+}
+
+.search-directions button:hover {
+    background-color: #231D4D;
+}
+
 /******************** Search Info Pane ***********************/
 
 .search-info {
@@ -434,6 +466,10 @@ html, body {
     outline: none;
 }
 
+.gear button:hover {
+    background-color: #231D4D;
+}
+
 .gear .open-gear {
 	position: relative;
 	float: left;
@@ -497,6 +533,10 @@ html, body {
     border: 2px solid #fff;
     border-radius: 25px;
     outline: none;
+}
+
+.direction button:hover {
+    background-color: #231D4D;
 }
 
 .direction .open-Directions {
