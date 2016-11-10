@@ -335,6 +335,9 @@ $(document).ready(function() {
         });
         
         currentAddress = {"lat": lat, "lon": lon};
+        
+        //show directions button
+        document.getElementById('search-directions').hidden = false;
      }
     
     //drop marker
