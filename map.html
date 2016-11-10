@@ -15,12 +15,15 @@
     <body>
         
         <div class="options">
-            <button id="DC" class="DC">Washington DC</button>
-            <button id="NYC" class="NYC">New York</button>
-            <button id="SF" class="SF">San Francisco</button>
-            <button id="PA" class="PA">Palo Alto</button>
-            <button id="SM" class="SM">Santa Monica/LA</button>
-            <button id="CHI" class="CHI">Chicago</button>
+            <button id="cities" class="cities"><i class="fa fa-caret-down fa-1x" aria-hidden="true" ></i> Cities</button>
+            <button id="DC" class="DC" hidden="true">Washington DC</button>
+            <button id="NYC" class="NYC" hidden="true">New York</button>
+            <button id="SF" class="SF" hidden="true">San Francisco</button>
+            <button id="PA" class="PA" hidden="true">Palo Alto</button>
+            <button id="SM" class="SM" hidden="true">Santa Monica/LA</button>
+            <button id="CHI" class="CHI" hidden="true">Chicago</button>
+            <button id="SEA" class="SEA" hidden="true">Seattle</button>
+            <button id="BOS" class="BOS" hidden="true">Boston</button>
           </div>
         
         <div id='map'>
@@ -29,6 +32,10 @@
                 <button class="address-search" type="button">Go</button>
                 <input id="city-state" type="text" placeholder="City, State" required>
             </form>
+            
+            <div class="search-directions">
+                <button type="button">Directions To Here</button>
+            </div>
             
             <div class="zoom">
                 <button id="zoomIn" class="IN"><i class="fa fa-plus fa-1x" aria-hidden="true" ></i></button>
