@@ -25,8 +25,41 @@ $(document).ready(function() {
         
     var defLoc = "cities";
     
-    //mobile OS detection
-    console.log("is mobile? - " + detectmob());
+    //mobile OS detection and setup    
+    if(detectmob()){        
+        document.getElementById('zoom').hidden = true;
+        
+        //nav buttons
+        $(".gear").css("left", "-10%");
+        $(".sat").css("left", "-1%");
+        $(".sat").css("bottom", "-1%");
+        $(".sat button").css("height", "60px");
+        $(".sat button").css("width", "60px");
+        $(".sat button").css("background-size", "60px 60px");
+        $(".sat button").css("border-radius", "30px");
+        $(".direction").css("left", "-1%");
+        $(".direction").css("bottom", "-1%");
+        $(".direction button").css("width", "60px");
+        $(".direction button").css("height", "60px");
+        $(".direction button").css("background-size", "60px 60px");
+        $(".direction button").css("border-radius", "30px");
+        
+        //address search
+        $(".search-form").css("width", "100%");
+        $(".search-form input").css("width", "74%");
+        $(".search-form button").css("width", "19%");
+        $(".search-directions").css("top", "auto");
+        $(".search-directions").css("left", "auto");
+        $(".search-directions").css("right", "1%");
+        $(".search-directions").css("bottom", "50px");
+        $(".search-directions").css("width", "50%");
+        $(".search-directions button").css("width", "95%");
+        
+        //cities
+        $(".options").css("top", "75px");
+        $(".options").css("right", "3%");
+        $(".options").css("width", "45%");
+    }
     
     function detectmob() { 
         if( navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i)
