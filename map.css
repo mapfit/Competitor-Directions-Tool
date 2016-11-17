@@ -702,7 +702,7 @@ html, body {
 	position: absolute;
 	width: 300px;
 	left: 5%;
-	top: 200px;
+	top: 250px;
 	z-index: 5;
     display: table;
 }
