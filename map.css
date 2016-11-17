@@ -48,6 +48,7 @@ html, body {
 	font-weight: normal;
 	font-style: italic;
     margin-bottom: 2px;
+    border-radius: 5px;
 }
 
 .search-form input-state {
@@ -59,6 +60,7 @@ html, body {
 	background: #FFFFFF;
 	font-weight: normal;
 	font-style: italic;
+    border-radius: 5px;
 }
 
 .search-form input:focus {
@@ -83,6 +85,7 @@ html, body {
 	text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
     border: 1px white;
     border-style: solid;
+    border-radius: 10px;
 /*    margin-left: 5px;*/
 }
 
