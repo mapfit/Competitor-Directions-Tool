@@ -798,7 +798,7 @@ $(document).ready(function() {
             $('.open-Directions').css("background", "#0F0C27");
             
             //close directions menu
-            document.getElementById("menu").style.marginLeft = "-387px";
+            $('.close').click();
         }else{
             directionOut = true;
             $('.open-Directions').css("color", "#0F0C27");
