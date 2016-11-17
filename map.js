@@ -40,7 +40,7 @@ $(document).ready(function() {
         
         if(citiesOut){
             citiesOut = false;
-            $this.html('<i class="fa fa-caret-down fa-1x" aria-hidden="true"></i> Cities');
+            $this.html('<i class="fa fa-building-o fa-2x" aria-hidden="false"></i>');
             document.getElementById('DC').hidden = true;
             document.getElementById('NYC').hidden = true;
             document.getElementById('SF').hidden = true;
@@ -51,7 +51,7 @@ $(document).ready(function() {
             document.getElementById('BOS').hidden = true;
         }else{
             citiesOut = true;
-            $this.html('<i class="fa fa-caret-up fa-1x" aria-hidden="true"></i> Cities');
+            $this.html('<i class="fa fa-building fa-2x" aria-hidden="false"></i>');
             document.getElementById('DC').hidden = false;
             document.getElementById('NYC').hidden = false;
             document.getElementById('SF').hidden = false;
