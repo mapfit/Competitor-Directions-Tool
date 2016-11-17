@@ -32,6 +32,21 @@ $(document).ready(function() {
     var transitType = "driving";
     document.getElementById("car").style.backgroundColor = "#3A5391";
         
+    //toggle pins
+    var pinsOn = true;
+    $('.toggle-pin').on('click', function(e) {
+        
+        if(pinsOn){
+            pinsOn = false;
+            $('.toggle-pin').css("color", "#0F0C27");
+            $('.toggle-pin').css("background", "#fff");
+        }else{
+            pinsOn = true;
+            $('.toggle-pin').css("color", "#fff");
+            $('.toggle-pin').css("background", "#0F0C27");
+        }
+    });
+    
     //fly to cities
     var citiesOut = false;
     $('.cities').on('click', function(e) {
@@ -40,7 +55,7 @@ $(document).ready(function() {
         
         if(citiesOut){
             citiesOut = false;
-            $this.html('<i class="fa fa-building-o fa-2x" aria-hidden="false"></i>');
+            $this.html('<img src="New%20York%20Filled-50.png">');
             document.getElementById('DC').hidden = true;
             document.getElementById('NYC').hidden = true;
             document.getElementById('SF').hidden = true;
@@ -51,7 +66,7 @@ $(document).ready(function() {
             document.getElementById('BOS').hidden = true;
         }else{
             citiesOut = true;
-            $this.html('<i class="fa fa-building fa-2x" aria-hidden="false"></i>');
+            $this.html('<img src="New%20York-50.png">');
             document.getElementById('DC').hidden = false;
             document.getElementById('NYC').hidden = false;
             document.getElementById('SF').hidden = false;
@@ -750,6 +765,7 @@ $(document).ready(function() {
     });
     
     //directions button
+    var directionOut = false;
     $('.open-Directions').on('click', function(e) {
         var addresses = map.getSource('addresses')
 
@@ -763,6 +779,19 @@ $(document).ready(function() {
             map.setLayoutProperty("bingDist", 'visibility', 'none');
         }
         document.getElementById("menu").style.marginLeft = "0px";
+        
+        if(directionOut){
+            directionOut = false;
+            $('.open-Directions').css("color", "#fff");
+            $('.open-Directions').css("background", "#0F0C27");
+            
+            //close directions menu
+            document.getElementById("menu").style.marginLeft = "-387px";
+        }else{
+            directionOut = true;
+            $('.open-Directions').css("color", "#0F0C27");
+            $('.open-Directions').css("background", "#fff");
+        }
     });
     
     $('.close').on('click', function(e) {
