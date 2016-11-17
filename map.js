@@ -809,6 +809,12 @@ $(document).ready(function() {
     $('.close').on('click', function(e) {
         document.getElementById("menu").style.marginLeft = "-387px";
         
+        if(directionOut){            
+            directionOut = false;
+            $('.open-Directions').css("color", "#fff");
+            $('.open-Directions').css("background", "#0F0C27");
+        }
+        
         map.setLayoutProperty("route", 'visibility', 'none');
         map.setLayoutProperty("gRoute", 'visibility', 'none');
         map.setLayoutProperty("gStart", 'visibility', 'none');
