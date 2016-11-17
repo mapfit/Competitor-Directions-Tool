@@ -944,7 +944,7 @@ $(document).ready(function() {
            }
          };
         
-        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + startAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
+        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + startAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&type=" + transitType + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
         
          xhttp.send();
     }
@@ -976,7 +976,7 @@ $(document).ready(function() {
            }
          };
         
-        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + endAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
+        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + endAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&type=" + transitType + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
         
          xhttp.send();
     }
