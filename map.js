@@ -67,7 +67,7 @@ $(document).ready(function() {
         
         if(citiesOut){
             citiesOut = false;
-            $this.html('<img src="New%20York%20Filled-50.png">');
+            $this.html('<img src="Skyline-Filled-50.png">');
             document.getElementById('DC').hidden = true;
             document.getElementById('NYC').hidden = true;
             document.getElementById('SF').hidden = true;
@@ -78,7 +78,7 @@ $(document).ready(function() {
             document.getElementById('BOS').hidden = true;
         }else{
             citiesOut = true;
-            $this.html('<img src="New%20York-50.png">');
+            $this.html('<img src="Skyline-50.png">');
             document.getElementById('DC').hidden = false;
             document.getElementById('NYC').hidden = false;
             document.getElementById('SF').hidden = false;
