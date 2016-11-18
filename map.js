@@ -55,7 +55,6 @@ $(document).ready(function() {
         $(".menu").css("margin-left", "-100%");
         $(".directions-form").css("width", "80%");
         $(".directions-form input").css("width", "100%");
-//        $(".start-city-state").css("width", "75%");
     }
     
     function detectmob() { 
@@ -861,6 +860,11 @@ $(document).ready(function() {
             document.getElementById("menu").style.marginLeft = "-387px";
         }
         
+        //hide buttons if out
+        document.getElementById('on-map').hidden = true;
+        $('.on-map-sim').text('Run Nav Simulation');
+        document.getElementById('search-directions').hidden = true;
+        
         map.setLayoutProperty("route", 'visibility', 'none');
         map.setLayoutProperty("gRoute", 'visibility', 'none');
         map.setLayoutProperty("gStart", 'visibility', 'none');
@@ -992,11 +996,14 @@ $(document).ready(function() {
         console.log("get " + transitType + " directions");
         
         if(detectmob){
+            document.getElementById('search-directions').hidden = true;
             $('.menu').css("margin-left", "-100%");
 
             directionOut = false;
             $('.open-Directions').css("color", "#fff");
             $('.open-Directions').css("background", "#0F0C27");
+            
+            document.getElementById('on-map').hidden = false;
         }
         
         //get query parts
@@ -2319,6 +2326,54 @@ $(document).ready(function() {
 
         navCounter = navCounter + 1;
     }
+    
+    /// ON MAP CONTROLS
+    $('.on-map-sim').on('click', function(e){
+        $('.demo').click();
+        
+        var $this = $(this);
+        
+        if(demoRunning){
+            $this.text('Stop Demo');
+        }else{
+            $this.text('Run Nav Simulation');
+        }
+    });
 
+    $('.clear-route').on('click', function(e){
+        //hide buttons
+        document.getElementById('on-map').hidden = true;
+        $('.on-map-sim').text('Run Nav Simulation');
+        
+        map.setLayoutProperty("route", 'visibility', 'none');
+        map.setLayoutProperty("gRoute", 'visibility', 'none');
+        map.setLayoutProperty("gStart", 'visibility', 'none');
+        map.setLayoutProperty("gEnd", 'visibility', 'none');
+        map.setLayoutProperty("googleStart", 'visibility', 'none');
+        map.setLayoutProperty("googleEnd", 'visibility', 'none');
+        map.setLayoutProperty("routeStart", 'visibility', 'none');
+        map.setLayoutProperty("routeEnd", 'visibility', 'none');
+        
+        map.setLayoutProperty("openRoute", 'visibility', 'none');
+        map.setLayoutProperty("openStart", 'visibility', 'none');
+        map.setLayoutProperty("openEnd", 'visibility', 'none');
+        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
+        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
+        
+        map.setLayoutProperty("bingRoute", 'visibility', 'none');
+        map.setLayoutProperty("bingStart", 'visibility', 'none');
+        map.setLayoutProperty("bingEnd", 'visibility', 'none');
+        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
+        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
+        
+        //stop navigation
+        navCounter = -1;
+        map.setLayoutProperty("navPoint", 'visibility', 'none');
+        
+        //change camera zoom/pitch/bearing
+        map.setZoom(15);
+        map.setPitch(0);
+        map.setBearing(0);
+    });
 });
 

@@ -869,17 +869,15 @@ html, body {
 .on-map {
 	position: absolute;
 	width: 50%;
-	left: 1%;
-	bottom: 50px;
+	left: 2%;
+	bottom: 5px;
 	z-index: 5;
 }
 
 .on-map button{
-    overflow: visible;
-	position: absolute;
 	float: right;
 	border: 0;
-	padding: 0;
+	padding: 1px;
 	cursor: pointer;
 	height: 45px;
 	width: 100%;
@@ -891,6 +889,7 @@ html, body {
 	text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
     border: 1px white;
     border-style: solid;
+    margin: 2px;
 }
 
 .on-map button:hover {
