@@ -29,21 +29,6 @@ $(document).ready(function() {
     if(detectmob()){        
         document.getElementById('zoom').hidden = true;
         
-        //nav buttons
-//        $(".gear").css("left", "-10%");
-//        $(".sat").css("left", "-1%");
-//        $(".sat").css("bottom", "-1%");
-//        $(".sat button").css("height", "60px");
-//        $(".sat button").css("width", "60px");
-//        $(".sat button").css("background-size", "60px 60px");
-//        $(".sat button").css("border-radius", "30px");
-//        $(".direction").css("left", "-1%");
-//        $(".direction").css("bottom", "-1%");
-//        $(".direction button").css("width", "60px");
-//        $(".direction button").css("height", "60px");
-//        $(".direction button").css("background-size", "60px 60px");
-//        $(".direction button").css("border-radius", "30px");
-        
         //address search
         $(".search-form").css("width", "100%");
         $(".search-form input").css("width", "74%");
@@ -997,6 +982,14 @@ $(document).ready(function() {
         
     $('.get-directions').on('click', function(e) {        
         console.log("get " + transitType + " directions");
+        
+        if(detectmob){
+            document.getElementById("menu").style.marginLeft = "-387px";
+
+            directionOut = false;
+            $('.open-Directions').css("color", "#fff");
+            $('.open-Directions').css("background", "#0F0C27");
+        }
         
         //get query parts
         var startAddress = document.getElementById('start-address').value;
