@@ -29,7 +29,7 @@ html, body {
 	position: absolute;
 	width: 400px;
 	left: 1%;
-	top: 20px;
+	top: 1%;
 /*	background: #FEFFFF;*/
 	z-index: 5;
 }
@@ -863,4 +863,35 @@ html, body {
 	z-index: 5;
     font-size: 20px;
     font-style: oblique;
+}
+
+/********************* On-Map Direction Buttons *****************/
+.on-map {
+	position: absolute;
+	width: 50%;
+	left: 2%;
+	bottom: 5px;
+	z-index: 5;
+}
+
+.on-map button{
+	float: right;
+	border: 0;
+	padding: 1px;
+	cursor: pointer;
+	height: 45px;
+	width: 100%;
+	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+    background: #0F0C27;
+	color: #fff;
+    text-transform: uppercase;
+	border-radius: 0 3px 3px 0;
+	text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
+    border: 1px white;
+    border-style: solid;
+    margin: 2px;
+}
+
+.on-map button:hover {
+    background-color: #231D4D;
 }
