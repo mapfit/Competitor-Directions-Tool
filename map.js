@@ -79,6 +79,33 @@ $(document).ready(function() {
     var transitType = "driving";
     document.getElementById("car").style.backgroundColor = "#3A5391";
         
+    //toggle pins
+    var pinsOn = true;
+    $('.toggle-pin').on('click', function(e) {
+        
+        if(pinsOn){
+            pinsOn = false;
+            $('.toggle-pin').css("color", "#0F0C27");
+            $('.toggle-pin').css("background", "#fff");
+            
+            map.setLayoutProperty("dc-qa3-69l1tb", 'visibility', 'none');
+            map.setLayoutProperty("nyc-qa3-6p88sb", 'visibility', 'none');
+            map.setLayoutProperty("sfbayarea-qa3-5q3pey", 'visibility', 'none');
+            map.setLayoutProperty("la-qa3-ctl2ua", 'visibility', 'none');
+            map.setLayoutProperty("chi-il-qa-a8xu42", 'visibility', 'none');
+        }else{
+            pinsOn = true;
+            $('.toggle-pin').css("color", "#fff");
+            $('.toggle-pin').css("background", "#0F0C27");
+            
+            map.setLayoutProperty("dc-qa3-69l1tb", 'visibility', 'visible');
+            map.setLayoutProperty("nyc-qa3-6p88sb", 'visibility', 'visible');
+            map.setLayoutProperty("sfbayarea-qa3-5q3pey", 'visibility', 'visible');
+            map.setLayoutProperty("la-qa3-ctl2ua", 'visibility', 'visible');
+            map.setLayoutProperty("chi-il-qa-a8xu42", 'visibility', 'visible');
+        }
+    });
+    
     //fly to cities
     var citiesOut = false;
     $('.cities').on('click', function(e) {
@@ -87,7 +114,7 @@ $(document).ready(function() {
         
         if(citiesOut){
             citiesOut = false;
-            $this.html('<i class="fa fa-caret-down fa-1x" aria-hidden="true"></i> Cities');
+            $this.html('<img src="Skyline-Filled-50.png">');
             document.getElementById('DC').hidden = true;
             document.getElementById('NYC').hidden = true;
             document.getElementById('SF').hidden = true;
@@ -98,7 +125,7 @@ $(document).ready(function() {
             document.getElementById('BOS').hidden = true;
         }else{
             citiesOut = true;
-            $this.html('<i class="fa fa-caret-up fa-1x" aria-hidden="true"></i> Cities');
+            $this.html('<img src="Skyline-50.png">');
             document.getElementById('DC').hidden = false;
             document.getElementById('NYC').hidden = false;
             document.getElementById('SF').hidden = false;
@@ -797,6 +824,7 @@ $(document).ready(function() {
     });
     
     //directions button
+    var directionOut = false;
     $('.open-Directions').on('click', function(e) {
         var addresses = map.getSource('addresses')
 
@@ -810,10 +838,29 @@ $(document).ready(function() {
             map.setLayoutProperty("bingDist", 'visibility', 'none');
         }
         document.getElementById("menu").style.marginLeft = "0px";
+        
+        if(directionOut){
+            directionOut = false;
+            $('.open-Directions').css("color", "#fff");
+            $('.open-Directions').css("background", "#0F0C27");
+            
+            //close directions menu
+            $('.close').click();
+        }else{
+            directionOut = true;
+            $('.open-Directions').css("color", "#0F0C27");
+            $('.open-Directions').css("background", "#fff");
+        }
     });
     
     $('.close').on('click', function(e) {
         document.getElementById("menu").style.marginLeft = "-387px";
+        
+        if(directionOut){            
+            directionOut = false;
+            $('.open-Directions').css("color", "#fff");
+            $('.open-Directions').css("background", "#0F0C27");
+        }
         
         map.setLayoutProperty("route", 'visibility', 'none');
         map.setLayoutProperty("gRoute", 'visibility', 'none');
@@ -991,7 +1038,7 @@ $(document).ready(function() {
            }
          };
         
-        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + startAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
+        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + startAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&type=" + transitType + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
         
          xhttp.send();
     }
@@ -1023,7 +1070,7 @@ $(document).ready(function() {
            }
          };
         
-        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + endAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
+        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + endAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&type=" + transitType + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
         
          xhttp.send();
     }

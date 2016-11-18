@@ -48,6 +48,7 @@ html, body {
 	font-weight: normal;
 	font-style: italic;
     margin-bottom: 2px;
+    border-radius: 5px;
 }
 
 .search-form input-state {
@@ -59,6 +60,7 @@ html, body {
 	background: #FFFFFF;
 	font-weight: normal;
 	font-style: italic;
+    border-radius: 5px;
 }
 
 .search-form input:focus {
@@ -83,6 +85,7 @@ html, body {
 	text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
     border: 1px white;
     border-style: solid;
+    border-radius: 10px;
 /*    margin-left: 5px;*/
 }
 
@@ -217,10 +220,10 @@ html, body {
 
 .options {
 	position: absolute;
-	right: 0%;
+	right: 10px;
 	z-index: 5;
 	top: 20px;
-    width: 200px;
+    width: 50px;
 }
 
 .options img {
@@ -229,15 +232,17 @@ html, body {
 }
 
 .options button {
-	height: 30px;
-	width: 165px;
+	height: 50px;
+	width: 50px;
     background: #0F0C27;
 	color: #fff;
 	text-transform: uppercase;
 	cursor: pointer;
 	margin: 2.5px;
     font-size: 15px;
-    border: none;
+    border: 2px solid #fff;
+    border-radius: 25px;
+    outline: none;
 }
 
 .options .add-pin {
@@ -261,8 +266,10 @@ html, body {
 }
 
 .options button:focus {
+/*
     outline: solid;
     outline-color: floralwhite;
+*/
 }
 
 .dropdown #pin-toggle {
@@ -389,7 +396,7 @@ html, body {
 
 .satView {
 	position: absolute;
-	left: 5%;
+	right: 5%;
 	z-index: 5;
 	bottom: 20px;
 }
@@ -479,9 +486,9 @@ html, body {
 
 .sat {
 	position: absolute;
-	left: 0%;
+	right: 125px;
 	z-index: 5;
-	bottom: 0px;
+	top: 20px;
 }
 
 .sat img {
@@ -512,9 +519,9 @@ html, body {
 
 .direction {
 	position: absolute;
-	left: 0%;
+	right: 65px;
 	z-index: 5;
-	bottom: 0px;
+	top: 20px;
 }
 
 .direction img {
@@ -540,6 +547,43 @@ html, body {
 }
 
 .direction .open-Directions {
+	position: relative;
+	float: left;
+}
+
+/******************** Sat Button ********************/
+
+.pin {
+	position: absolute;
+	right: 185px;
+	z-index: 5;
+	top: 20px;
+}
+
+.pin img {
+	height: 25px;
+	width: 25px;
+}
+
+.pin button {
+	height: 50px;
+	width: 50px;
+	background: #0F0C27;
+	color: #fff;
+	text-transform: uppercase;
+	cursor: pointer;
+	margin: 1px;
+    border: 2px solid #fff;
+    border-radius: 25px;
+    outline: none;
+}
+
+.pin button:hover {
+    background-color: #231D4D;
+}
+
+
+.pin .toggle-pin {
 	position: relative;
 	float: left;
 }
@@ -658,7 +702,7 @@ html, body {
 	position: absolute;
 	width: 300px;
 	left: 5%;
-	top: 200px;
+	top: 250px;
 	z-index: 5;
     display: table;
 }
