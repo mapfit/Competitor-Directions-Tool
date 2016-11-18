@@ -111,6 +111,7 @@ $(document).ready(function() {
         if(citiesOut){
             citiesOut = false;
             $this.html('<img src="Skyline-Filled-50.png">');
+            $this.css("background", "#0F0C27");
             document.getElementById('DC').hidden = true;
             document.getElementById('NYC').hidden = true;
             document.getElementById('SF').hidden = true;
@@ -122,6 +123,7 @@ $(document).ready(function() {
         }else{
             citiesOut = true;
             $this.html('<img src="Skyline-50.png">');
+            $this.css("background", "#fff");
             document.getElementById('DC').hidden = false;
             document.getElementById('NYC').hidden = false;
             document.getElementById('SF').hidden = false;
