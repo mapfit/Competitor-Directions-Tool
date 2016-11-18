@@ -30,19 +30,19 @@ $(document).ready(function() {
         document.getElementById('zoom').hidden = true;
         
         //nav buttons
-        $(".gear").css("left", "-10%");
-        $(".sat").css("left", "-1%");
-        $(".sat").css("bottom", "-1%");
-        $(".sat button").css("height", "60px");
-        $(".sat button").css("width", "60px");
-        $(".sat button").css("background-size", "60px 60px");
-        $(".sat button").css("border-radius", "30px");
-        $(".direction").css("left", "-1%");
-        $(".direction").css("bottom", "-1%");
-        $(".direction button").css("width", "60px");
-        $(".direction button").css("height", "60px");
-        $(".direction button").css("background-size", "60px 60px");
-        $(".direction button").css("border-radius", "30px");
+//        $(".gear").css("left", "-10%");
+//        $(".sat").css("left", "-1%");
+//        $(".sat").css("bottom", "-1%");
+//        $(".sat button").css("height", "60px");
+//        $(".sat button").css("width", "60px");
+//        $(".sat button").css("background-size", "60px 60px");
+//        $(".sat button").css("border-radius", "30px");
+//        $(".direction").css("left", "-1%");
+//        $(".direction").css("bottom", "-1%");
+//        $(".direction button").css("width", "60px");
+//        $(".direction button").css("height", "60px");
+//        $(".direction button").css("background-size", "60px 60px");
+//        $(".direction button").css("border-radius", "30px");
         
         //address search
         $(".search-form").css("width", "100%");
@@ -57,8 +57,13 @@ $(document).ready(function() {
         
         //cities
         $(".options").css("top", "75px");
-        $(".options").css("left", "10px");
-        $(".options").css("width", "50%");
+        $(".options").css("right", "10px");
+        $(".options").css("width", "50px");
+        
+        //buttons
+        $(".direction").css("top", "75px");
+        $(".sat").css("top", "75px");
+        $(".pin").css("top", "75px");
     }
     
     function detectmob() { 
