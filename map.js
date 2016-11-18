@@ -57,8 +57,8 @@ $(document).ready(function() {
         
         //cities
         $(".options").css("top", "75px");
-        $(".options").css("right", "3%");
-        $(".options").css("width", "45%");
+        $(".options").css("left", "10px");
+        $(".options").css("width", "50%");
     }
     
     function detectmob() { 
