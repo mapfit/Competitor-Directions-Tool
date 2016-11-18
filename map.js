@@ -49,6 +49,13 @@ $(document).ready(function() {
         $(".direction").css("top", "75px");
         $(".sat").css("top", "75px");
         $(".pin").css("top", "75px");
+        
+        //directions menu
+        $(".menu").css("width", "100%");
+        $(".menu").css("margin-left", "-100%");
+        $(".directions-form").css("width", "80%");
+        $(".directions-form input").css("width", "100%");
+//        $(".start-city-state").css("width", "75%");
     }
     
     function detectmob() { 
@@ -844,12 +851,14 @@ $(document).ready(function() {
     });
     
     $('.close').on('click', function(e) {
-        document.getElementById("menu").style.marginLeft = "-387px";
         
         if(directionOut){            
             directionOut = false;
             $('.open-Directions').css("color", "#fff");
             $('.open-Directions').css("background", "#0F0C27");
+            $('.menu').css("margin-left", "-100%");
+        }else{
+            document.getElementById("menu").style.marginLeft = "-387px";
         }
         
         map.setLayoutProperty("route", 'visibility', 'none');
@@ -958,7 +967,6 @@ $(document).ready(function() {
                 }
             }
         }
-        
     });
     
     //sat button toggle
@@ -984,7 +992,7 @@ $(document).ready(function() {
         console.log("get " + transitType + " directions");
         
         if(detectmob){
-            document.getElementById("menu").style.marginLeft = "-387px";
+            $('.menu').css("margin-left", "-100%");
 
             directionOut = false;
             $('.open-Directions').css("color", "#fff");

@@ -864,3 +864,35 @@ html, body {
     font-size: 20px;
     font-style: oblique;
 }
+
+/********************* On-Map Direction Buttons *****************/
+.on-map {
+	position: absolute;
+	width: 50%;
+	left: 1%;
+	bottom: 50px;
+	z-index: 5;
+}
+
+.on-map button{
+    overflow: visible;
+	position: absolute;
+	float: right;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+	height: 45px;
+	width: 100%;
+	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+    background: #0F0C27;
+	color: #fff;
+    text-transform: uppercase;
+	border-radius: 0 3px 3px 0;
+	text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
+    border: 1px white;
+    border-style: solid;
+}
+
+.on-map button:hover {
+    background-color: #231D4D;
+}
