@@ -272,6 +272,11 @@ $(document).ready(function() {
          var query = document.getElementById('address-query').value;
         var cityState = document.getElementById('city-state').value;
                 
+        if(query == ""){
+            alert("No address provided. Please enter an address to search.");
+            return;
+        }
+        
         if(cityState == ""){
             coordSearch(query);
         }else{
@@ -315,9 +320,7 @@ $(document).ready(function() {
            }
              
          };
-        
-        console.log("city: -" + city + "-");
-        
+                
         xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
         
          xhttp.send();
@@ -817,15 +820,18 @@ $(document).ready(function() {
         var cityState = document.getElementById('city-state').value;
             
         document.getElementById('search-directions').hidden = true;
-        $('.open-Directions').click();
         
         $('.end-address').val(query);
         $('.end-city-state').val(cityState);
+                
+        $('.open-Directions').click();
     });
     
     //directions button
     var directionOut = false;
     $('.open-Directions').on('click', function(e) {
+        document.getElementById("menu").style.marginLeft = "0px";
+        
         var addresses = map.getSource('addresses')
 
         if(addresses){
@@ -837,7 +843,7 @@ $(document).ready(function() {
             map.setLayoutProperty("bingAddress", 'visibility', 'none');
             map.setLayoutProperty("bingDist", 'visibility', 'none');
         }
-        document.getElementById("menu").style.marginLeft = "0px";
+        
         
         if(directionOut){
             directionOut = false;
@@ -999,7 +1005,7 @@ $(document).ready(function() {
     $('.get-directions').on('click', function(e) {        
         console.log("get " + transitType + " directions");
         
-        if(detectmob){
+        if(detectmob()){
             document.getElementById('search-directions').hidden = true;
             $('.menu').css("margin-left", "-100%");
 
