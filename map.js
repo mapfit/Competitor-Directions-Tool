@@ -272,6 +272,11 @@ $(document).ready(function() {
          var query = document.getElementById('address-query').value;
         var cityState = document.getElementById('city-state').value;
                 
+        if(query == ""){
+            alert("No address provided. Please enter an address to search.");
+            return;
+        }
+        
         if(cityState == ""){
             coordSearch(query);
         }else{
