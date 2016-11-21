@@ -999,7 +999,7 @@ $(document).ready(function() {
     $('.get-directions').on('click', function(e) {        
         console.log("get " + transitType + " directions");
         
-        if(detectmob){
+        if(detectmob()){
             document.getElementById('search-directions').hidden = true;
             $('.menu').css("margin-left", "-100%");
 
