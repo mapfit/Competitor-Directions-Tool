@@ -490,7 +490,7 @@ html, body {
 
 .sat {
 	position: absolute;
-	right: 125px;
+	right: 65px;
 	z-index: 5;
 	top: 20px;
 }
@@ -559,7 +559,7 @@ html, body {
 
 .pin {
 	position: absolute;
-	right: 185px;
+	right: 125px;
 	z-index: 5;
 	top: 20px;
 }
