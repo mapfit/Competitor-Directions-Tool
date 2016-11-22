@@ -718,6 +718,7 @@ html, body {
     background: #fff;
 	color: #0F0C27;
     border: none;
+    padding: 0;
 /*    display: table-cell;*/
 }
 

@@ -1,5 +1,12 @@
 $(document).ready(function() {
     
+    //prevent pin to zoom
+    document.addEventListener('mousewheel', function(e) {
+      if(e.deltaY % 1 !== 0) {
+        e.preventDefault();
+      }
+    });
+    
     mapboxgl.accessToken = 'pk.eyJ1IjoicGFya291cm1ldGhvZCIsImEiOiI5Y2JmOGJhMDYzZDgyODBhYzQ3OTFkZWE3NGFiMmUzYiJ9.kp_5LMwcR79TKOERpkilAQ';
     var googleAPI = 'AIzaSyALB5yXEHcbkr51lCbrPeCdVf60SbWENtU';
     var bingAPI = 'Aks14rX10AqP9GDWoreX8d-Mw-lD1d13TkKKLvgXIGEvr8Ke4Iuni6w5wRUxaKj1';
@@ -21,7 +28,9 @@ $(document).ready(function() {
         attributionControl: false
     });
 
+    //prevent rotation
     map.dragRotate.disable();
+    map.touchZoomRotate.disableRotation();
         
     var defLoc = "cities";
     
