@@ -263,8 +263,8 @@ $(document).ready(function() {
             
             //stop navigation
             navCounter = -1;
-            map.setLayoutProperty("navPoint", 'visibility', 'none');
-
+//            map.setLayoutProperty("navPoint", 'visibility', 'none');
+            document.getElementById('demo-icon').hidden = true;
             //change camera zoom/pitch/bearing
             map.setZoom(15);
             map.setPitch(0);
@@ -2233,34 +2233,36 @@ $(document).ready(function() {
         };
         
         //transit
-        var navIcon = "car-nav";
+        var navIcon = "car_icon@3x.png";
         
         if(transitType == "driving"){
-            navIcon = "car-nav";
+            navIcon = "car_icon@3x.png";
         }else if(transitType == "walking"){
-            navIcon = "walk-nav";
+            navIcon = "run_icon@3x.png";
         }else if(transitType == "cycling"){
-            navIcon = "bike-nav";
+            navIcon = "bike_icon@3x.png";
         }
         
-        if(nav){
-            map.removeSource('navPoint');
-            map.removeLayer('navPoint');
-        }
-
-            map.addSource('navPoint', {
-                "type": "geojson",
-                "data": navPoint
-            });
-
-            map.addLayer({
-                "id": "navPoint",
-                "source": "navPoint",
-                "type": "symbol",
-                "layout": {
-                    "icon-image": navIcon,
-                }
-            });
+        document.getElementById('demo-icon').hidden = false;
+        document.getElementById('demo-icon').src = navIcon;
+//        if(nav){
+//            map.removeSource('navPoint');
+//            map.removeLayer('navPoint');
+//        }
+//
+//            map.addSource('navPoint', {
+//                "type": "geojson",
+//                "data": navPoint
+//            });
+//
+//            map.addLayer({
+//                "id": "navPoint",
+//                "source": "navPoint",
+//                "type": "symbol",
+//                "layout": {
+//                    "icon-image": navIcon,
+//                }
+//            });
         
         //second route
         var route = {
@@ -2297,7 +2299,7 @@ $(document).ready(function() {
             }]
         };
         
-        map.getSource('navPoint').setData(point);
+//        map.getSource('navPoint').setData(point);
 
         map.setCenter(route[navCounter]);
         map.setZoom(18);

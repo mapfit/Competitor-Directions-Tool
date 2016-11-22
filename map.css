@@ -900,3 +900,12 @@ html, body {
 .on-map button:hover {
     background-color: #231D4D;
 }
+
+/***************** Demo Icon *********************/
+.demo-icon {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -15px;
+    margin-left: -15px;
+}
