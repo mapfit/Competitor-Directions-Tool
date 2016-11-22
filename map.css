@@ -238,11 +238,13 @@ html, body {
 	color: #fff;
 	text-transform: uppercase;
 	cursor: pointer;
-	margin: 2.5px;
     font-size: 15px;
     border: 2px solid #fff;
     border-radius: 25px;
     outline: none;
+    text-align: center;
+    padding: 0;
+    margin: 2.5px;
 }
 
 .options .add-pin {
