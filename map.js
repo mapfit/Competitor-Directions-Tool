@@ -822,8 +822,7 @@ $(document).ready(function() {
         document.getElementById('search-directions').hidden = true;
         
         $('.end-address').val(query);
-        $('.end-city-state').val(cityState);
-                
+        $('.end-city-state').val(cityState);        
         $('.open-Directions').click();
     });
     
@@ -1005,17 +1004,6 @@ $(document).ready(function() {
     $('.get-directions').on('click', function(e) {        
         console.log("get " + transitType + " directions");
         
-        if(detectmob()){
-            document.getElementById('search-directions').hidden = true;
-            $('.menu').css("margin-left", "-100%");
-
-            directionOut = false;
-            $('.open-Directions').css("color", "#fff");
-            $('.open-Directions').css("background", "#0F0C27");
-            
-            document.getElementById('on-map').hidden = false;
-        }
-        
         //get query parts
         var startAddress = document.getElementById('start-address').value;
         var startCityState = document.getElementById('start-city-state').value;
@@ -1030,6 +1018,17 @@ $(document).ready(function() {
         if(endCityState.indexOf(",") == -1){
             alert("Your destination is missing a comma between city and state");
             return;
+        }
+        
+        if(detectmob()){
+            document.getElementById('search-directions').hidden = true;
+            $('.menu').css("margin-left", "-100%");
+
+            directionOut = false;
+            $('.open-Directions').css("color", "#fff");
+            $('.open-Directions').css("background", "#0F0C27");
+            
+            document.getElementById('on-map').hidden = false;
         }
         
         startSearch(startAddress, startCityState, endAddress, endCityState);

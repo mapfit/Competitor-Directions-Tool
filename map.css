@@ -716,7 +716,7 @@ html, body {
     background: #fff;
 	color: #0F0C27;
     border: none;
-    display: table-cell;
+/*    display: table-cell;*/
 }
 
 .get-directions {
