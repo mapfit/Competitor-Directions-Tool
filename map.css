@@ -238,11 +238,13 @@ html, body {
 	color: #fff;
 	text-transform: uppercase;
 	cursor: pointer;
-	margin: 2.5px;
     font-size: 15px;
     border: 2px solid #fff;
     border-radius: 25px;
     outline: none;
+    text-align: center;
+    padding: 0;
+    margin: 2.5px;
 }
 
 .options .add-pin {
@@ -716,7 +718,8 @@ html, body {
     background: #fff;
 	color: #0F0C27;
     border: none;
-    display: table-cell;
+    padding: 0;
+/*    display: table-cell;*/
 }
 
 .get-directions {
@@ -734,8 +737,8 @@ html, body {
 	position: absolute;
 	width: 300px;
     height: 50px;
-	left: 5%;
-	top: 420px;
+	left: 6%;
+	top: 400px;
 	z-index: 5;
 }
 
@@ -861,7 +864,7 @@ html, body {
 	width: 300px;
     height: 40px;
 	left: 5%;
-	top: 600px;
+	top: 520px;
 	z-index: 5;
     font-size: 20px;
     font-style: oblique;
@@ -896,4 +899,13 @@ html, body {
 
 .on-map button:hover {
     background-color: #231D4D;
+}
+
+/***************** Demo Icon *********************/
+.demo-icon {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -15px;
+    margin-left: -15px;
 }

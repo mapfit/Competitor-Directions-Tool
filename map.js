@@ -1,5 +1,12 @@
 $(document).ready(function() {
     
+    //prevent pin to zoom
+    document.addEventListener('mousewheel', function(e) {
+      if(e.deltaY % 1 !== 0) {
+        e.preventDefault();
+      }
+    });
+    
     mapboxgl.accessToken = 'pk.eyJ1IjoicGFya291cm1ldGhvZCIsImEiOiI5Y2JmOGJhMDYzZDgyODBhYzQ3OTFkZWE3NGFiMmUzYiJ9.kp_5LMwcR79TKOERpkilAQ';
     var googleAPI = 'AIzaSyALB5yXEHcbkr51lCbrPeCdVf60SbWENtU';
     var bingAPI = 'Aks14rX10AqP9GDWoreX8d-Mw-lD1d13TkKKLvgXIGEvr8Ke4Iuni6w5wRUxaKj1';
@@ -21,7 +28,9 @@ $(document).ready(function() {
         attributionControl: false
     });
 
+    //prevent rotation
     map.dragRotate.disable();
+    map.touchZoomRotate.disableRotation();
         
     var defLoc = "cities";
     
@@ -254,8 +263,8 @@ $(document).ready(function() {
             
             //stop navigation
             navCounter = -1;
-            map.setLayoutProperty("navPoint", 'visibility', 'none');
-
+//            map.setLayoutProperty("navPoint", 'visibility', 'none');
+            document.getElementById('demo-icon').hidden = true;
             //change camera zoom/pitch/bearing
             map.setZoom(15);
             map.setPitch(0);
@@ -822,8 +831,7 @@ $(document).ready(function() {
         document.getElementById('search-directions').hidden = true;
         
         $('.end-address').val(query);
-        $('.end-city-state').val(cityState);
-                
+        $('.end-city-state').val(cityState);        
         $('.open-Directions').click();
     });
     
@@ -1005,17 +1013,6 @@ $(document).ready(function() {
     $('.get-directions').on('click', function(e) {        
         console.log("get " + transitType + " directions");
         
-        if(detectmob()){
-            document.getElementById('search-directions').hidden = true;
-            $('.menu').css("margin-left", "-100%");
-
-            directionOut = false;
-            $('.open-Directions').css("color", "#fff");
-            $('.open-Directions').css("background", "#0F0C27");
-            
-            document.getElementById('on-map').hidden = false;
-        }
-        
         //get query parts
         var startAddress = document.getElementById('start-address').value;
         var startCityState = document.getElementById('start-city-state').value;
@@ -1030,6 +1027,17 @@ $(document).ready(function() {
         if(endCityState.indexOf(",") == -1){
             alert("Your destination is missing a comma between city and state");
             return;
+        }
+        
+        if(detectmob()){
+            document.getElementById('search-directions').hidden = true;
+            $('.menu').css("margin-left", "-100%");
+
+            directionOut = false;
+            $('.open-Directions').css("color", "#fff");
+            $('.open-Directions').css("background", "#0F0C27");
+            
+            document.getElementById('on-map').hidden = false;
         }
         
         startSearch(startAddress, startCityState, endAddress, endCityState);
@@ -2225,34 +2233,36 @@ $(document).ready(function() {
         };
         
         //transit
-        var navIcon = "car-nav";
+        var navIcon = "car_icon@3x.png";
         
         if(transitType == "driving"){
-            navIcon = "car-nav";
+            navIcon = "car_icon@3x.png";
         }else if(transitType == "walking"){
-            navIcon = "walk-nav";
+            navIcon = "run_icon@3x.png";
         }else if(transitType == "cycling"){
-            navIcon = "bike-nav";
+            navIcon = "bike_icon@3x.png";
         }
         
-        if(nav){
-            map.removeSource('navPoint');
-            map.removeLayer('navPoint');
-        }
-
-            map.addSource('navPoint', {
-                "type": "geojson",
-                "data": navPoint
-            });
-
-            map.addLayer({
-                "id": "navPoint",
-                "source": "navPoint",
-                "type": "symbol",
-                "layout": {
-                    "icon-image": navIcon,
-                }
-            });
+        document.getElementById('demo-icon').hidden = false;
+        document.getElementById('demo-icon').src = navIcon;
+//        if(nav){
+//            map.removeSource('navPoint');
+//            map.removeLayer('navPoint');
+//        }
+//
+//            map.addSource('navPoint', {
+//                "type": "geojson",
+//                "data": navPoint
+//            });
+//
+//            map.addLayer({
+//                "id": "navPoint",
+//                "source": "navPoint",
+//                "type": "symbol",
+//                "layout": {
+//                    "icon-image": navIcon,
+//                }
+//            });
         
         //second route
         var route = {
@@ -2289,7 +2299,7 @@ $(document).ready(function() {
             }]
         };
         
-        map.getSource('navPoint').setData(point);
+//        map.getSource('navPoint').setData(point);
 
         map.setCenter(route[navCounter]);
         map.setZoom(18);
