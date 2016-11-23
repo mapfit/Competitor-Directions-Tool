@@ -43,7 +43,7 @@ html, body {
 	height: 20px;
 	padding: 5px;
 	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
-	border: 0;
+	border: 1px solid #0F0C27;
 	background: #FFFFFF;
 	font-weight: normal;
 	font-style: italic;
@@ -56,7 +56,7 @@ html, body {
 	height: 20px;
 	padding: 5px;
 	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
-	border: 0;
+	border: 1px solid #0F0C27;
 	background: #FFFFFF;
 	font-weight: normal;
 	font-style: italic;
@@ -75,8 +75,8 @@ html, body {
 	border: 0;
 	padding: 0;
 	cursor: pointer;
-	height: 62px;
-	width: 62px;
+	height: 67px;
+	width: 67px;
 	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
     background: #0F0C27;
 	color: #fff;
@@ -509,7 +509,7 @@ html, body {
 	text-transform: uppercase;
 	cursor: pointer;
 	margin: 1px;
-    border: 2px solid #fff;
+    border: 2px solid #0F0C27;
     border-radius: 22.5px;
     outline: none;
 }

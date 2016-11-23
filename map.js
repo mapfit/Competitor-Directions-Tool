@@ -90,8 +90,9 @@ $(document).ready(function() {
         
         if(pinsOn){
             pinsOn = false;
-            $('.toggle-pin').css("color", "#fff");
-            $('.toggle-pin').css("background", "#0F0C27");
+            $('.toggle-pin').css("color", "#0F0C27");
+            $('.toggle-pin').css("background", "#fff");
+            $('.toggle-pin').css("border-color", "#0F0C27");
             
             map.setLayoutProperty("dc-qa3-69l1tb", 'visibility', 'visible');
             map.setLayoutProperty("nyc-qa3-6p88sb", 'visibility', 'visible');
@@ -100,8 +101,9 @@ $(document).ready(function() {
             map.setLayoutProperty("chi-il-qa-a8xu42", 'visibility', 'visible');
         }else{
             pinsOn = true;
-            $('.toggle-pin').css("color", "#0F0C27");
-            $('.toggle-pin').css("background", "#fff");
+            $('.toggle-pin').css("color", "#fff");
+            $('.toggle-pin').css("background", "#0F0C27");
+            $('.toggle-pin').css("border-color", "#fff");
             
             map.setLayoutProperty("dc-qa3-69l1tb", 'visibility', 'none');
             map.setLayoutProperty("nyc-qa3-6p88sb", 'visibility', 'none');
@@ -121,6 +123,7 @@ $(document).ready(function() {
             citiesOut = false;
             $this.html('<img src="Skyline-Filled-50.png">');
             $this.css("background", "#0F0C27");
+            $this.css("border-color", "#fff");
             document.getElementById('DC').hidden = true;
             document.getElementById('NYC').hidden = true;
             document.getElementById('SF').hidden = true;
@@ -133,6 +136,7 @@ $(document).ready(function() {
             citiesOut = true;
             $this.html('<img src="Skyline-50.png">');
             $this.css("background", "#fff");
+            $this.css("border-color", "#0F0C27");
             document.getElementById('DC').hidden = false;
             document.getElementById('NYC').hidden = false;
             document.getElementById('SF').hidden = false;
@@ -1001,12 +1005,14 @@ $(document).ready(function() {
             
             $('.toggle-sat').css("background", "url(satMap.png) no-repeat");
             $('.toggle-sat').css("background-size", "50px 50px");
+            $('.toggle-sat').css("border-color", "#0F0C27");
         }else{
             satOn = true;
             map.setLayoutProperty("mapbox-mapbox-satellite", 'visibility', 'visible');
             
             $('.toggle-sat').css("background", "url(normMap.png) no-repeat");
             $('.toggle-sat').css("background-size", "50px 50px");
+            $('.toggle-sat').css("border-color", "#fff");
         }
     });
         
