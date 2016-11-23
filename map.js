@@ -82,7 +82,7 @@ $(document).ready(function() {
     
     //initialize car for transit
     var transitType = "driving";
-    document.getElementById("car").style.backgroundColor = "#3A5391";
+    document.getElementById("car").style.backgroundColor = "#FC0D1B";
         
     //toggle pins
     var pinsOn = true;
@@ -90,9 +90,9 @@ $(document).ready(function() {
         
         if(pinsOn){
             pinsOn = false;
-            $('.toggle-pin').css("color", "#0F0C27");
+            $('.toggle-pin').css("color", "#1F363D");
             $('.toggle-pin').css("background", "#fff");
-            $('.toggle-pin').css("border-color", "#0F0C27");
+            $('.toggle-pin').css("border-color", "#1F363D");
             
             map.setLayoutProperty("dc-qa3-69l1tb", 'visibility', 'visible');
             map.setLayoutProperty("nyc-qa3-6p88sb", 'visibility', 'visible');
@@ -102,7 +102,7 @@ $(document).ready(function() {
         }else{
             pinsOn = true;
             $('.toggle-pin').css("color", "#fff");
-            $('.toggle-pin').css("background", "#0F0C27");
+            $('.toggle-pin').css("background", "#1F363D");
             $('.toggle-pin').css("border-color", "#fff");
             
             map.setLayoutProperty("dc-qa3-69l1tb", 'visibility', 'none');
@@ -122,7 +122,7 @@ $(document).ready(function() {
         if(citiesOut){
             citiesOut = false;
             $this.html('<img src="Skyline-Filled-50.png">');
-            $this.css("background", "#0F0C27");
+            $this.css("background", "#1F363D");
             $this.css("border-color", "#fff");
             document.getElementById('DC').hidden = true;
             document.getElementById('NYC').hidden = true;
@@ -136,7 +136,7 @@ $(document).ready(function() {
             citiesOut = true;
             $this.html('<img src="Skyline-50.png">');
             $this.css("background", "#fff");
-            $this.css("border-color", "#0F0C27");
+            $this.css("border-color", "#1F363D");
             document.getElementById('DC').hidden = false;
             document.getElementById('NYC').hidden = false;
             document.getElementById('SF').hidden = false;
@@ -932,21 +932,21 @@ $(document).ready(function() {
     
     $('#car').on('click', function(e){
         transitType = "driving";
-        document.getElementById("car").style.backgroundColor = "#3A5391";
+        document.getElementById("car").style.backgroundColor = "#FC0D1B";
         document.getElementById("walk").style.backgroundColor = "#FFFFFF";
         document.getElementById("bike").style.backgroundColor = "#FFFFFF";
     });
     
     $('#walk').on('click', function(e){
         transitType = "walking";
-        document.getElementById("walk").style.backgroundColor = "#3A5391";
+        document.getElementById("walk").style.backgroundColor = "#FC0D1B";
         document.getElementById("car").style.backgroundColor = "#FFFFFF";
         document.getElementById("bike").style.backgroundColor = "#FFFFFF";
     });
     
     $('#bike').on('click', function(e){
         transitType = "cycling";
-        document.getElementById("bike").style.backgroundColor = "#3A5391";
+        document.getElementById("bike").style.backgroundColor = "#FC0D1B";
         document.getElementById("walk").style.backgroundColor = "#FFFFFF";
         document.getElementById("car").style.backgroundColor = "#FFFFFF";
     });
@@ -1005,7 +1005,7 @@ $(document).ready(function() {
             
             $('.toggle-sat').css("background", "url(satMap.png) no-repeat");
             $('.toggle-sat').css("background-size", "50px 50px");
-            $('.toggle-sat').css("border-color", "#0F0C27");
+            $('.toggle-sat').css("border-color", "#1F363D");
         }else{
             satOn = true;
             map.setLayoutProperty("mapbox-mapbox-satellite", 'visibility', 'visible');

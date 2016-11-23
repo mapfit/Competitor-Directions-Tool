@@ -78,7 +78,7 @@ html, body {
 	height: 67px;
 	width: 67px;
 	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
-    background: #0F0C27;
+    background: #1F363D;
 	color: #fff;
     text-transform: uppercase;
 	border-radius: 0 3px 3px 0;
@@ -90,7 +90,7 @@ html, body {
 }
 
 .search-form button:hover {
-    background-color: #231D4D;
+    background-color: #1F363D;
 }
 
 /********************* Search Directions *****************/
@@ -112,7 +112,7 @@ html, body {
 	height: 45px;
 	width: 375px;
 	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
-    background: #0F0C27;
+    background: #1F363D;
 	color: #fff;
     text-transform: uppercase;
 	border-radius: 0 3px 3px 0;
@@ -123,7 +123,7 @@ html, body {
 }
 
 .search-directions button:hover {
-    background-color: #231D4D;
+    background-color: #1F363D;
 }
 
 /******************** Search Info Pane ***********************/
@@ -235,7 +235,7 @@ html, body {
 .options button {
 	height: 45px;
 	width: 45px;
-    background: #0F0C27;
+    background: #1F363D;
 	color: #fff;
 	text-transform: uppercase;
 	cursor: pointer;
@@ -265,7 +265,7 @@ html, body {
 
 
 .options button:hover {
-	background-color: #231D4D;
+	background-color: #1F363D;
 }
 
 .options button:focus {
@@ -440,7 +440,7 @@ html, body {
 .zoom button {
 	height: 40px;
 	width: 40px;
-    background: #0F0C27;
+    background: #1F363D;
 	color: #fff;
 	text-transform: uppercase;
 	cursor: pointer;
@@ -573,7 +573,7 @@ html, body {
 .pin button {
 	height: 45px;
 	width: 45px;
-	background: #0F0C27;
+	background: #1F363D;
 	color: #fff;
 	text-transform: uppercase;
 	cursor: pointer;
@@ -584,7 +584,7 @@ html, body {
 }
 
 .pin button:hover {
-    background-color: #231D4D;
+    background-color: #1F363D;
 }
 
 
@@ -596,7 +596,7 @@ html, body {
 /******************** direction menu ***********************/
 
 .menu {
-    background-color: #0F0C27;
+    background-color: #1F363D;
     position: fixed;
     top: 0;
     height: 100%;
@@ -622,7 +622,7 @@ html, body {
     height: 50px;
 	width: 50px;
     right: 0%;
-	background: #0F0C27;
+	background: #1F363D;
 	color: #fff;
 	text-transform: uppercase;
 	cursor: pointer;
@@ -637,7 +637,7 @@ html, body {
 	width: 100px;
     left: 5%;
     top: 15px;
-	background: #0F0C27;
+	background: #1F363D;
 	color: #fff;
 	text-transform: uppercase;
 	margin: 1px;
@@ -659,7 +659,7 @@ html, body {
 	right: 0%;
 	top: 100px;
 	z-index: 5;
-    background: #0F0C27;
+    background: #1F363D;
 	color: #fff;
     border: none;
 }
@@ -669,7 +669,7 @@ html, body {
 	width: 100px;
     left: 0%;
     top: 15px;
-	background: #0F0C27;
+	background: #1F363D;
 	color: #fff;
 	text-transform: uppercase;
 	margin: 1px;
@@ -681,7 +681,7 @@ html, body {
 	width: 100px;
     left: 0%;
     top: 15px;
-	background: #0F0C27;
+	background: #1F363D;
 	color: #fff;
 	text-transform: uppercase;
 	margin: 1px;
@@ -718,7 +718,7 @@ html, body {
     height: 40px;
 	z-index: 5;
     background: #fff;
-	color: #0F0C27;
+	color: #1F363D;
     border: none;
     padding: 0;
     border-radius: 20px;
@@ -751,7 +751,7 @@ html, body {
     height: 50px;
 	width: 300px;
     left: 0%;
-	background: #0F0C27;
+	background: #1F363D;
 	color: white;
     font-size: 17px;
     padding: 5px;
@@ -772,7 +772,7 @@ html, body {
     height: 50px;
 	width: 300px;
     left: 0%;
-	background: #0F0C27;
+	background: #1F363D;
 	color: white;
     font-size: 17px;
     padding: 5px;
@@ -793,7 +793,7 @@ html, body {
     height: 50px;
 	width: 300px;
     left: 0%;
-	background: #0F0C27;
+	background: #1F363D;
 	color: white;
     font-size: 17px;
     padding: 5px;
@@ -814,7 +814,7 @@ html, body {
     height: 50px;
 	width: 300px;
     left: 0%;
-	background: #0F0C27;
+	background: #1F363D;
 	color: white;
     font-size: 17px;
     padding: 5px;
@@ -835,7 +835,7 @@ html, body {
     height: 50px;
 	width: 300px;
     left: 0%;
-	background: #0F0C27;
+	background: #1F363D;
 	color: white;
     font-size: 20px;
     padding: 5px;
@@ -856,7 +856,7 @@ html, body {
     height: 50px;
 	width: 300px;
     left: 0%;
-	background: #0F0C27;
+	background: #1F363D;
 	color: white;
     font-size: 20px;
     padding: 5px;
@@ -894,7 +894,7 @@ html, body {
 	height: 45px;
 	width: 100%;
 	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
-    background: #0F0C27;
+    background: #1F363D;
 	color: #fff;
     text-transform: uppercase;
 	border-radius: 0 3px 3px 0;
@@ -905,7 +905,7 @@ html, body {
 }
 
 .on-map button:hover {
-    background-color: #231D4D;
+    background-color: #1F363D;
 }
 
 /***************** Demo Icon *********************/
