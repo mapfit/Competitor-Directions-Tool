@@ -481,7 +481,7 @@ $(document).ready(function() {
             source: 'addresses',
             type: 'symbol',
             "layout": {
-                "icon-image": "marker-green-15",
+                "icon-image": "geofi-marker",
                 "icon-allow-overlap": true,
                 "text-field": "GeoFi\n" + data.address,
                 "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
@@ -532,7 +532,7 @@ $(document).ready(function() {
                 source: 'gAddress',
                 type: 'symbol',
                 "layout": {
-                    "icon-image": "marker-red-15",
+                    "icon-image": "google-marker",
                     "icon-allow-overlap": true,
                     "text-field": "Google\n" + calcDist(location.lat, location.lng, currentAddress.lat, currentAddress.lon) + "m",
                     "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
@@ -627,7 +627,7 @@ $(document).ready(function() {
             source: 'openAddress',
             type: 'symbol',
             "layout": {
-                "icon-image": "marker-yellow-15",
+                "icon-image": "open-marker",
                 "icon-allow-overlap": true,
                 "text-field": "OSM\n" + calcDist(location[1], location[0], currentAddress.lat, currentAddress.lon) + "m",
                 "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
@@ -770,7 +770,7 @@ $(document).ready(function() {
             source: 'bingAddress',
             type: 'symbol',
             "layout": {
-                "icon-image": "marker-orange-15",
+                "icon-image": "bing-marker",
                 "icon-allow-overlap": true,
                 "text-field": "Bing\n" + calcDist(coords[0], coords[1], currentAddress.lat, currentAddress.lon) + "m",
                 "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
@@ -1540,7 +1540,7 @@ $(document).ready(function() {
                 source: 'routeEnd',
                 type: 'symbol',
                 "layout": {
-                    "icon-image": "marker-green-15",
+                    "icon-image": "geofi-marker",
                 },
                 paint: {
                   "text-color": "#09B529"
@@ -1581,7 +1581,7 @@ $(document).ready(function() {
                 source: 'googleEnd',
                 type: 'symbol',
                 "layout": {
-                    "icon-image": "marker-red-15",
+                    "icon-image": "google-marker",
                 },
                 paint: {
                   "text-color": "#4DD10F"
@@ -1622,7 +1622,7 @@ $(document).ready(function() {
                 source: 'routeStart',
                 type: 'symbol',
                 "layout": {
-                    "icon-image": "marker-green-15",
+                    "icon-image": "geofi-marker",
                 },
                 paint: {
                   "text-color": "#09B529"
@@ -1663,7 +1663,7 @@ $(document).ready(function() {
                 source: 'googleStart',
                 type: 'symbol',
                 "layout": {
-                    "icon-image": "marker-red-15",
+                    "icon-image": "google-marker",
                 },
                 paint: {
                   "text-color": "#4DD10F"
@@ -1830,7 +1830,7 @@ $(document).ready(function() {
             source: 'openStart',
             type: 'symbol',
             "layout": {
-                "icon-image": "marker-yellow-15",
+                "icon-image": "open-marker",
             }
         });
         
@@ -1870,7 +1870,7 @@ $(document).ready(function() {
             source: 'openEnd',
             type: 'symbol',
             "layout": {
-                "icon-image": "marker-yellow-15",
+                "icon-image": "open-marker",
             }
         });
     }
@@ -2090,7 +2090,7 @@ $(document).ready(function() {
             source: 'bingStart',
             type: 'symbol',
             "layout": {
-                "icon-image": "marker-orange-15",
+                "icon-image": "bing-marker",
             }
         }, 'route');
         
@@ -2172,7 +2172,7 @@ $(document).ready(function() {
             source: 'bingEnd',
             type: 'symbol',
             "layout": {
-                "icon-image": "marker-orange-15",
+                "icon-image": "bing-marker",
             }
         }, 'route');
         
