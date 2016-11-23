@@ -450,7 +450,7 @@ $(document).ready(function() {
                   "zip" : data.zip,
                   "placeType" : data["place-type"],
                   "icon" : "circle",
-                  "color" : '#4DD10F'
+                  "color" : '#09B529'
                 }};
 
             thisAddJsonArray.push(thisJSON);
@@ -490,7 +490,7 @@ $(document).ready(function() {
                 "text-offset": [0, 3]
             },
             paint: {
-              "text-color": "#4DD10F"
+              "text-color": "#09B529"
             }
         });
     }
@@ -636,7 +636,7 @@ $(document).ready(function() {
                 "text-offset": [0, 2]
             },
             paint: {
-              'text-color': '#F4F41C',
+              'text-color': '#E864DD',
             },
         });
         
@@ -675,7 +675,7 @@ $(document).ready(function() {
                     "line-cap": "round"
                 },
                 "paint": {
-                    "line-color": "#F4F41C",
+                    "line-color": "#E864DD",
                     "line-width": 3,
                     "line-dasharray": [.5, 1.5]
                 }
@@ -1318,7 +1318,7 @@ $(document).ready(function() {
                     "line-cap": "round"
                 },
                 "paint": {
-                    "line-color": "#4DD10F",
+                    "line-color": "#09B529",
                     "line-width": 4
                 }
             });
@@ -1543,7 +1543,7 @@ $(document).ready(function() {
                     "icon-image": "marker-green-15",
                 },
                 paint: {
-                  "text-color": "#4DD10F"
+                  "text-color": "#09B529"
                 }
             });
     }
@@ -1625,7 +1625,7 @@ $(document).ready(function() {
                     "icon-image": "marker-green-15",
                 },
                 paint: {
-                  "text-color": "#4DD10F"
+                  "text-color": "#09B529"
                 }
             });
     }
@@ -1785,7 +1785,7 @@ $(document).ready(function() {
                     "line-cap": "round"
                 },
                 "paint": {
-                    "line-color": "#F4F41C",
+                    "line-color": "#E864DD",
                     "line-width": 8
                 }
             }, 'route');
@@ -1907,7 +1907,7 @@ $(document).ready(function() {
                     "line-cap": "round"
                 },
                 "paint": {
-                    "line-color": "#F4F41C",
+                    "line-color": "#E864DD",
                     "line-width": 5,
                     "line-dasharray": [.25, 1.5]
                 }
@@ -1943,7 +1943,7 @@ $(document).ready(function() {
                     "line-cap": "round"
                 },
                 "paint": {
-                    "line-color": "#F4F41C",
+                    "line-color": "#E864DD",
                     "line-width": 5,
                     "line-dasharray": [.25, 1.5]
                 }
