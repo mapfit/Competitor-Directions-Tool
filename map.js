@@ -21,7 +21,7 @@ $(document).ready(function() {
     
     var map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/parkourmethod/cim5hb9c600jza0m473wrw6y6',
+        style: 'mapbox://styles/parkourmethod/civtu956m000b2kmx6k62naro',
         center: [-77.043132, 38.902705],
         zoom: 16,
         minZoom: 4,
