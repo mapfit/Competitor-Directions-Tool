@@ -119,6 +119,7 @@ html, body {
 	text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
     border: 1px white;
     border-style: solid;
+    border-radius: 5px;
 }
 
 .search-directions button:hover {
@@ -699,6 +700,7 @@ html, body {
 	font-style: italic;
     margin-bottom: 2px;
     margin-top: 2px;
+    border-radius: 5px;
 }
 
 /******************** travel type select ***********************/
@@ -719,11 +721,13 @@ html, body {
 	color: #0F0C27;
     border: none;
     padding: 0;
+    border-radius: 20px;
 /*    display: table-cell;*/
 }
 
 .get-directions {
 	position: absolute;
+    background: #fff;
 	width: 250;
     height: 40px;
 	left: 45%;
@@ -731,6 +735,7 @@ html, body {
 	z-index: 5;
     font-size: 20px;
     font-style: oblique;
+    border-radius: 5px;
 }
 
 .details-header {
@@ -866,8 +871,10 @@ html, body {
 	left: 5%;
 	top: 520px;
 	z-index: 5;
+    background: #fff;
     font-size: 20px;
     font-style: oblique;
+    border-radius: 5px;
 }
 
 /********************* On-Map Direction Buttons *****************/
