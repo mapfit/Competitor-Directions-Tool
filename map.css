@@ -43,7 +43,7 @@ html, body {
 	height: 20px;
 	padding: 5px;
 	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
-	border: 0;
+	border: 1px solid #0F0C27;
 	background: #FFFFFF;
 	font-weight: normal;
 	font-style: italic;
@@ -56,7 +56,7 @@ html, body {
 	height: 20px;
 	padding: 5px;
 	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
-	border: 0;
+	border: 1px solid #0F0C27;
 	background: #FFFFFF;
 	font-weight: normal;
 	font-style: italic;
@@ -75,8 +75,8 @@ html, body {
 	border: 0;
 	padding: 0;
 	cursor: pointer;
-	height: 62px;
-	width: 62px;
+	height: 67px;
+	width: 67px;
 	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
     background: #0F0C27;
 	color: #fff;
@@ -98,7 +98,7 @@ html, body {
 	position: absolute;
 	width: 400px;
 	left: 1%;
-	top: 90px;
+	top: 80px;
 	z-index: 5;
 }
 
@@ -119,6 +119,7 @@ html, body {
 	text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
     border: 1px white;
     border-style: solid;
+    border-radius: 7px;
 }
 
 .search-directions button:hover {
@@ -232,15 +233,15 @@ html, body {
 }
 
 .options button {
-	height: 50px;
-	width: 50px;
+	height: 45px;
+	width: 45px;
     background: #0F0C27;
 	color: #fff;
 	text-transform: uppercase;
 	cursor: pointer;
-    font-size: 15px;
+    font-size: 13px;
     border: 2px solid #fff;
-    border-radius: 25px;
+    border-radius: 22.5px;
     outline: none;
     text-align: center;
     padding: 0;
@@ -490,7 +491,7 @@ html, body {
 
 .sat {
 	position: absolute;
-	right: 125px;
+	right: 67.5px;
 	z-index: 5;
 	top: 20px;
 }
@@ -501,16 +502,16 @@ html, body {
 }
 
 .sat button {
-	height: 50px;
-	width: 50px;
+	height: 45px;
+	width: 45px;
 	background: url(satMap.png) no-repeat;
     background-size: 50px 50px;
 	color: #fff;
 	text-transform: uppercase;
 	cursor: pointer;
 	margin: 1px;
-    border: 2px solid #fff;
-    border-radius: 25px;
+    border: 2px solid #0F0C27;
+    border-radius: 22.5px;
     outline: none;
 }
 
@@ -559,7 +560,7 @@ html, body {
 
 .pin {
 	position: absolute;
-	right: 185px;
+	right: 125px;
 	z-index: 5;
 	top: 20px;
 }
@@ -570,15 +571,15 @@ html, body {
 }
 
 .pin button {
-	height: 50px;
-	width: 50px;
+	height: 45px;
+	width: 45px;
 	background: #0F0C27;
 	color: #fff;
 	text-transform: uppercase;
 	cursor: pointer;
 	margin: 1px;
     border: 2px solid #fff;
-    border-radius: 25px;
+    border-radius: 22.5px;
     outline: none;
 }
 
@@ -699,6 +700,7 @@ html, body {
 	font-style: italic;
     margin-bottom: 2px;
     margin-top: 2px;
+    border-radius: 5px;
 }
 
 /******************** travel type select ***********************/
@@ -719,11 +721,13 @@ html, body {
 	color: #0F0C27;
     border: none;
     padding: 0;
+    border-radius: 20px;
 /*    display: table-cell;*/
 }
 
 .get-directions {
 	position: absolute;
+    background: #fff;
 	width: 250;
     height: 40px;
 	left: 45%;
@@ -731,6 +735,7 @@ html, body {
 	z-index: 5;
     font-size: 20px;
     font-style: oblique;
+    border-radius: 5px;
 }
 
 .details-header {
@@ -866,8 +871,10 @@ html, body {
 	left: 5%;
 	top: 520px;
 	z-index: 5;
+    background: #fff;
     font-size: 20px;
     font-style: oblique;
+    border-radius: 5px;
 }
 
 /********************* On-Map Direction Buttons *****************/
