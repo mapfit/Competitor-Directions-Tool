@@ -121,7 +121,7 @@ $(document).ready(function() {
         
         if(citiesOut){
             citiesOut = false;
-            $this.html('<img src="Skyline-Filled-50.png">');
+            $this.html('<img src="light-travel.png">');
             $this.css("background", "#1F363D");
             $this.css("border-color", "#fff");
             document.getElementById('DC').hidden = true;
@@ -134,7 +134,7 @@ $(document).ready(function() {
             document.getElementById('BOS').hidden = true;
         }else{
             citiesOut = true;
-            $this.html('<img src="Skyline-50.png">');
+            $this.html('<img src="dark-travel.png">');
             $this.css("background", "#fff");
             $this.css("border-color", "#1F363D");
             document.getElementById('DC').hidden = false;
