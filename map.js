@@ -90,16 +90,6 @@ $(document).ready(function() {
         
         if(pinsOn){
             pinsOn = false;
-            $('.toggle-pin').css("color", "#0F0C27");
-            $('.toggle-pin').css("background", "#fff");
-            
-            map.setLayoutProperty("dc-qa3-69l1tb", 'visibility', 'none');
-            map.setLayoutProperty("nyc-qa3-6p88sb", 'visibility', 'none');
-            map.setLayoutProperty("sfbayarea-qa3-5q3pey", 'visibility', 'none');
-            map.setLayoutProperty("la-qa3-ctl2ua", 'visibility', 'none');
-            map.setLayoutProperty("chi-il-qa-a8xu42", 'visibility', 'none');
-        }else{
-            pinsOn = true;
             $('.toggle-pin').css("color", "#fff");
             $('.toggle-pin').css("background", "#0F0C27");
             
@@ -108,6 +98,16 @@ $(document).ready(function() {
             map.setLayoutProperty("sfbayarea-qa3-5q3pey", 'visibility', 'visible');
             map.setLayoutProperty("la-qa3-ctl2ua", 'visibility', 'visible');
             map.setLayoutProperty("chi-il-qa-a8xu42", 'visibility', 'visible');
+        }else{
+            pinsOn = true;
+            $('.toggle-pin').css("color", "#0F0C27");
+            $('.toggle-pin').css("background", "#fff");
+            
+            map.setLayoutProperty("dc-qa3-69l1tb", 'visibility', 'none');
+            map.setLayoutProperty("nyc-qa3-6p88sb", 'visibility', 'none');
+            map.setLayoutProperty("sfbayarea-qa3-5q3pey", 'visibility', 'none');
+            map.setLayoutProperty("la-qa3-ctl2ua", 'visibility', 'none');
+            map.setLayoutProperty("chi-il-qa-a8xu42", 'visibility', 'none');
         }
     });
     
