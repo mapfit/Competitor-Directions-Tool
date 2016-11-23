@@ -232,15 +232,15 @@ html, body {
 }
 
 .options button {
-	height: 50px;
-	width: 50px;
+	height: 45px;
+	width: 45px;
     background: #0F0C27;
 	color: #fff;
 	text-transform: uppercase;
 	cursor: pointer;
-    font-size: 15px;
+    font-size: 13px;
     border: 2px solid #fff;
-    border-radius: 25px;
+    border-radius: 22.5px;
     outline: none;
     text-align: center;
     padding: 0;
@@ -490,7 +490,7 @@ html, body {
 
 .sat {
 	position: absolute;
-	right: 65px;
+	right: 67.5px;
 	z-index: 5;
 	top: 20px;
 }
@@ -501,8 +501,8 @@ html, body {
 }
 
 .sat button {
-	height: 50px;
-	width: 50px;
+	height: 45px;
+	width: 45px;
 	background: url(satMap.png) no-repeat;
     background-size: 50px 50px;
 	color: #fff;
@@ -510,7 +510,7 @@ html, body {
 	cursor: pointer;
 	margin: 1px;
     border: 2px solid #fff;
-    border-radius: 25px;
+    border-radius: 22.5px;
     outline: none;
 }
 
@@ -570,15 +570,15 @@ html, body {
 }
 
 .pin button {
-	height: 50px;
-	width: 50px;
+	height: 45px;
+	width: 45px;
 	background: #0F0C27;
 	color: #fff;
 	text-transform: uppercase;
 	cursor: pointer;
 	margin: 1px;
     border: 2px solid #fff;
-    border-radius: 25px;
+    border-radius: 22.5px;
     outline: none;
 }
 
