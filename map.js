@@ -1005,14 +1005,14 @@ $(document).ready(function() {
             
             $('.toggle-sat').css("background", "url(satMap.png) no-repeat");
             $('.toggle-sat').css("background-size", "50px 50px");
-            $('.toggle-sat').css("border-color", "#1F363D");
+            $('.toggle-sat').css("border-color", "#fff");
         }else{
             satOn = true;
             map.setLayoutProperty("mapbox-mapbox-satellite", 'visibility', 'visible');
             
             $('.toggle-sat').css("background", "url(normMap.png) no-repeat");
             $('.toggle-sat').css("background-size", "50px 50px");
-            $('.toggle-sat').css("border-color", "#fff");
+            $('.toggle-sat').css("border-color", "#1F363D");
         }
     });
         
