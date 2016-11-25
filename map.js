@@ -1089,99 +1089,6 @@ $(document).ready(function() {
         xhttp.send(dicString);
     }
     
-//    function startSearch(startAddress, startCityState, endAddress, endCityState){
-//        var xhttp = new XMLHttpRequest();
-//        
-//        //split address
-//        var splitQuery = startCityState.split(",");
-//        
-//        var state = splitQuery[1].replace(/\s/g, '');
-//        
-//        var center = map.getCenter();
-//         xhttp.onreadystatechange = function(){
-//           if(xhttp.readyState == 4 && xhttp.status == 200){
-//               var myArr = JSON.parse(xhttp.responseText);
-//
-//               if(myArr[0]){
-//                   endSearch(myArr[0], endAddress, endCityState);
-//               }else{
-//                   console.log("no data found");
-//                   alert("No Matching Address found for your start location. Please try another address.");
-//               }
-//           }else if(xhttp.status == 500){
-//               alert("There was an error. Please try your request again");
-//           }
-//         };
-//        
-//        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + startAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&type=" + transitType + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
-//        
-//         xhttp.send();
-//    }
-//    
-//    function endSearch(startResult, endAddress, endCityState){
-//        var xhttp = new XMLHttpRequest();
-//        
-//        //split address
-//        var splitQuery = endCityState.split(",");
-//        
-//        var state = splitQuery[1].replace(/\s/g, '');
-//        
-//        var center = map.getCenter();
-//         xhttp.onreadystatechange = function(){
-//           if(xhttp.readyState == 4 && xhttp.status == 200){
-//               var myArr = JSON.parse(xhttp.responseText);
-//
-//               if(myArr[0]){
-//                    console.log("start: " + startResult.lat + ", " + startResult.lon + "\n end: " + myArr[0].lat + ", " + myArr[0].lon);
-//
-//                   callMapboxDirections(startResult, myArr[0]);
-//                   googleDirections(startResult, myArr[0]);
-//               }else{
-//                   console.log("no data found");
-//                   alert("No Matching Address found for your destination. Please try another address.");
-//               }
-//           }else if(xhttp.status == 500){
-//               alert("There was an error. Please try your request again");
-//           }
-//         };
-//        
-//        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + endAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&type=" + transitType + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
-//        
-//         xhttp.send();
-//    }
-//    
-//    function callMapboxDirections(startResult, endResult){
-//        var xhttp = new XMLHttpRequest();
-//        
-//        xhttp.onreadystatechange = function(){
-//           if(xhttp.readyState == 4 && xhttp.status == 200){
-//               var response = JSON.parse(xhttp.responseText);
-//               
-//               reverseMapboxDirections(startResult, endResult, response);
-//           }  
-//         };
-//        
-//        xhttp.open('GET', "https://api.mapbox.com/directions/v5/mapbox/" + transitType + "/" + startResult.lon + "," + startResult.lat + ";" + endResult.lon + "," + endResult.lat + "?steps=true&access_token=" + mapboxgl.accessToken, true);
-//        
-//         xhttp.send();
-//    }
-//    
-//    function reverseMapboxDirections(startResult, endResult, correctResponse){
-//        var xhttp = new XMLHttpRequest();
-//        
-//        xhttp.onreadystatechange = function(){
-//           if(xhttp.readyState == 4 && xhttp.status == 200){
-//               var response = JSON.parse(xhttp.responseText);
-//               
-//               readDirections(correctResponse, response, startResult, endResult);
-//           }  
-//         };
-//        
-//        xhttp.open('GET', "https://api.mapbox.com/directions/v5/mapbox/" + transitType + "/" + endResult.lon + "," + endResult.lat + ";" + startResult.lon + "," + startResult.lat + "?steps=true&access_token=" + mapboxgl.accessToken, true);
-//        
-//         xhttp.send();
-//    }
-    
     function googleDirections(startAddress, startCityState, endAddress, endCityState){
         
         //split address
@@ -1264,91 +1171,45 @@ $(document).ready(function() {
     function readDirections(response){
         
         var routes = response.routes;
-//        var revRoutes = reverseResponse.routes;
         var duration = routes[0].duration;
         var distance = routes[0].distance;
         var polyline = routes[0].geometry;
         
         //format start and stop coordinates
-//        var startLoc = [startResult.lon, startResult.lat];
-//        var endLoc = [endResult.lon, endResult.lat];
+        var startLoc = response.sourceLocation;
+        var endLoc = response.destinationLocation;
 
         //get location points for route
         var locationArray = [];
         var geometryArray = [];
         var steps = routes[0].legs[0].steps;
-//        var revSteps = revRoutes[0].legs[0].steps;
         
         //add first location
-//        locationArray.push(startLoc);
+        locationArray.push(startLoc);
         
         //test
         var polylineArray = decode(polyline, 5);
         
         //add first and last points
-//        polylineArray.unshift(startLoc);
-//        polylineArray.push(endLoc);
+        polylineArray.unshift(startLoc);
+        polylineArray.push(endLoc);
                 
         drawRoute(polylineArray);
         
         fillInDetails(distance, duration);
         
         //drop end marker
-//        routeEnd(endLoc);
-//        routeStart(startLoc);
+        routeEnd(endLoc);
+        routeStart(startLoc);
         
-//        map.flyTo({
-//            center: endLoc,
-//            zoom: 18,
-//            speed: 1.5
-//        });
+        map.flyTo({
+            center: endLoc,
+            zoom: 18,
+            speed: 1.5
+        });
         
         ourRoute = polylineArray;
     }
-//    function readDirections(correctResponse, reverseResponse, startResult, endResult){
-//        
-//        var routes = correctResponse.routes;
-//        var revRoutes = reverseResponse.routes;
-//        var duration = routes[0].duration;
-//        var distance = routes[0].distance;
-//        var polyline = routes[0].geometry;
-//        
-//        //format start and stop coordinates
-//        var startLoc = [startResult.lon, startResult.lat];
-//        var endLoc = [endResult.lon, endResult.lat];
-//
-//        //get location points for route
-//        var locationArray = [];
-//        var geometryArray = [];
-//        var steps = routes[0].legs[0].steps;
-//        var revSteps = revRoutes[0].legs[0].steps;
-//        
-//        //add first location
-//        locationArray.push(startLoc);
-//        
-//        //test
-//        var polylineArray = decode(polyline, 5);
-//        
-//        //add first and last points
-//        polylineArray.unshift(startLoc);
-//        polylineArray.push(endLoc);
-//                
-//        drawRoute(polylineArray);
-//        
-//        fillInDetails(distance, duration);
-//        
-//        //drop end marker
-//        routeEnd(endLoc);
-//        routeStart(startLoc);
-//        
-//        map.flyTo({
-//            center: endLoc,
-//            zoom: 18,
-//            speed: 1.5
-//        });
-//        
-//        ourRoute = polylineArray;
-//    }
     
     function readGoogleDirections(directions, startResponse, endResponse){
         
