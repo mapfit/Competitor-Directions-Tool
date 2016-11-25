@@ -1047,6 +1047,7 @@ $(document).ready(function() {
         }
         
         callDirections(startAddress, startCityState, endAddress, endCityState);
+        googleDirections(startAddress, startCityState, endAddress, endCityState);
         openStart(startAddress, startCityState, endAddress, endCityState);
         bingStart(startAddress, startCityState, endAddress, endCityState);
     });
@@ -1165,26 +1166,35 @@ $(document).ready(function() {
 //         xhttp.send();
 //    }
 //    
-    function reverseMapboxDirections(startResult, endResult, correctResponse){
-        var xhttp = new XMLHttpRequest();
-        
-        xhttp.onreadystatechange = function(){
-           if(xhttp.readyState == 4 && xhttp.status == 200){
-               var response = JSON.parse(xhttp.responseText);
-               
-               readDirections(correctResponse, response, startResult, endResult);
-           }  
-         };
-        
-        xhttp.open('GET', "https://api.mapbox.com/directions/v5/mapbox/" + transitType + "/" + endResult.lon + "," + endResult.lat + ";" + startResult.lon + "," + startResult.lat + "?steps=true&access_token=" + mapboxgl.accessToken, true);
-        
-         xhttp.send();
-    }
+//    function reverseMapboxDirections(startResult, endResult, correctResponse){
+//        var xhttp = new XMLHttpRequest();
+//        
+//        xhttp.onreadystatechange = function(){
+//           if(xhttp.readyState == 4 && xhttp.status == 200){
+//               var response = JSON.parse(xhttp.responseText);
+//               
+//               readDirections(correctResponse, response, startResult, endResult);
+//           }  
+//         };
+//        
+//        xhttp.open('GET', "https://api.mapbox.com/directions/v5/mapbox/" + transitType + "/" + endResult.lon + "," + endResult.lat + ";" + startResult.lon + "," + startResult.lat + "?steps=true&access_token=" + mapboxgl.accessToken, true);
+//        
+//         xhttp.send();
+//    }
     
-    function googleDirections(startResult, endResult){
+    function googleDirections(startAddress, startCityState, endAddress, endCityState){
         
-        var start = startResult.address + " " + startResult.city + " " + startResult.state;
-        var end = endResult.address + " " + endResult.city + " " + endResult.state;
+        //split address
+        var splitQuery = startCityState.split(",");
+        var city = splitQuery[0];
+        var state = splitQuery[1].replace(/\s/g, '');
+        
+        var splitQuery2 = endCityState.split(",");
+        var city2 = splitQuery2[0];
+        var state2 = splitQuery2[1].replace(/\s/g, '');
+        
+        var start = startAddress+ " " + city + " " + state;
+        var end = endAddress + " " + city2 + " " + state2;
         
         //convert addresses
         for(var i = 0; i < start.length; i++) {
