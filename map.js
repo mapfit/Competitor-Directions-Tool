@@ -1065,33 +1065,22 @@ $(document).ready(function() {
         
          xhttp.onreadystatechange = function(){
            if(xhttp.readyState == 4 && xhttp.status == 200){
-//               var myArr = JSON.parse(xhttp.responseText);
-//               var response = JSON.parse(xhttp.responseText);
+               var response = JSON.parse(xhttp.responseText);
                
                console.log("directions response: " + xhttp.responseText);
 
-//               if(myArr[0]){
-////                   endSearch(myArr[0], endAddress, endCityState);
-//               }else{
-//                   console.log("no data found");
-//                   alert("No Matching Address found for your start location. Please try another address.");
-//               }
+               readDirections(response);
            }else if(xhttp.status == 500){
                alert("There was an error. Please try your request again");
            }
          };
-        
-        // {"sourceAddress" : {"address":"628 Madison Ave","city" : "Ny", "state" : "Ny", "type" : "all"}, "destinationAddress" : {"address":"660 Madison Ave","city" : "Ny", "state" : "Ny", "type" : "all”}}
-        
-//        var dicString = "{\"sourceAddress\":" + lat + ",\"lon\":"+ lon + ", \"radius\" : 250}";
-        var dicString = "{\"sourceAddress\" : {\"address\":\"" + startAddress + "\",\"city\" :\"" + city + "\", \"state\" : \"" + state +"\", \"type\" : \"" + transitType + "\"}, \"destinationAddress\" : {\"address\":\"" + endAddress + "\",\"city\" : \"" + city2 + "\", \"state\" : \"" + state2 + "\", \"type\" : \"" + transitType + "\"}}";
+
+        var dicString = "{\"sourceAddress\" : {\"address\":\"" + startAddress + "\",\"city\" :\"" + city + "\", \"state\" : \"" + state +"\", \"type\" : \"" + transitType + "\"}, \"destinationAddress\" : {\"address\":\"" + endAddress + "\",\"city\" : \"" + city2 + "\", \"state\" : \"" + state2 + "\", \"type\" : \"" + transitType + "\"}, \"type\": \"" + transitType + "\"}";
         var bytes = [];
 
         for(var i = 0; i < dicString.length; ++i){
             bytes.push(dicString.charCodeAt(i));
         }
-
-        console.log("dicString: " + dicString);
         
         xhttp.open('POST', "https://api.parkourmethod.com/directions?api_key=c628cf2156354f53b704bd7f491607a7", true);
         xhttp.setRequestHeader("Content-Type","application/json");
@@ -1262,50 +1251,94 @@ $(document).ready(function() {
         xhttp.send();
     }
     
-    function readDirections(correctResponse, reverseResponse, startResult, endResult){
+    function readDirections(response){
         
-        var routes = correctResponse.routes;
-        var revRoutes = reverseResponse.routes;
+        var routes = response.routes;
+//        var revRoutes = reverseResponse.routes;
         var duration = routes[0].duration;
         var distance = routes[0].distance;
         var polyline = routes[0].geometry;
         
         //format start and stop coordinates
-        var startLoc = [startResult.lon, startResult.lat];
-        var endLoc = [endResult.lon, endResult.lat];
+//        var startLoc = [startResult.lon, startResult.lat];
+//        var endLoc = [endResult.lon, endResult.lat];
 
         //get location points for route
         var locationArray = [];
         var geometryArray = [];
         var steps = routes[0].legs[0].steps;
-        var revSteps = revRoutes[0].legs[0].steps;
+//        var revSteps = revRoutes[0].legs[0].steps;
         
         //add first location
-        locationArray.push(startLoc);
+//        locationArray.push(startLoc);
         
         //test
         var polylineArray = decode(polyline, 5);
         
         //add first and last points
-        polylineArray.unshift(startLoc);
-        polylineArray.push(endLoc);
+//        polylineArray.unshift(startLoc);
+//        polylineArray.push(endLoc);
                 
         drawRoute(polylineArray);
         
         fillInDetails(distance, duration);
         
         //drop end marker
-        routeEnd(endLoc);
-        routeStart(startLoc);
+//        routeEnd(endLoc);
+//        routeStart(startLoc);
         
-        map.flyTo({
-            center: endLoc,
-            zoom: 18,
-            speed: 1.5
-        });
+//        map.flyTo({
+//            center: endLoc,
+//            zoom: 18,
+//            speed: 1.5
+//        });
         
         ourRoute = polylineArray;
     }
+//    function readDirections(correctResponse, reverseResponse, startResult, endResult){
+//        
+//        var routes = correctResponse.routes;
+//        var revRoutes = reverseResponse.routes;
+//        var duration = routes[0].duration;
+//        var distance = routes[0].distance;
+//        var polyline = routes[0].geometry;
+//        
+//        //format start and stop coordinates
+//        var startLoc = [startResult.lon, startResult.lat];
+//        var endLoc = [endResult.lon, endResult.lat];
+//
+//        //get location points for route
+//        var locationArray = [];
+//        var geometryArray = [];
+//        var steps = routes[0].legs[0].steps;
+//        var revSteps = revRoutes[0].legs[0].steps;
+//        
+//        //add first location
+//        locationArray.push(startLoc);
+//        
+//        //test
+//        var polylineArray = decode(polyline, 5);
+//        
+//        //add first and last points
+//        polylineArray.unshift(startLoc);
+//        polylineArray.push(endLoc);
+//                
+//        drawRoute(polylineArray);
+//        
+//        fillInDetails(distance, duration);
+//        
+//        //drop end marker
+//        routeEnd(endLoc);
+//        routeStart(startLoc);
+//        
+//        map.flyTo({
+//            center: endLoc,
+//            zoom: 18,
+//            speed: 1.5
+//        });
+//        
+//        ourRoute = polylineArray;
+//    }
     
     function readGoogleDirections(directions, startResponse, endResponse){
         
