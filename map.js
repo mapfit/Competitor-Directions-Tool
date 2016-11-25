@@ -1046,88 +1046,136 @@ $(document).ready(function() {
             document.getElementById('on-map').hidden = false;
         }
         
-        startSearch(startAddress, startCityState, endAddress, endCityState);
+        callDirections(startAddress, startCityState, endAddress, endCityState);
         openStart(startAddress, startCityState, endAddress, endCityState);
         bingStart(startAddress, startCityState, endAddress, endCityState);
     });
     
-    function startSearch(startAddress, startCityState, endAddress, endCityState){
+    function callDirections(startAddress, startCityState, endAddress, endCityState){
         var xhttp = new XMLHttpRequest();
         
         //split address
         var splitQuery = startCityState.split(",");
-        
+        var city = splitQuery[0];
         var state = splitQuery[1].replace(/\s/g, '');
         
-        var center = map.getCenter();
+        var splitQuery2 = endCityState.split(",");
+        var city2 = splitQuery2[0];
+        var state2 = splitQuery2[1].replace(/\s/g, '');
+        
          xhttp.onreadystatechange = function(){
            if(xhttp.readyState == 4 && xhttp.status == 200){
-               var myArr = JSON.parse(xhttp.responseText);
-
-               if(myArr[0]){
-                   endSearch(myArr[0], endAddress, endCityState);
-               }else{
-                   console.log("no data found");
-                   alert("No Matching Address found for your start location. Please try another address.");
-               }
-           }else if(xhttp.status == 500){
-               alert("There was an error. Please try your request again");
-           }
-         };
-        
-        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + startAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&type=" + transitType + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
-        
-         xhttp.send();
-    }
-    
-    function endSearch(startResult, endAddress, endCityState){
-        var xhttp = new XMLHttpRequest();
-        
-        //split address
-        var splitQuery = endCityState.split(",");
-        
-        var state = splitQuery[1].replace(/\s/g, '');
-        
-        var center = map.getCenter();
-         xhttp.onreadystatechange = function(){
-           if(xhttp.readyState == 4 && xhttp.status == 200){
-               var myArr = JSON.parse(xhttp.responseText);
-
-               if(myArr[0]){
-                    console.log("start: " + startResult.lat + ", " + startResult.lon + "\n end: " + myArr[0].lat + ", " + myArr[0].lon);
-
-                   callMapboxDirections(startResult, myArr[0]);
-                   googleDirections(startResult, myArr[0]);
-               }else{
-                   console.log("no data found");
-                   alert("No Matching Address found for your destination. Please try another address.");
-               }
-           }else if(xhttp.status == 500){
-               alert("There was an error. Please try your request again");
-           }
-         };
-        
-        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + endAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&type=" + transitType + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
-        
-         xhttp.send();
-    }
-    
-    function callMapboxDirections(startResult, endResult){
-        var xhttp = new XMLHttpRequest();
-        
-        xhttp.onreadystatechange = function(){
-           if(xhttp.readyState == 4 && xhttp.status == 200){
-               var response = JSON.parse(xhttp.responseText);
+//               var myArr = JSON.parse(xhttp.responseText);
+//               var response = JSON.parse(xhttp.responseText);
                
-               reverseMapboxDirections(startResult, endResult, response);
-           }  
+               console.log("directions response: " + xhttp.responseText);
+
+//               if(myArr[0]){
+////                   endSearch(myArr[0], endAddress, endCityState);
+//               }else{
+//                   console.log("no data found");
+//                   alert("No Matching Address found for your start location. Please try another address.");
+//               }
+           }else if(xhttp.status == 500){
+               alert("There was an error. Please try your request again");
+           }
          };
         
-        xhttp.open('GET', "https://api.mapbox.com/directions/v5/mapbox/" + transitType + "/" + startResult.lon + "," + startResult.lat + ";" + endResult.lon + "," + endResult.lat + "?steps=true&access_token=" + mapboxgl.accessToken, true);
+        // {"sourceAddress" : {"address":"628 Madison Ave","city" : "Ny", "state" : "Ny", "type" : "all"}, "destinationAddress" : {"address":"660 Madison Ave","city" : "Ny", "state" : "Ny", "type" : "all”}}
         
-         xhttp.send();
+//        var dicString = "{\"sourceAddress\":" + lat + ",\"lon\":"+ lon + ", \"radius\" : 250}";
+        var dicString = "{\"sourceAddress\" : {\"address\":\"" + startAddress + "\",\"city\" :\"" + city + "\", \"state\" : \"" + state +"\", \"type\" : \"" + transitType + "\"}, \"destinationAddress\" : {\"address\":\"" + endAddress + "\",\"city\" : \"" + city2 + "\", \"state\" : \"" + state2 + "\", \"type\" : \"" + transitType + "\"}}";
+        var bytes = [];
+
+        for(var i = 0; i < dicString.length; ++i){
+            bytes.push(dicString.charCodeAt(i));
+        }
+
+        console.log("dicString: " + dicString);
+        
+        xhttp.open('POST', "https://api.parkourmethod.com/directions?api_key=c628cf2156354f53b704bd7f491607a7", true);
+        xhttp.setRequestHeader("Content-Type","application/json");
+        xhttp.setRequestHeader("Accept","application/json");
+        xhttp.send(dicString);
     }
     
+//    function startSearch(startAddress, startCityState, endAddress, endCityState){
+//        var xhttp = new XMLHttpRequest();
+//        
+//        //split address
+//        var splitQuery = startCityState.split(",");
+//        
+//        var state = splitQuery[1].replace(/\s/g, '');
+//        
+//        var center = map.getCenter();
+//         xhttp.onreadystatechange = function(){
+//           if(xhttp.readyState == 4 && xhttp.status == 200){
+//               var myArr = JSON.parse(xhttp.responseText);
+//
+//               if(myArr[0]){
+//                   endSearch(myArr[0], endAddress, endCityState);
+//               }else{
+//                   console.log("no data found");
+//                   alert("No Matching Address found for your start location. Please try another address.");
+//               }
+//           }else if(xhttp.status == 500){
+//               alert("There was an error. Please try your request again");
+//           }
+//         };
+//        
+//        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + startAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&type=" + transitType + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
+//        
+//         xhttp.send();
+//    }
+//    
+//    function endSearch(startResult, endAddress, endCityState){
+//        var xhttp = new XMLHttpRequest();
+//        
+//        //split address
+//        var splitQuery = endCityState.split(",");
+//        
+//        var state = splitQuery[1].replace(/\s/g, '');
+//        
+//        var center = map.getCenter();
+//         xhttp.onreadystatechange = function(){
+//           if(xhttp.readyState == 4 && xhttp.status == 200){
+//               var myArr = JSON.parse(xhttp.responseText);
+//
+//               if(myArr[0]){
+//                    console.log("start: " + startResult.lat + ", " + startResult.lon + "\n end: " + myArr[0].lat + ", " + myArr[0].lon);
+//
+//                   callMapboxDirections(startResult, myArr[0]);
+//                   googleDirections(startResult, myArr[0]);
+//               }else{
+//                   console.log("no data found");
+//                   alert("No Matching Address found for your destination. Please try another address.");
+//               }
+//           }else if(xhttp.status == 500){
+//               alert("There was an error. Please try your request again");
+//           }
+//         };
+//        
+//        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + endAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&type=" + transitType + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
+//        
+//         xhttp.send();
+//    }
+//    
+//    function callMapboxDirections(startResult, endResult){
+//        var xhttp = new XMLHttpRequest();
+//        
+//        xhttp.onreadystatechange = function(){
+//           if(xhttp.readyState == 4 && xhttp.status == 200){
+//               var response = JSON.parse(xhttp.responseText);
+//               
+//               reverseMapboxDirections(startResult, endResult, response);
+//           }  
+//         };
+//        
+//        xhttp.open('GET', "https://api.mapbox.com/directions/v5/mapbox/" + transitType + "/" + startResult.lon + "," + startResult.lat + ";" + endResult.lon + "," + endResult.lat + "?steps=true&access_token=" + mapboxgl.accessToken, true);
+//        
+//         xhttp.send();
+//    }
+//    
     function reverseMapboxDirections(startResult, endResult, correctResponse){
         var xhttp = new XMLHttpRequest();
         
