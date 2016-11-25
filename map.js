@@ -1046,108 +1046,62 @@ $(document).ready(function() {
             document.getElementById('on-map').hidden = false;
         }
         
-        startSearch(startAddress, startCityState, endAddress, endCityState);
+        callDirections(startAddress, startCityState, endAddress, endCityState);
+        googleDirections(startAddress, startCityState, endAddress, endCityState);
         openStart(startAddress, startCityState, endAddress, endCityState);
         bingStart(startAddress, startCityState, endAddress, endCityState);
     });
     
-    function startSearch(startAddress, startCityState, endAddress, endCityState){
+    function callDirections(startAddress, startCityState, endAddress, endCityState){
         var xhttp = new XMLHttpRequest();
         
         //split address
         var splitQuery = startCityState.split(",");
-        
+        var city = splitQuery[0];
         var state = splitQuery[1].replace(/\s/g, '');
         
-        var center = map.getCenter();
+        var splitQuery2 = endCityState.split(",");
+        var city2 = splitQuery2[0];
+        var state2 = splitQuery2[1].replace(/\s/g, '');
+        
          xhttp.onreadystatechange = function(){
            if(xhttp.readyState == 4 && xhttp.status == 200){
-               var myArr = JSON.parse(xhttp.responseText);
+               var response = JSON.parse(xhttp.responseText);
+               
+               console.log("directions response: " + xhttp.responseText);
 
-               if(myArr[0]){
-                   endSearch(myArr[0], endAddress, endCityState);
-               }else{
-                   console.log("no data found");
-                   alert("No Matching Address found for your start location. Please try another address.");
-               }
+               readDirections(response);
            }else if(xhttp.status == 500){
                alert("There was an error. Please try your request again");
            }
          };
+
+        var dicString = "{\"sourceAddress\" : {\"address\":\"" + startAddress + "\",\"city\" :\"" + city + "\", \"state\" : \"" + state +"\", \"type\" : \"" + transitType + "\"}, \"destinationAddress\" : {\"address\":\"" + endAddress + "\",\"city\" : \"" + city2 + "\", \"state\" : \"" + state2 + "\", \"type\" : \"" + transitType + "\"}, \"type\": \"" + transitType + "\"}";
+        var bytes = [];
+
+        for(var i = 0; i < dicString.length; ++i){
+            bytes.push(dicString.charCodeAt(i));
+        }
         
-        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + startAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&type=" + transitType + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
-        
-         xhttp.send();
+        xhttp.open('POST', "https://api.parkourmethod.com/directions?api_key=c628cf2156354f53b704bd7f491607a7", true);
+        xhttp.setRequestHeader("Content-Type","application/json");
+        xhttp.setRequestHeader("Accept","application/json");
+        xhttp.send(dicString);
     }
     
-    function endSearch(startResult, endAddress, endCityState){
-        var xhttp = new XMLHttpRequest();
+    function googleDirections(startAddress, startCityState, endAddress, endCityState){
         
         //split address
-        var splitQuery = endCityState.split(",");
-        
+        var splitQuery = startCityState.split(",");
+        var city = splitQuery[0];
         var state = splitQuery[1].replace(/\s/g, '');
         
-        var center = map.getCenter();
-         xhttp.onreadystatechange = function(){
-           if(xhttp.readyState == 4 && xhttp.status == 200){
-               var myArr = JSON.parse(xhttp.responseText);
-
-               if(myArr[0]){
-                    console.log("start: " + startResult.lat + ", " + startResult.lon + "\n end: " + myArr[0].lat + ", " + myArr[0].lon);
-
-                   callMapboxDirections(startResult, myArr[0]);
-                   googleDirections(startResult, myArr[0]);
-               }else{
-                   console.log("no data found");
-                   alert("No Matching Address found for your destination. Please try another address.");
-               }
-           }else if(xhttp.status == 500){
-               alert("There was an error. Please try your request again");
-           }
-         };
+        var splitQuery2 = endCityState.split(",");
+        var city2 = splitQuery2[0];
+        var state2 = splitQuery2[1].replace(/\s/g, '');
         
-        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + endAddress + "\&city="+ splitQuery[0] +"\&state=" + state + "\&type=" + transitType + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
-        
-         xhttp.send();
-    }
-    
-    function callMapboxDirections(startResult, endResult){
-        var xhttp = new XMLHttpRequest();
-        
-        xhttp.onreadystatechange = function(){
-           if(xhttp.readyState == 4 && xhttp.status == 200){
-               var response = JSON.parse(xhttp.responseText);
-               
-               reverseMapboxDirections(startResult, endResult, response);
-           }  
-         };
-        
-        xhttp.open('GET', "https://api.mapbox.com/directions/v5/mapbox/" + transitType + "/" + startResult.lon + "," + startResult.lat + ";" + endResult.lon + "," + endResult.lat + "?steps=true&access_token=" + mapboxgl.accessToken, true);
-        
-         xhttp.send();
-    }
-    
-    function reverseMapboxDirections(startResult, endResult, correctResponse){
-        var xhttp = new XMLHttpRequest();
-        
-        xhttp.onreadystatechange = function(){
-           if(xhttp.readyState == 4 && xhttp.status == 200){
-               var response = JSON.parse(xhttp.responseText);
-               
-               readDirections(correctResponse, response, startResult, endResult);
-           }  
-         };
-        
-        xhttp.open('GET', "https://api.mapbox.com/directions/v5/mapbox/" + transitType + "/" + endResult.lon + "," + endResult.lat + ";" + startResult.lon + "," + startResult.lat + "?steps=true&access_token=" + mapboxgl.accessToken, true);
-        
-         xhttp.send();
-    }
-    
-    function googleDirections(startResult, endResult){
-        
-        var start = startResult.address + " " + startResult.city + " " + startResult.state;
-        var end = endResult.address + " " + endResult.city + " " + endResult.state;
+        var start = startAddress+ " " + city + " " + state;
+        var end = endAddress + " " + city2 + " " + state2;
         
         //convert addresses
         for(var i = 0; i < start.length; i++) {
@@ -1214,23 +1168,21 @@ $(document).ready(function() {
         xhttp.send();
     }
     
-    function readDirections(correctResponse, reverseResponse, startResult, endResult){
+    function readDirections(response){
         
-        var routes = correctResponse.routes;
-        var revRoutes = reverseResponse.routes;
+        var routes = response.routes;
         var duration = routes[0].duration;
         var distance = routes[0].distance;
         var polyline = routes[0].geometry;
         
         //format start and stop coordinates
-        var startLoc = [startResult.lon, startResult.lat];
-        var endLoc = [endResult.lon, endResult.lat];
+        var startLoc = response.sourceLocation;
+        var endLoc = response.destinationLocation;
 
         //get location points for route
         var locationArray = [];
         var geometryArray = [];
         var steps = routes[0].legs[0].steps;
-        var revSteps = revRoutes[0].legs[0].steps;
         
         //add first location
         locationArray.push(startLoc);
