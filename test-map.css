@@ -510,7 +510,7 @@ html, body {
 	text-transform: uppercase;
 	cursor: pointer;
 	margin: 1px;
-    border: 2px solid #0F0C27;
+    border: 2px solid #fff;
     border-radius: 22.5px;
     outline: none;
 }
