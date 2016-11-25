@@ -1076,7 +1076,7 @@ $(document).ready(function() {
            }
          };
 
-        var dicString = "{\"sourceAddress\" : {\"address\":\"" + startAddress + "\",\"city\" :\"" + city + "\", \"state\" : \"" + state +"\", \"type\" : \"" + transitType + "\"}, \"destinationAddress\" : {\"address\":\"" + endAddress + "\",\"city\" : \"" + city2 + "\", \"state\" : \"" + state2 + "\", \"type\" : \"" + transitType + "\"}, \"type\": \"" + transitType + "\"}";
+        var dicString = "{\"sourceAddress\" : {\"address\":\"" + startAddress + "\",\"city\" :\"" + city + "\", \"state\" : \"" + state +"\", \"type\" : \"all\"}, \"destinationAddress\" : {\"address\":\"" + endAddress + "\",\"city\" : \"" + city2 + "\", \"state\" : \"" + state2 + "\", \"type\" : \"all\"}, \"type\": \"" + transitType + "\"}";
         var bytes = [];
 
         for(var i = 0; i < dicString.length; ++i){
