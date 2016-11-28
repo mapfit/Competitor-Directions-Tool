@@ -536,7 +536,7 @@ $(document).ready(function() {
                 "layout": {
                     "icon-image": "google-marker",
                     "icon-allow-overlap": true,
-                    "text-field": "Google\n" + calcDist(location.lat, location.lng, currentAddress.lat, currentAddress.lon) + "m",
+                    "text-field": "BigCo 3\n" + calcDist(location.lat, location.lng, currentAddress.lat, currentAddress.lon) + "m",
                     "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
                     "text-size": 11,
                     "text-letter-spacing": 0.05,
@@ -631,7 +631,7 @@ $(document).ready(function() {
             "layout": {
                 "icon-image": "open-marker",
                 "icon-allow-overlap": true,
-                "text-field": "OSM\n" + calcDist(location[1], location[0], currentAddress.lat, currentAddress.lon) + "m",
+                "text-field": "BigCo 1\n" + calcDist(location[1], location[0], currentAddress.lat, currentAddress.lon) + "m",
                 "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
                 "text-size": 11,
                 "text-letter-spacing": 0.05,
@@ -774,7 +774,7 @@ $(document).ready(function() {
             "layout": {
                 "icon-image": "bing-marker",
                 "icon-allow-overlap": true,
-                "text-field": "Bing\n" + calcDist(coords[0], coords[1], currentAddress.lat, currentAddress.lon) + "m",
+                "text-field": "BigCo 2\n" + calcDist(coords[0], coords[1], currentAddress.lat, currentAddress.lon) + "m",
                 "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
                 "text-size": 11,
                 "text-letter-spacing": 0.05,
