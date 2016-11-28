@@ -1,5 +1,7 @@
 $(document).ready(function() {
     
+    var geofiKey = "d2ab3ecab8d443e3b9871a6cc1ee616e";
+    
     //prevent pin to zoom
     document.addEventListener('mousewheel', function(e) {
       if(e.deltaY % 1 !== 0) {
@@ -334,7 +336,7 @@ $(document).ready(function() {
              
          };
                 
-        xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
+        xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -358,7 +360,7 @@ $(document).ready(function() {
            }
          };
 
-         xhttp.open('GET', "https://api.parkourmethod.com/address?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&api_key=c628cf2156354f53b704bd7f491607a7", true);
+         xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -1083,7 +1085,7 @@ $(document).ready(function() {
             bytes.push(dicString.charCodeAt(i));
         }
         
-        xhttp.open('POST', "https://api.parkourmethod.com/directions?api_key=c628cf2156354f53b704bd7f491607a7", true);
+        xhttp.open('POST', "https://api.geofi.io/directions?api_key=" + geofiKey, true);
         xhttp.setRequestHeader("Content-Type","application/json");
         xhttp.setRequestHeader("Accept","application/json");
         xhttp.send(dicString);
