@@ -310,6 +310,8 @@ $(document).ready(function() {
          xhttp.onreadystatechange = function(){
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var myArr = JSON.parse(xhttp.responseText);
+               
+               console.log(xhttp.responseText);
 
                if(myArr[0]){
                    readLocation(myArr);
@@ -328,7 +330,7 @@ $(document).ready(function() {
              
          };
                 
-        xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&api_key=" + geofiKey, true);
+        xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -581,6 +583,9 @@ $(document).ready(function() {
                 }
             }, 'addresses', 'gAddress');
         }
+        
+        map.setLayoutProperty("gAddress", 'visibility', 'none');
+        map.setLayoutProperty("gDist", 'visibility', 'none');
     }
     
     //drop OPEN point
