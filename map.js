@@ -680,6 +680,9 @@ $(document).ready(function() {
                 }
             }, 'addresses', 'openAddress');
         }
+        
+        map.setLayoutProperty("openAddress", 'visibility', 'none');
+        map.setLayoutProperty("openDist", 'visibility', 'none');
     }
     
     //distance calculation
@@ -823,6 +826,9 @@ $(document).ready(function() {
                 }
             }, 'addresses', 'bingAddress');
         }
+        
+        map.setLayoutProperty("bingAddress", 'visibility', 'none');
+        map.setLayoutProperty("bingDist", 'visibility', 'none');
     }
         
     //***********************DIRECTIONS*********************************************
