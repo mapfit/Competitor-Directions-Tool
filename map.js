@@ -343,6 +343,8 @@ $(document).ready(function() {
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var myArr = JSON.parse(xhttp.responseText);
 
+               console.log(xhttp.responseText);
+               
                if(myArr[0]){
                    readLocation(myArr);
                }else{
@@ -354,7 +356,7 @@ $(document).ready(function() {
            }
          };
 
-         xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&api_key=" + geofiKey, true);
+         xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
