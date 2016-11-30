@@ -414,8 +414,12 @@ $(document).ready(function() {
          var lat = arr[0].lat;
          var lon = arr[0].lon;
         
-        dropMarker(arr[0]);
-
+        for(var i = 0; i < arr.length; i++){
+            if(arr[i].entrance_type == "pedestrian-access" || arr[i]["place-type"] == "interpolated point"){
+                dropMarker(arr[i]);
+            }
+        }
+        
         map.flyTo({
             center: [lon, lat],
             zoom: 18,
