@@ -916,3 +916,34 @@ html, body {
     margin-top: -15px;
     margin-left: -15px;
 }
+
+/********************* On-Map Direction Buttons *****************/
+.extra-data {
+	position: absolute;
+	width: 250px;
+	left: 2%;
+	bottom: 5px;
+	z-index: 5;
+}
+
+.extra-data button{
+	float: right;
+	border: 0;
+	padding: 1px;
+	cursor: pointer;
+	height: 45px;
+	width: 100%;
+	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+    background: #1F363D;
+	color: #fff;
+    text-transform: uppercase;
+	border-radius: 7px;
+	text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
+    border: 1px white;
+    border-style: solid;
+    margin: 2px;
+}
+
+.extra-data button:hover {
+    background-color: #1F363D;
+}

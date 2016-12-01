@@ -310,6 +310,8 @@ $(document).ready(function() {
          xhttp.onreadystatechange = function(){
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var myArr = JSON.parse(xhttp.responseText);
+               
+               console.log(xhttp.responseText);
 
                if(myArr[0]){
                    readLocation(myArr);
@@ -328,7 +330,7 @@ $(document).ready(function() {
              
          };
                 
-        xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&api_key=" + geofiKey, true);
+        xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -341,6 +343,8 @@ $(document).ready(function() {
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var myArr = JSON.parse(xhttp.responseText);
 
+               console.log(xhttp.responseText);
+               
                if(myArr[0]){
                    readLocation(myArr);
                }else{
@@ -352,7 +356,7 @@ $(document).ready(function() {
            }
          };
 
-         xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&api_key=" + geofiKey, true);
+         xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -410,8 +414,21 @@ $(document).ready(function() {
          var lat = arr[0].lat;
          var lon = arr[0].lon;
         
-        dropMarker(arr[0]);
+        var altEntrances = map.getSource('altEntrances')
 
+        if(altEntrances){
+            map.removeSource('altEntrances');
+            map.removeLayer('altEntrances');
+        }
+        
+        for(var i = 0; i < arr.length; i++){
+            if(arr[i].entrance_type == "pedestrian-access" || arr[i]["place-type"] == "interpolated point"){
+                dropMarker(arr[i]);
+            }else{
+                dropAltEntrance(arr[i]);
+            }
+        }
+        
         map.flyTo({
             center: [lon, lat],
             zoom: 18,
@@ -422,7 +439,57 @@ $(document).ready(function() {
         
         //show directions button
         document.getElementById('search-directions').hidden = false;
+        
+        turnOnPointUI(arr);
      }
+    
+    //alt entrances and competitor points
+    function turnOnPointUI(arr){
+        var altEntrances = map.getSource('altEntrances')
+
+        if(altEntrances){
+            map.setLayoutProperty("altEntrances", 'visibility', 'none');
+        }
+        
+        document.getElementById('extra-data').hidden = false;
+        document.getElementById('comp-points').hidden = false;
+        
+        if(arr.length > 1){
+            document.getElementById('alt-entrances').hidden = false;
+        }
+    }
+    
+    var altShowing = false;
+    $('.alt-entrances').on('click', function(e) {        
+        if(altShowing){
+            altShowing = false;
+            map.setLayoutProperty("altEntrances", 'visibility', 'none');
+        }else{
+            altShowing = true;
+            map.setLayoutProperty("altEntrances", 'visibility', 'visible');
+        }
+    });
+    
+    var compShowing = false;
+    $('.comp-points').on('click', function(e) {        
+        if(compShowing){
+            compShowing = false;
+            map.setLayoutProperty("gAddress", 'visibility', 'none');
+            map.setLayoutProperty("gDist", 'visibility', 'none');
+            map.setLayoutProperty("bingAddress", 'visibility', 'none');
+            map.setLayoutProperty("bingDist", 'visibility', 'none');
+            map.setLayoutProperty("openAddress", 'visibility', 'none');
+            map.setLayoutProperty("openDist", 'visibility', 'none');
+        }else{
+            compShowing = true;
+            map.setLayoutProperty("gAddress", 'visibility', 'visible');
+            map.setLayoutProperty("gDist", 'visibility', 'visible');
+            map.setLayoutProperty("bingAddress", 'visibility', 'visible');
+            map.setLayoutProperty("bingDist", 'visibility', 'visible');
+            map.setLayoutProperty("openAddress", 'visibility', 'visible');
+            map.setLayoutProperty("openDist", 'visibility', 'visible');
+        }
+    });
     
     //drop marker
     function dropMarker(data){
@@ -478,6 +545,63 @@ $(document).ready(function() {
                 "icon-image": "geofi-marker",
                 "icon-allow-overlap": true,
                 "text-field": "GeoFi\n" + data.address,
+                "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+                "text-size": 11,
+                "text-letter-spacing": 0.05,
+                "text-offset": [0, 3]
+            },
+            paint: {
+              "text-color": "#09B529"
+            }
+        });
+    }
+    
+    function dropAltEntrance(data){
+        var thisAddJsonArray = new Array;
+        
+        var thisJSON = {"type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    data.lon,
+                    data.lat
+                  ]
+                },
+                "properties": {
+                  "description": data.address,
+                  "address" : data.address,
+                  "city" : data.city,
+                  "state" : data.state,
+                  "zip" : data.zip,
+                  "placeType" : data["place-type"],
+                  "icon" : "circle",
+                  "color" : '#09B529'
+                }};
+
+            thisAddJsonArray.push(thisJSON);
+    
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
+
+        map.addSource('altEntrances',{
+            type: 'geojson',
+            data: geoJson
+        });
+
+        var marker = new mapboxgl.Marker()
+          .setLngLat([data.lon, data.lat])
+          .addTo(map);
+
+        map.addLayer({
+            id: 'altEntrances',
+            source: 'altEntrances',
+            type: 'symbol',
+            "layout": {
+                "icon-image": "geofi-marker",
+                "icon-allow-overlap": true,
+                "text-field": "GeoFi\n" + data.entrance_type,
                 "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
                 "text-size": 11,
                 "text-letter-spacing": 0.05,
@@ -581,6 +705,9 @@ $(document).ready(function() {
                 }
             }, 'addresses', 'gAddress');
         }
+        
+        map.setLayoutProperty("gAddress", 'visibility', 'none');
+        map.setLayoutProperty("gDist", 'visibility', 'none');
     }
     
     //drop OPEN point
@@ -675,6 +802,9 @@ $(document).ready(function() {
                 }
             }, 'addresses', 'openAddress');
         }
+        
+        map.setLayoutProperty("openAddress", 'visibility', 'none');
+        map.setLayoutProperty("openDist", 'visibility', 'none');
     }
     
     //distance calculation
@@ -818,6 +948,9 @@ $(document).ready(function() {
                 }
             }, 'addresses', 'bingAddress');
         }
+        
+        map.setLayoutProperty("bingAddress", 'visibility', 'none');
+        map.setLayoutProperty("bingDist", 'visibility', 'none');
     }
         
     //***********************DIRECTIONS*********************************************
@@ -848,6 +981,10 @@ $(document).ready(function() {
             map.setLayoutProperty("openDist", 'visibility', 'none');
             map.setLayoutProperty("bingAddress", 'visibility', 'none');
             map.setLayoutProperty("bingDist", 'visibility', 'none');
+            map.setLayoutProperty("altEntrances", 'visibility', 'none');
+            document.getElementById('extra-data').hidden = true;
+            document.getElementById('comp-points').hidden = true;
+            document.getElementById('alt-entrances').hidden = true;
         }
         
         
