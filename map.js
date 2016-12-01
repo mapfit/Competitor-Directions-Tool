@@ -414,9 +414,18 @@ $(document).ready(function() {
          var lat = arr[0].lat;
          var lon = arr[0].lon;
         
+        var altEntrances = map.getSource('altEntrances')
+
+        if(altEntrances){
+            map.removeSource('altEntrances');
+            map.removeLayer('altEntrances');
+        }
+        
         for(var i = 0; i < arr.length; i++){
             if(arr[i].entrance_type == "pedestrian-access" || arr[i]["place-type"] == "interpolated point"){
                 dropMarker(arr[i]);
+            }else{
+                dropAltEntrance(arr[i]);
             }
         }
         
@@ -486,6 +495,63 @@ $(document).ready(function() {
                 "icon-image": "geofi-marker",
                 "icon-allow-overlap": true,
                 "text-field": "GeoFi\n" + data.address,
+                "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+                "text-size": 11,
+                "text-letter-spacing": 0.05,
+                "text-offset": [0, 3]
+            },
+            paint: {
+              "text-color": "#09B529"
+            }
+        });
+    }
+    
+    function dropAltEntrance(data){
+        var thisAddJsonArray = new Array;
+        
+        var thisJSON = {"type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    data.lon,
+                    data.lat
+                  ]
+                },
+                "properties": {
+                  "description": data.address,
+                  "address" : data.address,
+                  "city" : data.city,
+                  "state" : data.state,
+                  "zip" : data.zip,
+                  "placeType" : data["place-type"],
+                  "icon" : "circle",
+                  "color" : '#09B529'
+                }};
+
+            thisAddJsonArray.push(thisJSON);
+    
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
+
+        map.addSource('altEntrances',{
+            type: 'geojson',
+            data: geoJson
+        });
+
+        var marker = new mapboxgl.Marker()
+          .setLngLat([data.lon, data.lat])
+          .addTo(map);
+
+        map.addLayer({
+            id: 'altEntrances',
+            source: 'altEntrances',
+            type: 'symbol',
+            "layout": {
+                "icon-image": "geofi-marker",
+                "icon-allow-overlap": true,
+                "text-field": "GeoFi\n" + data.entrance_type,
                 "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
                 "text-size": 11,
                 "text-letter-spacing": 0.05,
