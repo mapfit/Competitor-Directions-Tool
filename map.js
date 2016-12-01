@@ -439,7 +439,57 @@ $(document).ready(function() {
         
         //show directions button
         document.getElementById('search-directions').hidden = false;
+        
+        turnOnPointUI(arr);
      }
+    
+    //alt entrances and competitor points
+    function turnOnPointUI(arr){
+        var altEntrances = map.getSource('altEntrances')
+
+        if(altEntrances){
+            map.setLayoutProperty("altEntrances", 'visibility', 'none');
+        }
+        
+        document.getElementById('extra-data').hidden = false;
+        document.getElementById('comp-points').hidden = false;
+        
+        if(arr.length > 1){
+            document.getElementById('alt-entrances').hidden = false;
+        }
+    }
+    
+    var altShowing = false;
+    $('.alt-entrances').on('click', function(e) {        
+        if(altShowing){
+            altShowing = false;
+            map.setLayoutProperty("altEntrances", 'visibility', 'none');
+        }else{
+            altShowing = true;
+            map.setLayoutProperty("altEntrances", 'visibility', 'visible');
+        }
+    });
+    
+    var compShowing = false;
+    $('.comp-points').on('click', function(e) {        
+        if(compShowing){
+            compShowing = false;
+            map.setLayoutProperty("gAddress", 'visibility', 'none');
+            map.setLayoutProperty("gDist", 'visibility', 'none');
+            map.setLayoutProperty("bingAddress", 'visibility', 'none');
+            map.setLayoutProperty("bingDist", 'visibility', 'none');
+            map.setLayoutProperty("openAddress", 'visibility', 'none');
+            map.setLayoutProperty("openDist", 'visibility', 'none');
+        }else{
+            compShowing = true;
+            map.setLayoutProperty("gAddress", 'visibility', 'visible');
+            map.setLayoutProperty("gDist", 'visibility', 'visible');
+            map.setLayoutProperty("bingAddress", 'visibility', 'visible');
+            map.setLayoutProperty("bingDist", 'visibility', 'visible');
+            map.setLayoutProperty("openAddress", 'visibility', 'visible');
+            map.setLayoutProperty("openDist", 'visibility', 'visible');
+        }
+    });
     
     //drop marker
     function dropMarker(data){
@@ -931,6 +981,10 @@ $(document).ready(function() {
             map.setLayoutProperty("openDist", 'visibility', 'none');
             map.setLayoutProperty("bingAddress", 'visibility', 'none');
             map.setLayoutProperty("bingDist", 'visibility', 'none');
+            map.setLayoutProperty("altEntrances", 'visibility', 'none');
+            document.getElementById('extra-data').hidden = true;
+            document.getElementById('comp-points').hidden = true;
+            document.getElementById('alt-entrances').hidden = true;
         }
         
         
