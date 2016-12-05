@@ -627,7 +627,7 @@ $(document).ready(function() {
             source: 'altEntrances',
             type: 'symbol',
             "layout": {
-                "icon-image": "geofi-marker",
+                "icon-image": "hologram_entrance",
                 "icon-allow-overlap": true,
                 "text-field": "GeoFi\n" + data.entrance_type,
                 "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
