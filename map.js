@@ -307,6 +307,8 @@ $(document).ready(function() {
     function calcDurationDifference(){
         var diff = gDuration - geofiDuration;
         
+        console.log("time diff = " + diff);
+        
         if(Math.sign(diff) > 0){
             var time = secondsToHms(diff);
                 
@@ -639,7 +641,7 @@ $(document).ready(function() {
             source: 'altEntrances',
             type: 'symbol',
             "layout": {
-                "icon-image": "hologram_entrance",
+                "icon-image": "geofi-marker",
                 "icon-allow-overlap": true,
                 "text-field": "GeoFi\n" + data.entrance_type,
                 "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
