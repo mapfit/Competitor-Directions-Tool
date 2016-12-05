@@ -299,8 +299,20 @@ $(document).ready(function() {
             map.setLayoutProperty("bingEnd", 'visibility', 'visible');
             map.setLayoutProperty("bingStartRoute", 'visibility', 'visible');
             map.setLayoutProperty("bingEndRoute", 'visibility', 'visible');
+            
+            calcDurationDifference();
         }
     });
+    
+    function calcDurationDifference(){
+        var diff = gDuration - geofiDuration;
+        
+        if(Math.sign(diff) > 0){
+            var time = secondsToHms(diff);
+                
+            $('#gTime').text("You save " + time + " with our route!");
+        }
+    }
     
     //search
     $('.address-search').on('click', function(e) {
@@ -1226,8 +1238,6 @@ $(document).ready(function() {
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var response = JSON.parse(xhttp.responseText);
                
-               console.log("directions response: " + xhttp.responseText);
-
                readDirections(response);
            }else if(xhttp.status == 500){
                alert("There was an error. Please try your request again");
@@ -1369,11 +1379,14 @@ $(document).ready(function() {
         ourRoute = polylineArray;
     }
     
+    var gDuration;
     function readGoogleDirections(directions, startResponse, endResponse){
-        
         var routes = directions.routes;
         var bounds = routes[0].bounds;
         var polyline = routes[0]["overview_polyline"];
+        
+        //get google time
+        gDuration = routes[0].legs[0].duration.value;
         
         //get start point
         var startResult = startResponse.results;
@@ -1551,7 +1564,9 @@ $(document).ready(function() {
         map.setLayoutProperty("gEnd", 'visibility', 'none');
     }
     
+    var geofiDuration;
     function fillInDetails(meters, seconds){
+        geofiDuration = seconds;
         var miles = meters*0.000621371192;
         var time = secondsToHms(seconds);
                 
