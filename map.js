@@ -252,7 +252,7 @@ $(document).ready(function() {
     //demo stuff
     var demoRunning = false;
     
-    $('.demo').on('click', function(e) {
+    $('.compareRoutes').on('click', function(e) {
         var $this = $(this);
         
         if(demoRunning){
@@ -986,7 +986,6 @@ $(document).ready(function() {
             document.getElementById('comp-points').hidden = true;
             document.getElementById('alt-entrances').hidden = true;
         }
-        
         
         if(directionOut){
             directionOut = false;
@@ -2438,7 +2437,7 @@ $(document).ready(function() {
     
     /// ON MAP CONTROLS
     $('.on-map-sim').on('click', function(e){
-        $('.demo').click();
+        $('.compareRoutes').click();
         
         var $this = $(this);
         
