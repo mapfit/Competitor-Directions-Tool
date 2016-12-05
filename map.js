@@ -250,27 +250,55 @@ $(document).ready(function() {
     });
     
     //demo stuff
-    var demoRunning = false;
+    var compareRoutes = false;
     
     $('.compareRoutes').on('click', function(e) {
         var $this = $(this);
         
-        if(demoRunning){
-            $this.text('Run Demo');
-            demoRunning = false;
+        if(compareRoutes){
+            $this.text('Compare Routes');
+            compareRoutes = false;
             
-            //stop navigation
-            navCounter = -1;
-//            map.setLayoutProperty("navPoint", 'visibility', 'none');
-            document.getElementById('demo-icon').hidden = true;
-            //change camera zoom/pitch/bearing
-            map.setZoom(15);
-            map.setPitch(0);
-            map.setBearing(0);
+            map.setLayoutProperty("gRoute", 'visibility', 'none');
+            map.setLayoutProperty("gStart", 'visibility', 'none');
+            map.setLayoutProperty("gEnd", 'visibility', 'none');
+            map.setLayoutProperty("googleStart", 'visibility', 'none');
+            map.setLayoutProperty("googleEnd", 'visibility', 'none');
+
+            map.setLayoutProperty("openRoute", 'visibility', 'none');
+            map.setLayoutProperty("openStart", 'visibility', 'none');
+            map.setLayoutProperty("openEnd", 'visibility', 'none');
+            map.setLayoutProperty("openRouteStart", 'visibility', 'none');
+            map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
+
+            map.setLayoutProperty("bingRoute", 'visibility', 'none');
+            map.setLayoutProperty("bingStart", 'visibility', 'none');
+            map.setLayoutProperty("bingEnd", 'visibility', 'none');
+            map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
+            map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
         }else{
-            $this.text('Stop Demo');
-            demoRunning = true;
-            setupSimulation();  
+            $this.text('Hide Routes');
+            compareRoutes = true;
+            
+            map.setLayoutProperty("gRoute", 'visibility', 'visible');
+            map.setLayoutProperty("gStart", 'visibility', 'visible');
+            map.setLayoutProperty("gEnd", 'visibility', 'visible');
+            map.setLayoutProperty("googleStart", 'visibility', 'visible');
+            map.setLayoutProperty("googleEnd", 'visibility', 'visible');
+            map.setLayoutProperty("routeStart", 'visibility', 'visible');
+            map.setLayoutProperty("routeEnd", 'visibility', 'visible');
+
+            map.setLayoutProperty("openRoute", 'visibility', 'visible');
+            map.setLayoutProperty("openStart", 'visibility', 'visible');
+            map.setLayoutProperty("openEnd", 'visibility', 'visible');
+            map.setLayoutProperty("openRouteStart", 'visibility', 'visible');
+            map.setLayoutProperty("openRouteEnd", 'visibility', 'visible');
+
+            map.setLayoutProperty("bingRoute", 'visibility', 'visible');
+            map.setLayoutProperty("bingStart", 'visibility', 'visible');
+            map.setLayoutProperty("bingEnd", 'visibility', 'visible');
+            map.setLayoutProperty("bingStartRoute", 'visibility', 'visible');
+            map.setLayoutProperty("bingEndRoute", 'visibility', 'visible');
         }
     });
     
@@ -1442,6 +1470,8 @@ $(document).ready(function() {
                 }
             }, 'route');
         }
+        
+        map.setLayoutProperty("gRoute", 'visibility', 'none');
     }
     
     function drawGoogleEnds(locationArray, start, end){
@@ -1516,6 +1546,9 @@ $(document).ready(function() {
                 }
             }, 'route');
         }
+        
+        map.setLayoutProperty("gStart", 'visibility', 'none');
+        map.setLayoutProperty("gEnd", 'visibility', 'none');
     }
     
     function fillInDetails(meters, seconds){
@@ -1669,6 +1702,8 @@ $(document).ready(function() {
                   "text-color": "#4DD10F"
                 }
             });
+        
+        map.setLayoutProperty("googleEnd", 'visibility', 'none');
     }
     
     function routeStart(location){
@@ -1735,22 +1770,25 @@ $(document).ready(function() {
             map.removeSource('googleStart');
             map.removeLayer('googleStart');
         }
-            map.addSource('googleStart',{
-                type: 'geojson',
-                data: geoJson
-            });
 
-            map.addLayer({
-                id: 'googleStart',
-                source: 'googleStart',
-                type: 'symbol',
-                "layout": {
-                    "icon-image": "google-marker",
-                },
-                paint: {
-                  "text-color": "#4DD10F"
-                }
-            });
+        map.addSource('googleStart',{
+            type: 'geojson',
+            data: geoJson
+        });
+
+        map.addLayer({
+            id: 'googleStart',
+            source: 'googleStart',
+            type: 'symbol',
+            "layout": {
+                "icon-image": "google-marker",
+            },
+            paint: {
+              "text-color": "#4DD10F"
+            }
+        });
+        
+        map.setLayoutProperty("googleStart", 'visibility', 'none');
     }
     
     //*****************************Open Street Map Directions *************************//
@@ -1872,6 +1910,8 @@ $(document).ready(function() {
                 }
             }, 'route');
         }
+        
+        map.setLayoutProperty("openRoute", 'visibility', 'none');
     }
     
     function dropOpenEnds(start, end){
@@ -1955,6 +1995,9 @@ $(document).ready(function() {
                 "icon-image": "open-marker",
             }
         });
+        
+        map.setLayoutProperty("openStart", 'visibility', 'none');
+        map.setLayoutProperty("openEnd", 'visibility', 'none');
     }
     
     function drawOpenEndsRoutes(points, start, end){
@@ -2031,6 +2074,9 @@ $(document).ready(function() {
                 }
             }, 'route');
         }
+        
+        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
+        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
     }
     
     ///******************************* BING Directions ***************************///
@@ -2131,6 +2177,8 @@ $(document).ready(function() {
                 }
             }, 'route');
         }
+        
+        map.setLayoutProperty("bingRoute", 'visibility', 'none');
     }
     
     function drawBingStart(startPoint, routeStart){
@@ -2214,6 +2262,9 @@ $(document).ready(function() {
                 }
             }, 'route');
         }
+        
+        map.setLayoutProperty("bingStart", 'visibility', 'none');
+        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
     }
     
     function drawBingEnd(endPoint, routeEnd){
@@ -2296,6 +2347,9 @@ $(document).ready(function() {
                 }
             }, 'route');
         }
+        
+        map.setLayoutProperty("bingEnd", 'visibility', 'none');
+        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
     }
     
     ///******************************* Nav Simulator ***************************///    
