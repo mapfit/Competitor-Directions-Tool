@@ -827,7 +827,7 @@ html, body {
 	width: 300px;
     height: 50px;
 	left: 5%;
-	top: 320px;
+	top: 300px;
 	z-index: 5;
 }
 
@@ -848,7 +848,7 @@ html, body {
 	width: 300px;
     height: 50px;
 	left: 5%;
-	top: 360px;
+	top: 330px;
 	z-index: 5;
 }
 
@@ -864,7 +864,28 @@ html, body {
     margin-top: 10px;
 }
 
-.demo {
+.gDeets {
+	position: absolute;
+	width: 300px;
+    height: 50px;
+	left: 5%;
+	top: 360px;
+	z-index: 5;
+}
+
+.gDeets label {
+    height: 50px;
+	width: 300px;
+    left: 0%;
+	background: #1F363D;
+	color: white;
+    font-size: 20px;
+    padding: 5px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.compareRoutes {
 	position: absolute;
 	width: 300px;
     height: 40px;
@@ -915,4 +936,35 @@ html, body {
     left: 50%;
     margin-top: -15px;
     margin-left: -15px;
+}
+
+/********************* On-Map Direction Buttons *****************/
+.extra-data {
+	position: absolute;
+	width: 250px;
+	left: 2%;
+	bottom: 5px;
+	z-index: 5;
+}
+
+.extra-data button{
+	float: right;
+	border: 0;
+	padding: 1px;
+	cursor: pointer;
+	height: 45px;
+	width: 100%;
+	font: bold 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+    background: #1F363D;
+	color: #fff;
+    text-transform: uppercase;
+	border-radius: 7px;
+	text-shadow: 0 -1px 0 rgba(0, 0 ,0, .3);
+    border: 1px white;
+    border-style: solid;
+    margin: 2px;
+}
+
+.extra-data button:hover {
+    background-color: #1F363D;
 }

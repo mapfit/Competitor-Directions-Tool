@@ -250,29 +250,71 @@ $(document).ready(function() {
     });
     
     //demo stuff
-    var demoRunning = false;
+    var compareRoutes = false;
     
-    $('.demo').on('click', function(e) {
+    $('.compareRoutes').on('click', function(e) {
         var $this = $(this);
         
-        if(demoRunning){
-            $this.text('Run Demo');
-            demoRunning = false;
+        if(compareRoutes){
+            $this.text('Compare Routes');
+            compareRoutes = false;
             
-            //stop navigation
-            navCounter = -1;
-//            map.setLayoutProperty("navPoint", 'visibility', 'none');
-            document.getElementById('demo-icon').hidden = true;
-            //change camera zoom/pitch/bearing
-            map.setZoom(15);
-            map.setPitch(0);
-            map.setBearing(0);
+            map.setLayoutProperty("gRoute", 'visibility', 'none');
+            map.setLayoutProperty("gStart", 'visibility', 'none');
+            map.setLayoutProperty("gEnd", 'visibility', 'none');
+            map.setLayoutProperty("googleStart", 'visibility', 'none');
+            map.setLayoutProperty("googleEnd", 'visibility', 'none');
+
+            map.setLayoutProperty("openRoute", 'visibility', 'none');
+            map.setLayoutProperty("openStart", 'visibility', 'none');
+            map.setLayoutProperty("openEnd", 'visibility', 'none');
+            map.setLayoutProperty("openRouteStart", 'visibility', 'none');
+            map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
+
+            map.setLayoutProperty("bingRoute", 'visibility', 'none');
+            map.setLayoutProperty("bingStart", 'visibility', 'none');
+            map.setLayoutProperty("bingEnd", 'visibility', 'none');
+            map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
+            map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
         }else{
-            $this.text('Stop Demo');
-            demoRunning = true;
-            setupSimulation();  
+            $this.text('Hide Routes');
+            compareRoutes = true;
+            
+            map.setLayoutProperty("gRoute", 'visibility', 'visible');
+            map.setLayoutProperty("gStart", 'visibility', 'visible');
+            map.setLayoutProperty("gEnd", 'visibility', 'visible');
+            map.setLayoutProperty("googleStart", 'visibility', 'visible');
+            map.setLayoutProperty("googleEnd", 'visibility', 'visible');
+            map.setLayoutProperty("routeStart", 'visibility', 'visible');
+            map.setLayoutProperty("routeEnd", 'visibility', 'visible');
+
+            map.setLayoutProperty("openRoute", 'visibility', 'visible');
+            map.setLayoutProperty("openStart", 'visibility', 'visible');
+            map.setLayoutProperty("openEnd", 'visibility', 'visible');
+            map.setLayoutProperty("openRouteStart", 'visibility', 'visible');
+            map.setLayoutProperty("openRouteEnd", 'visibility', 'visible');
+
+            map.setLayoutProperty("bingRoute", 'visibility', 'visible');
+            map.setLayoutProperty("bingStart", 'visibility', 'visible');
+            map.setLayoutProperty("bingEnd", 'visibility', 'visible');
+            map.setLayoutProperty("bingStartRoute", 'visibility', 'visible');
+            map.setLayoutProperty("bingEndRoute", 'visibility', 'visible');
+            
+            calcDurationDifference();
         }
     });
+    
+    function calcDurationDifference(){
+        var diff = gDuration - geofiDuration;
+        
+        console.log("time diff = " + diff);
+        
+        if(Math.sign(diff) > 0){
+            var time = secondsToHms(diff);
+                
+            $('#gTime').text("You save " + time + " with our route!");
+        }
+    }
     
     //search
     $('.address-search').on('click', function(e) {
@@ -310,6 +352,8 @@ $(document).ready(function() {
          xhttp.onreadystatechange = function(){
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var myArr = JSON.parse(xhttp.responseText);
+               
+               console.log(xhttp.responseText);
 
                if(myArr[0]){
                    readLocation(myArr);
@@ -328,7 +372,7 @@ $(document).ready(function() {
              
          };
                 
-        xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&api_key=" + geofiKey, true);
+        xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -341,6 +385,8 @@ $(document).ready(function() {
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var myArr = JSON.parse(xhttp.responseText);
 
+               console.log(xhttp.responseText);
+               
                if(myArr[0]){
                    readLocation(myArr);
                }else{
@@ -352,7 +398,7 @@ $(document).ready(function() {
            }
          };
 
-         xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&api_key=" + geofiKey, true);
+         xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -410,8 +456,21 @@ $(document).ready(function() {
          var lat = arr[0].lat;
          var lon = arr[0].lon;
         
-        dropMarker(arr[0]);
+        var altEntrances = map.getSource('altEntrances')
 
+        if(altEntrances){
+            map.removeSource('altEntrances');
+            map.removeLayer('altEntrances');
+        }
+        
+        for(var i = 0; i < arr.length; i++){
+            if(arr[i].entrance_type == "pedestrian-access" || arr[i]["place-type"] == "interpolated point"){
+                dropMarker(arr[i]);
+            }else{
+                dropAltEntrance(arr[i]);
+            }
+        }
+        
         map.flyTo({
             center: [lon, lat],
             zoom: 18,
@@ -422,7 +481,57 @@ $(document).ready(function() {
         
         //show directions button
         document.getElementById('search-directions').hidden = false;
+        
+        turnOnPointUI(arr);
      }
+    
+    //alt entrances and competitor points
+    function turnOnPointUI(arr){
+        var altEntrances = map.getSource('altEntrances')
+
+        if(altEntrances){
+            map.setLayoutProperty("altEntrances", 'visibility', 'none');
+        }
+        
+        document.getElementById('extra-data').hidden = false;
+        document.getElementById('comp-points').hidden = false;
+        
+        if(arr.length > 1){
+            document.getElementById('alt-entrances').hidden = false;
+        }
+    }
+    
+    var altShowing = false;
+    $('.alt-entrances').on('click', function(e) {        
+        if(altShowing){
+            altShowing = false;
+            map.setLayoutProperty("altEntrances", 'visibility', 'none');
+        }else{
+            altShowing = true;
+            map.setLayoutProperty("altEntrances", 'visibility', 'visible');
+        }
+    });
+    
+    var compShowing = false;
+    $('.comp-points').on('click', function(e) {        
+        if(compShowing){
+            compShowing = false;
+            map.setLayoutProperty("gAddress", 'visibility', 'none');
+            map.setLayoutProperty("gDist", 'visibility', 'none');
+            map.setLayoutProperty("bingAddress", 'visibility', 'none');
+            map.setLayoutProperty("bingDist", 'visibility', 'none');
+            map.setLayoutProperty("openAddress", 'visibility', 'none');
+            map.setLayoutProperty("openDist", 'visibility', 'none');
+        }else{
+            compShowing = true;
+            map.setLayoutProperty("gAddress", 'visibility', 'visible');
+            map.setLayoutProperty("gDist", 'visibility', 'visible');
+            map.setLayoutProperty("bingAddress", 'visibility', 'visible');
+            map.setLayoutProperty("bingDist", 'visibility', 'visible');
+            map.setLayoutProperty("openAddress", 'visibility', 'visible');
+            map.setLayoutProperty("openDist", 'visibility', 'visible');
+        }
+    });
     
     //drop marker
     function dropMarker(data){
@@ -478,6 +587,63 @@ $(document).ready(function() {
                 "icon-image": "geofi-marker",
                 "icon-allow-overlap": true,
                 "text-field": "GeoFi\n" + data.address,
+                "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+                "text-size": 11,
+                "text-letter-spacing": 0.05,
+                "text-offset": [0, 3]
+            },
+            paint: {
+              "text-color": "#09B529"
+            }
+        });
+    }
+    
+    function dropAltEntrance(data){
+        var thisAddJsonArray = new Array;
+        
+        var thisJSON = {"type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    data.lon,
+                    data.lat
+                  ]
+                },
+                "properties": {
+                  "description": data.address,
+                  "address" : data.address,
+                  "city" : data.city,
+                  "state" : data.state,
+                  "zip" : data.zip,
+                  "placeType" : data["place-type"],
+                  "icon" : "circle",
+                  "color" : '#09B529'
+                }};
+
+            thisAddJsonArray.push(thisJSON);
+    
+        var geoJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
+
+        map.addSource('altEntrances',{
+            type: 'geojson',
+            data: geoJson
+        });
+
+        var marker = new mapboxgl.Marker()
+          .setLngLat([data.lon, data.lat])
+          .addTo(map);
+
+        map.addLayer({
+            id: 'altEntrances',
+            source: 'altEntrances',
+            type: 'symbol',
+            "layout": {
+                "icon-image": "geofi-marker",
+                "icon-allow-overlap": true,
+                "text-field": "GeoFi\n" + data.entrance_type,
                 "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
                 "text-size": 11,
                 "text-letter-spacing": 0.05,
@@ -581,6 +747,9 @@ $(document).ready(function() {
                 }
             }, 'addresses', 'gAddress');
         }
+        
+        map.setLayoutProperty("gAddress", 'visibility', 'none');
+        map.setLayoutProperty("gDist", 'visibility', 'none');
     }
     
     //drop OPEN point
@@ -675,6 +844,9 @@ $(document).ready(function() {
                 }
             }, 'addresses', 'openAddress');
         }
+        
+        map.setLayoutProperty("openAddress", 'visibility', 'none');
+        map.setLayoutProperty("openDist", 'visibility', 'none');
     }
     
     //distance calculation
@@ -818,6 +990,9 @@ $(document).ready(function() {
                 }
             }, 'addresses', 'bingAddress');
         }
+        
+        map.setLayoutProperty("bingAddress", 'visibility', 'none');
+        map.setLayoutProperty("bingDist", 'visibility', 'none');
     }
         
     //***********************DIRECTIONS*********************************************
@@ -848,8 +1023,11 @@ $(document).ready(function() {
             map.setLayoutProperty("openDist", 'visibility', 'none');
             map.setLayoutProperty("bingAddress", 'visibility', 'none');
             map.setLayoutProperty("bingDist", 'visibility', 'none');
+            map.setLayoutProperty("altEntrances", 'visibility', 'none');
+            document.getElementById('extra-data').hidden = true;
+            document.getElementById('comp-points').hidden = true;
+            document.getElementById('alt-entrances').hidden = true;
         }
-        
         
         if(directionOut){
             directionOut = false;
@@ -1062,8 +1240,6 @@ $(document).ready(function() {
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var response = JSON.parse(xhttp.responseText);
                
-               console.log("directions response: " + xhttp.responseText);
-
                readDirections(response);
            }else if(xhttp.status == 500){
                alert("There was an error. Please try your request again");
@@ -1205,11 +1381,14 @@ $(document).ready(function() {
         ourRoute = polylineArray;
     }
     
+    var gDuration;
     function readGoogleDirections(directions, startResponse, endResponse){
-        
         var routes = directions.routes;
         var bounds = routes[0].bounds;
         var polyline = routes[0]["overview_polyline"];
+        
+        //get google time
+        gDuration = routes[0].legs[0].duration.value;
         
         //get start point
         var startResult = startResponse.results;
@@ -1306,6 +1485,8 @@ $(document).ready(function() {
                 }
             }, 'route');
         }
+        
+        map.setLayoutProperty("gRoute", 'visibility', 'none');
     }
     
     function drawGoogleEnds(locationArray, start, end){
@@ -1380,9 +1561,14 @@ $(document).ready(function() {
                 }
             }, 'route');
         }
+        
+        map.setLayoutProperty("gStart", 'visibility', 'none');
+        map.setLayoutProperty("gEnd", 'visibility', 'none');
     }
     
+    var geofiDuration;
     function fillInDetails(meters, seconds){
+        geofiDuration = seconds;
         var miles = meters*0.000621371192;
         var time = secondsToHms(seconds);
                 
@@ -1533,6 +1719,8 @@ $(document).ready(function() {
                   "text-color": "#4DD10F"
                 }
             });
+        
+        map.setLayoutProperty("googleEnd", 'visibility', 'none');
     }
     
     function routeStart(location){
@@ -1599,22 +1787,25 @@ $(document).ready(function() {
             map.removeSource('googleStart');
             map.removeLayer('googleStart');
         }
-            map.addSource('googleStart',{
-                type: 'geojson',
-                data: geoJson
-            });
 
-            map.addLayer({
-                id: 'googleStart',
-                source: 'googleStart',
-                type: 'symbol',
-                "layout": {
-                    "icon-image": "google-marker",
-                },
-                paint: {
-                  "text-color": "#4DD10F"
-                }
-            });
+        map.addSource('googleStart',{
+            type: 'geojson',
+            data: geoJson
+        });
+
+        map.addLayer({
+            id: 'googleStart',
+            source: 'googleStart',
+            type: 'symbol',
+            "layout": {
+                "icon-image": "google-marker",
+            },
+            paint: {
+              "text-color": "#4DD10F"
+            }
+        });
+        
+        map.setLayoutProperty("googleStart", 'visibility', 'none');
     }
     
     //*****************************Open Street Map Directions *************************//
@@ -1736,6 +1927,8 @@ $(document).ready(function() {
                 }
             }, 'route');
         }
+        
+        map.setLayoutProperty("openRoute", 'visibility', 'none');
     }
     
     function dropOpenEnds(start, end){
@@ -1819,6 +2012,9 @@ $(document).ready(function() {
                 "icon-image": "open-marker",
             }
         });
+        
+        map.setLayoutProperty("openStart", 'visibility', 'none');
+        map.setLayoutProperty("openEnd", 'visibility', 'none');
     }
     
     function drawOpenEndsRoutes(points, start, end){
@@ -1895,6 +2091,9 @@ $(document).ready(function() {
                 }
             }, 'route');
         }
+        
+        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
+        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
     }
     
     ///******************************* BING Directions ***************************///
@@ -1995,6 +2194,8 @@ $(document).ready(function() {
                 }
             }, 'route');
         }
+        
+        map.setLayoutProperty("bingRoute", 'visibility', 'none');
     }
     
     function drawBingStart(startPoint, routeStart){
@@ -2078,6 +2279,9 @@ $(document).ready(function() {
                 }
             }, 'route');
         }
+        
+        map.setLayoutProperty("bingStart", 'visibility', 'none');
+        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
     }
     
     function drawBingEnd(endPoint, routeEnd){
@@ -2160,6 +2364,9 @@ $(document).ready(function() {
                 }
             }, 'route');
         }
+        
+        map.setLayoutProperty("bingEnd", 'visibility', 'none');
+        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
     }
     
     ///******************************* Nav Simulator ***************************///    
@@ -2301,7 +2508,7 @@ $(document).ready(function() {
     
     /// ON MAP CONTROLS
     $('.on-map-sim').on('click', function(e){
-        $('.demo').click();
+        $('.compareRoutes').click();
         
         var $this = $(this);
         
