@@ -278,6 +278,8 @@ $(document).ready(function() {
             map.setLayoutProperty("bingEnd", 'visibility', 'none');
             map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
             map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
+            
+            $('#gTime').text(" ");
         }else{
             $this.text('Hide Routes');
             compareRoutes = true;
@@ -1213,6 +1215,11 @@ $(document).ready(function() {
         
     $('.get-directions').on('click', function(e) {        
         console.log("get " + transitType + " directions");
+        
+        //reset comparison
+        compareRoutes = false;
+        $('.compareRoutes').text('Compare Routes');
+        $('#gTime').text(" ");
         
         //get query parts
         var startAddress = document.getElementById('start-address').value;
