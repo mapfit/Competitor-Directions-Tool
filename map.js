@@ -84,7 +84,9 @@ $(document).ready(function() {
     
     //initialize car for transit
     var transitType = "driving";
+    var entranceType = "walking";
     document.getElementById("car").style.backgroundColor = "#FC0D1B";
+    document.getElementById("entrance").style.backgroundColor = "#FC0D1B";
         
     //toggle pins
     var pinsOn = true;
@@ -1121,6 +1123,27 @@ $(document).ready(function() {
         document.getElementById("bike").style.backgroundColor = "#FC0D1B";
         document.getElementById("walk").style.backgroundColor = "#FFFFFF";
         document.getElementById("car").style.backgroundColor = "#FFFFFF";
+    });
+    
+    $('#entrance').on('click', function(e){
+        entranceType = "walking";
+        document.getElementById("entrance").style.backgroundColor = "#FC0D1B";
+        document.getElementById("parking").style.backgroundColor = "#FFFFFF";
+        document.getElementById("loading").style.backgroundColor = "#FFFFFF";
+    });
+    
+    $('#parking').on('click', function(e){
+        entranceType = "driving";
+        document.getElementById("parking").style.backgroundColor = "#FC0D1B";
+        document.getElementById("entrance").style.backgroundColor = "#FFFFFF";
+        document.getElementById("loading").style.backgroundColor = "#FFFFFF";
+    });
+    
+    $('#loading').on('click', function(e){
+        entranceType = "driving";
+        document.getElementById("loading").style.backgroundColor = "#FC0D1B";
+        document.getElementById("parking").style.backgroundColor = "#FFFFFF";
+        document.getElementById("entrance").style.backgroundColor = "#FFFFFF";
     });
     
     //settings button stuff
