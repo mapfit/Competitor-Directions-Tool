@@ -29,6 +29,9 @@ $(document).ready(function() {
         minZoom: 4,
         attributionControl: false
     });
+    
+    //altentrance points
+    var altJson;
 
     //prevent rotation
     map.dragRotate.disable();
@@ -461,19 +464,24 @@ $(document).ready(function() {
          var lon = arr[0].lon;
         
         var altEntrances = map.getSource('altEntrances')
-
+        altJson = [];
+        
         if(altEntrances){
             map.removeSource('altEntrances');
             map.removeLayer('altEntrances');
         }
         
         for(var i = 0; i < arr.length; i++){
+            console.log("got here - " + arr[i].entrance_type);
+            
             if(arr[i].entrance_type == "pedestrian-access" || arr[i]["place-type"] == "interpolated point"){
                 dropMarker(arr[i]);
             }else{
                 dropAltEntrance(arr[i]);
             }
         }
+        
+        console.log("coords: " + lat + ", " + lon);
         
         map.flyTo({
             center: [lon, lat],
@@ -485,6 +493,7 @@ $(document).ready(function() {
         
         //show directions button
         document.getElementById('search-directions').hidden = false;
+        
         
         turnOnPointUI(arr);
      }
@@ -579,10 +588,6 @@ $(document).ready(function() {
             data: geoJson
         });
 
-        var marker = new mapboxgl.Marker()
-          .setLngLat([data.lon, data.lat])
-          .addTo(map);
-
         map.addLayer({
             id: 'addresses',
             source: 'addresses',
@@ -603,6 +608,7 @@ $(document).ready(function() {
     }
     
     function dropAltEntrance(data){
+        console.log("altentrance - " + data);
         var thisAddJsonArray = new Array;
         
         var thisJSON = {"type": "Feature",
@@ -614,7 +620,7 @@ $(document).ready(function() {
                   ]
                 },
                 "properties": {
-                  "description": data.address,
+                  "description": data.entrance_type,
                   "address" : data.address,
                   "city" : data.city,
                   "state" : data.state,
@@ -624,39 +630,44 @@ $(document).ready(function() {
                   "color" : '#09B529'
                 }};
 
+        var altEntrances = map.getSource('altEntrances')
+
+        if(altEntrances){
+            altJson.features.push(thisJSON);
+            map.getSource('altEntrances').setData(altJson);
+        }else{
             thisAddJsonArray.push(thisJSON);
-    
-        var geoJson = {
-            "type": "FeatureCollection",       
-            "features": thisAddJsonArray
-        }
-
-        map.addSource('altEntrances',{
-            type: 'geojson',
-            data: geoJson
-        });
-
-        var marker = new mapboxgl.Marker()
-          .setLngLat([data.lon, data.lat])
-          .addTo(map);
-
-        map.addLayer({
-            id: 'altEntrances',
-            source: 'altEntrances',
-            type: 'symbol',
-            "layout": {
-                "icon-image": "geofi-marker",
-                "icon-allow-overlap": true,
-                "text-field": "GeoFi\n" + data.entrance_type,
-                "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-                "text-size": 11,
-                "text-letter-spacing": 0.05,
-                "text-offset": [0, 3]
-            },
-            paint: {
-              "text-color": "#09B529"
+        
+            altJson = {
+                "type": "FeatureCollection",       
+                "features": thisAddJsonArray
             }
-        });
+
+            map.addSource('altEntrances',{
+                type: 'geojson',
+                data: altJson
+            });
+
+            map.addLayer({
+                id: 'altEntrances',
+                source: 'altEntrances',
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "geofi-marker",
+                    "icon-allow-overlap": true,
+                    "text-field": '{description}',
+                    "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+                    "text-size": 11,
+                    "text-letter-spacing": 0.05,
+                    "text-offset": [0, 3]
+                },
+                paint: {
+                  "text-color": "#09B529"
+                }
+            });
+        }
+        
+
     }
     
     //drop google point
