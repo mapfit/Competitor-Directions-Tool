@@ -602,7 +602,7 @@ $(document).ready(function() {
     function dropAltEntrance(data){
         var thisAddJsonArray = new Array;
         
-        var placeType = data["place-type"];
+        var placeType = data.entrance_type;
         
         if(placeType == "pedestrian-secondary"){
             placeType = "PED-S";
