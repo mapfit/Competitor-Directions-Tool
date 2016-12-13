@@ -379,7 +379,7 @@ $(document).ready(function() {
              
          };
                         
-        xhttp.open('GET', "https://geotest.parkourmethod.com/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
+        xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -601,6 +601,18 @@ $(document).ready(function() {
     
     function dropAltEntrance(data){
         var thisAddJsonArray = new Array;
+        
+        var placeType = data["place-type"];
+        
+        if(placeType == "pedestrian-secondary"){
+            placeType = "PED-S";
+        }else if(placeType == "parking"){
+            placeType = "PARK";
+        }else if(placeType == "loading"){
+            placeType = "LOAD";
+        }else if(placeType == "service"){
+            placeType = "SERV";
+        }
         
         var thisJSON = {"type": "Feature",
                 "geometry": {
@@ -1285,7 +1297,7 @@ $(document).ready(function() {
             bytes.push(dicString.charCodeAt(i));
         }
                 
-        xhttp.open('POST', "https://geotest.parkourmethod.com/directions?api_key=" + geofiKey, true);
+        xhttp.open('POST', "https://api.geofi.io/directions?api_key=" + geofiKey, true);
         xhttp.setRequestHeader("Content-Type","application/json");
         xhttp.setRequestHeader("Accept","application/json");
         xhttp.send(dicString);
