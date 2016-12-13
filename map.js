@@ -628,7 +628,7 @@ $(document).ready(function() {
                   "city" : data.city,
                   "state" : data.state,
                   "zip" : data.zip,
-                  "placeType" : data["place-type"],
+                  "placeType" : placeType,
                   "icon" : "circle",
                   "color" : '#09B529'
                 }};
