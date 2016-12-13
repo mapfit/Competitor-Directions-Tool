@@ -87,7 +87,7 @@ $(document).ready(function() {
     
     //initialize car for transit
     var transitType = "driving";
-    var entranceType = "walking";
+    var entranceType = "all-pedestrian";
     document.getElementById("car").style.backgroundColor = "#FC0D1B";
     document.getElementById("entrance").style.backgroundColor = "#FC0D1B";
         
@@ -460,8 +460,6 @@ $(document).ready(function() {
     }
     
     function readLocation(arr){
-         var lat = arr[0].lat;
-         var lon = arr[0].lon;
         
         var altEntrances = map.getSource('altEntrances')
         altJson = [];
@@ -472,22 +470,18 @@ $(document).ready(function() {
         }
         
         for(var i = 0; i < arr.length; i++){            
-            if(arr[i].entrance_type == "pedestrian-access" || arr[i]["place-type"] == "interpolated point"){
+            if(arr[i].entrance_type == "pedestrian-primary" || arr[i]["place-type"] == "interpolated point"){
                 dropMarker(arr[i]);
+                var lat = arr[i].lat;
+                var lon = arr[i].lon;
+                
+                map.setCenter([lon, lat]);
+                map.setZoom(18);
+                currentAddress = {"lat": lat, "lon": lon};
             }else{
                 dropAltEntrance(arr[i]);
             }
         }
-                
-        map.setCenter([lon, lat]);
-        map.setZoom(18);
-//        map.flyTo({
-//            center: [lon, lat],
-//            zoom: 18,
-//            speed: 1.5
-//        });
-        
-        currentAddress = {"lat": lat, "lon": lon};
         
         //show directions button
         document.getElementById('search-directions').hidden = false;
@@ -1290,9 +1284,7 @@ $(document).ready(function() {
         for(var i = 0; i < dicString.length; ++i){
             bytes.push(dicString.charCodeAt(i));
         }
-        
-        console.log();
-        
+                
         xhttp.open('POST', "https://geotest.parkourmethod.com/directions?api_key=" + geofiKey, true);
         xhttp.setRequestHeader("Content-Type","application/json");
         xhttp.setRequestHeader("Accept","application/json");
@@ -1412,11 +1404,8 @@ $(document).ready(function() {
         routeEnd(endLoc);
         routeStart(startLoc);
         
-        map.flyTo({
-            center: endLoc,
-            zoom: 18,
-            speed: 1.5
-        });
+        map.setCenter(endLoc);
+        map.setZoom(18);
         
         ourRoute = polylineArray;
     }
