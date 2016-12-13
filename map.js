@@ -602,6 +602,18 @@ $(document).ready(function() {
     function dropAltEntrance(data){
         var thisAddJsonArray = new Array;
         
+        var placeType = data["place-type"];
+        
+        if(placeType == "pedestrian-secondary"){
+            placeType = "PED-S";
+        }else if(placeType == "parking"){
+            placeType = "PARK";
+        }else if(placeType == "loading"){
+            placeType = "LOAD";
+        }else if(placeType == "service"){
+            placeType = "SERV";
+        }
+        
         var thisJSON = {"type": "Feature",
                 "geometry": {
                   "type": "Point",
