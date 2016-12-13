@@ -379,7 +379,7 @@ $(document).ready(function() {
              
          };
                         
-        xhttp.open('GET', "https://geotest.parkourmethod.com/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
+        xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -1285,7 +1285,7 @@ $(document).ready(function() {
             bytes.push(dicString.charCodeAt(i));
         }
                 
-        xhttp.open('POST', "https://geotest.parkourmethod.com/directions?api_key=" + geofiKey, true);
+        xhttp.open('POST', "https://api.geofi.io/directions?api_key=" + geofiKey, true);
         xhttp.setRequestHeader("Content-Type","application/json");
         xhttp.setRequestHeader("Accept","application/json");
         xhttp.send(dicString);
