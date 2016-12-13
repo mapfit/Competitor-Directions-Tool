@@ -29,6 +29,9 @@ $(document).ready(function() {
         minZoom: 4,
         attributionControl: false
     });
+    
+    //altentrance points
+    var altJson;
 
     //prevent rotation
     map.dragRotate.disable();
@@ -84,7 +87,9 @@ $(document).ready(function() {
     
     //initialize car for transit
     var transitType = "driving";
+    var entranceType = "all-pedestrian";
     document.getElementById("car").style.backgroundColor = "#FC0D1B";
+    document.getElementById("entrance").style.backgroundColor = "#FC0D1B";
         
     //toggle pins
     var pinsOn = true;
@@ -276,6 +281,8 @@ $(document).ready(function() {
             map.setLayoutProperty("bingEnd", 'visibility', 'none');
             map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
             map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
+            
+            $('#gTime').text(" ");
         }else{
             $this.text('Hide Routes');
             compareRoutes = true;
@@ -371,8 +378,8 @@ $(document).ready(function() {
            }
              
          };
-                
-        xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
+                        
+        xhttp.open('GET', "https://geotest.parkourmethod.com/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -453,34 +460,32 @@ $(document).ready(function() {
     }
     
     function readLocation(arr){
-         var lat = arr[0].lat;
-         var lon = arr[0].lon;
         
         var altEntrances = map.getSource('altEntrances')
-
+        altJson = [];
+        
         if(altEntrances){
             map.removeSource('altEntrances');
             map.removeLayer('altEntrances');
         }
         
-        for(var i = 0; i < arr.length; i++){
-            if(arr[i].entrance_type == "pedestrian-access" || arr[i]["place-type"] == "interpolated point"){
+        for(var i = 0; i < arr.length; i++){            
+            if(arr[i].entrance_type == "pedestrian-primary" || arr[i]["place-type"] == "interpolated point"){
                 dropMarker(arr[i]);
+                var lat = arr[i].lat;
+                var lon = arr[i].lon;
+                
+                map.setCenter([lon, lat]);
+                map.setZoom(18);
+                currentAddress = {"lat": lat, "lon": lon};
             }else{
                 dropAltEntrance(arr[i]);
             }
         }
         
-        map.flyTo({
-            center: [lon, lat],
-            zoom: 18,
-            speed: 1.5
-        });
-        
-        currentAddress = {"lat": lat, "lon": lon};
-        
         //show directions button
         document.getElementById('search-directions').hidden = false;
+        
         
         turnOnPointUI(arr);
      }
@@ -575,10 +580,6 @@ $(document).ready(function() {
             data: geoJson
         });
 
-        var marker = new mapboxgl.Marker()
-          .setLngLat([data.lon, data.lat])
-          .addTo(map);
-
         map.addLayer({
             id: 'addresses',
             source: 'addresses',
@@ -610,7 +611,7 @@ $(document).ready(function() {
                   ]
                 },
                 "properties": {
-                  "description": data.address,
+                  "description": data.entrance_type,
                   "address" : data.address,
                   "city" : data.city,
                   "state" : data.state,
@@ -620,39 +621,44 @@ $(document).ready(function() {
                   "color" : '#09B529'
                 }};
 
+        var altEntrances = map.getSource('altEntrances')
+
+        if(altEntrances){
+            altJson.features.push(thisJSON);
+            map.getSource('altEntrances').setData(altJson);
+        }else{
             thisAddJsonArray.push(thisJSON);
-    
-        var geoJson = {
-            "type": "FeatureCollection",       
-            "features": thisAddJsonArray
-        }
-
-        map.addSource('altEntrances',{
-            type: 'geojson',
-            data: geoJson
-        });
-
-        var marker = new mapboxgl.Marker()
-          .setLngLat([data.lon, data.lat])
-          .addTo(map);
-
-        map.addLayer({
-            id: 'altEntrances',
-            source: 'altEntrances',
-            type: 'symbol',
-            "layout": {
-                "icon-image": "geofi-marker",
-                "icon-allow-overlap": true,
-                "text-field": "GeoFi\n" + data.entrance_type,
-                "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-                "text-size": 11,
-                "text-letter-spacing": 0.05,
-                "text-offset": [0, 3]
-            },
-            paint: {
-              "text-color": "#09B529"
+        
+            altJson = {
+                "type": "FeatureCollection",       
+                "features": thisAddJsonArray
             }
-        });
+
+            map.addSource('altEntrances',{
+                type: 'geojson',
+                data: altJson
+            });
+
+            map.addLayer({
+                id: 'altEntrances',
+                source: 'altEntrances',
+                type: 'symbol',
+                "layout": {
+                    "icon-image": "geofi-marker",
+                    "icon-allow-overlap": true,
+                    "text-field": '{description}',
+                    "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+                    "text-size": 11,
+                    "text-letter-spacing": 0.05,
+                    "text-offset": [0, 3]
+                },
+                paint: {
+                  "text-color": "#09B529"
+                }
+            });
+        }
+        
+
     }
     
     //drop google point
@@ -1123,6 +1129,27 @@ $(document).ready(function() {
         document.getElementById("car").style.backgroundColor = "#FFFFFF";
     });
     
+    $('#entrance').on('click', function(e){
+        entranceType = "all-pedestrian";
+        document.getElementById("entrance").style.backgroundColor = "#FC0D1B";
+        document.getElementById("parking").style.backgroundColor = "#FFFFFF";
+        document.getElementById("loading").style.backgroundColor = "#FFFFFF";
+    });
+    
+    $('#parking').on('click', function(e){
+        entranceType = "all-parking";
+        document.getElementById("parking").style.backgroundColor = "#FC0D1B";
+        document.getElementById("entrance").style.backgroundColor = "#FFFFFF";
+        document.getElementById("loading").style.backgroundColor = "#FFFFFF";
+    });
+    
+    $('#loading').on('click', function(e){
+        entranceType = "all-loading";
+        document.getElementById("loading").style.backgroundColor = "#FC0D1B";
+        document.getElementById("parking").style.backgroundColor = "#FFFFFF";
+        document.getElementById("entrance").style.backgroundColor = "#FFFFFF";
+    });
+    
     //settings button stuff
     var gearOut = false;
     
@@ -1191,6 +1218,11 @@ $(document).ready(function() {
     $('.get-directions').on('click', function(e) {        
         console.log("get " + transitType + " directions");
         
+        //reset comparison
+        compareRoutes = false;
+        $('.compareRoutes').text('Compare Routes');
+        $('#gTime').text(" ");
+        
         //get query parts
         var startAddress = document.getElementById('start-address').value;
         var startCityState = document.getElementById('start-city-state').value;
@@ -1246,14 +1278,14 @@ $(document).ready(function() {
            }
          };
 
-        var dicString = "{\"sourceAddress\" : {\"address\":\"" + startAddress + "\",\"city\" :\"" + city + "\", \"state\" : \"" + state +"\", \"type\" : \"all\"}, \"destinationAddress\" : {\"address\":\"" + endAddress + "\",\"city\" : \"" + city2 + "\", \"state\" : \"" + state2 + "\", \"type\" : \"all\"}, \"type\": \"" + transitType + "\"}";
+        var dicString = "{\"sourceAddress\" : {\"address\":\"" + startAddress + "\",\"city\" :\"" + city + "\", \"state\" : \"" + state +"\", \"type\" : \"" + entranceType + "\"}, \"destinationAddress\" : {\"address\":\"" + endAddress + "\",\"city\" : \"" + city2 + "\", \"state\" : \"" + state2 + "\", \"type\" : \"" + entranceType + "\"}, \"type\": \"" + transitType + "\"}";
         var bytes = [];
 
         for(var i = 0; i < dicString.length; ++i){
             bytes.push(dicString.charCodeAt(i));
         }
-        
-        xhttp.open('POST', "https://api.geofi.io/directions?api_key=" + geofiKey, true);
+                
+        xhttp.open('POST', "https://geotest.parkourmethod.com/directions?api_key=" + geofiKey, true);
         xhttp.setRequestHeader("Content-Type","application/json");
         xhttp.setRequestHeader("Accept","application/json");
         xhttp.send(dicString);
@@ -1372,11 +1404,8 @@ $(document).ready(function() {
         routeEnd(endLoc);
         routeStart(startLoc);
         
-        map.flyTo({
-            center: endLoc,
-            zoom: 18,
-            speed: 1.5
-        });
+        map.setCenter(endLoc);
+        map.setZoom(18);
         
         ourRoute = polylineArray;
     }

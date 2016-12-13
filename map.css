@@ -707,8 +707,8 @@ html, body {
 .segmented-control {
 	position: absolute;
 	width: 300px;
-	left: 5%;
-	top: 250px;
+	left: 10%;
+	top: 240px;
 	z-index: 5;
     display: table;
 }
@@ -728,10 +728,10 @@ html, body {
 .get-directions {
 	position: absolute;
     background: #fff;
-	width: 250;
+	width: 310px;
     height: 40px;
-	left: 45%;
-	top: 250px;
+	left: 5%;
+	top: 290px;
 	z-index: 5;
     font-size: 20px;
     font-style: oblique;
@@ -743,7 +743,7 @@ html, body {
 	width: 300px;
     height: 50px;
 	left: 6%;
-	top: 400px;
+	top: 430px;
 	z-index: 5;
 }
 
@@ -827,7 +827,7 @@ html, body {
 	width: 300px;
     height: 50px;
 	left: 5%;
-	top: 300px;
+	top: 335px;
 	z-index: 5;
 }
 
@@ -848,7 +848,7 @@ html, body {
 	width: 300px;
     height: 50px;
 	left: 5%;
-	top: 330px;
+	top: 365px;
 	z-index: 5;
 }
 
@@ -869,7 +869,7 @@ html, body {
 	width: 300px;
     height: 50px;
 	left: 5%;
-	top: 360px;
+	top: 395px;
 	z-index: 5;
 }
 
@@ -890,7 +890,7 @@ html, body {
 	width: 300px;
     height: 40px;
 	left: 5%;
-	top: 520px;
+	top: 555px;
 	z-index: 5;
     background: #fff;
     font-size: 20px;
@@ -967,4 +967,39 @@ html, body {
 
 .extra-data button:hover {
     background-color: #1F363D;
+}
+
+/************* New Diretions UI **************************/
+/* line and entrance types*/
+
+.separator{
+    position: absolute;
+    width: 3px;
+    height: 40px;
+    top: 240px;
+    color: #fff;
+    background: #fff;
+    left: 45%;
+    border-radius: 1px;
+}
+
+.entrance-control {
+	position: absolute;
+	width: 300px;
+	left: 47%;
+	top: 240px;
+	z-index: 5;
+    display: table;
+}
+
+.entrance {
+	width: 40px;
+    height: 40px;
+	z-index: 5;
+    background: #fff;
+	color: #1F363D;
+    border: none;
+    padding: 0;
+    border-radius: 20px;
+    font-size: 25px;
 }
