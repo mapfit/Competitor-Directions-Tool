@@ -378,8 +378,8 @@ $(document).ready(function() {
            }
              
          };
-                
-        xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
+                        
+        xhttp.open('GET', "https://geotest.parkourmethod.com/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -471,23 +471,21 @@ $(document).ready(function() {
             map.removeLayer('altEntrances');
         }
         
-        for(var i = 0; i < arr.length; i++){
-            console.log("got here - " + arr[i].entrance_type);
-            
+        for(var i = 0; i < arr.length; i++){            
             if(arr[i].entrance_type == "pedestrian-access" || arr[i]["place-type"] == "interpolated point"){
                 dropMarker(arr[i]);
             }else{
                 dropAltEntrance(arr[i]);
             }
         }
-        
-        console.log("coords: " + lat + ", " + lon);
-        
-        map.flyTo({
-            center: [lon, lat],
-            zoom: 18,
-            speed: 1.5
-        });
+                
+        map.setCenter([lon, lat]);
+        map.setZoom(18);
+//        map.flyTo({
+//            center: [lon, lat],
+//            zoom: 18,
+//            speed: 1.5
+//        });
         
         currentAddress = {"lat": lat, "lon": lon};
         
@@ -608,7 +606,6 @@ $(document).ready(function() {
     }
     
     function dropAltEntrance(data){
-        console.log("altentrance - " + data);
         var thisAddJsonArray = new Array;
         
         var thisJSON = {"type": "Feature",
@@ -1139,21 +1136,21 @@ $(document).ready(function() {
     });
     
     $('#entrance').on('click', function(e){
-        entranceType = "walking";
+        entranceType = "all-pedestrian";
         document.getElementById("entrance").style.backgroundColor = "#FC0D1B";
         document.getElementById("parking").style.backgroundColor = "#FFFFFF";
         document.getElementById("loading").style.backgroundColor = "#FFFFFF";
     });
     
     $('#parking').on('click', function(e){
-        entranceType = "driving";
+        entranceType = "all-parking";
         document.getElementById("parking").style.backgroundColor = "#FC0D1B";
         document.getElementById("entrance").style.backgroundColor = "#FFFFFF";
         document.getElementById("loading").style.backgroundColor = "#FFFFFF";
     });
     
     $('#loading').on('click', function(e){
-        entranceType = "driving";
+        entranceType = "all-loading";
         document.getElementById("loading").style.backgroundColor = "#FC0D1B";
         document.getElementById("parking").style.backgroundColor = "#FFFFFF";
         document.getElementById("entrance").style.backgroundColor = "#FFFFFF";
@@ -1287,14 +1284,16 @@ $(document).ready(function() {
            }
          };
 
-        var dicString = "{\"sourceAddress\" : {\"address\":\"" + startAddress + "\",\"city\" :\"" + city + "\", \"state\" : \"" + state +"\", \"type\" : \"all\"}, \"destinationAddress\" : {\"address\":\"" + endAddress + "\",\"city\" : \"" + city2 + "\", \"state\" : \"" + state2 + "\", \"type\" : \"all\"}, \"type\": \"" + transitType + "\"}";
+        var dicString = "{\"sourceAddress\" : {\"address\":\"" + startAddress + "\",\"city\" :\"" + city + "\", \"state\" : \"" + state +"\", \"type\" : \"" + entranceType + "\"}, \"destinationAddress\" : {\"address\":\"" + endAddress + "\",\"city\" : \"" + city2 + "\", \"state\" : \"" + state2 + "\", \"type\" : \"" + entranceType + "\"}, \"type\": \"" + transitType + "\"}";
         var bytes = [];
 
         for(var i = 0; i < dicString.length; ++i){
             bytes.push(dicString.charCodeAt(i));
         }
         
-        xhttp.open('POST', "https://api.geofi.io/directions?api_key=" + geofiKey, true);
+        console.log();
+        
+        xhttp.open('POST', "https://geotest.parkourmethod.com/directions?api_key=" + geofiKey, true);
         xhttp.setRequestHeader("Content-Type","application/json");
         xhttp.setRequestHeader("Accept","application/json");
         xhttp.send(dicString);
