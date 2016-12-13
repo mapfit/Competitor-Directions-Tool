@@ -623,7 +623,7 @@ $(document).ready(function() {
                   ]
                 },
                 "properties": {
-                  "description": data.entrance_type,
+                  "description": placeType,
                   "address" : data.address,
                   "city" : data.city,
                   "state" : data.state,
