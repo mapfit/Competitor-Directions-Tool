@@ -1016,10 +1016,13 @@ $(document).ready(function() {
     //***********************DIRECTIONS*********************************************
     
     $('.call-search-directions').on('click', function(e) {
-         var query = document.getElementById('address-query').value;
+        var query = document.getElementById('address-query').value;
         var cityState = document.getElementById('city-state').value;
             
         document.getElementById('search-directions').hidden = true;
+        document.getElementById('extra-data').hidden = true;
+        document.getElementById('comp-points').hidden = true;
+        document.getElementById('alt-entrances').hidden = true;
         
         $('.end-address').val(query);
         $('.end-city-state').val(cityState);        
