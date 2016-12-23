@@ -379,7 +379,7 @@ $(document).ready(function() {
              
          };
                         
-        xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
+        xhttp.open('GET', "https://geotest.parkourmethod.com/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -405,7 +405,7 @@ $(document).ready(function() {
            }
          };
 
-         xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
+         xhttp.open('GET', "https://geotest.parkourmethod.com?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -1016,10 +1016,13 @@ $(document).ready(function() {
     //***********************DIRECTIONS*********************************************
     
     $('.call-search-directions').on('click', function(e) {
-         var query = document.getElementById('address-query').value;
+        var query = document.getElementById('address-query').value;
         var cityState = document.getElementById('city-state').value;
             
         document.getElementById('search-directions').hidden = true;
+        document.getElementById('extra-data').hidden = true;
+        document.getElementById('comp-points').hidden = true;
+        document.getElementById('alt-entrances').hidden = true;
         
         $('.end-address').val(query);
         $('.end-city-state').val(cityState);        
@@ -1297,7 +1300,7 @@ $(document).ready(function() {
             bytes.push(dicString.charCodeAt(i));
         }
                 
-        xhttp.open('POST', "https://api.geofi.io/directions?api_key=" + geofiKey, true);
+        xhttp.open('POST', "https://geotest.parkourmethod.com/directions?api_key=" + geofiKey, true);
         xhttp.setRequestHeader("Content-Type","application/json");
         xhttp.setRequestHeader("Accept","application/json");
         xhttp.send(dicString);
