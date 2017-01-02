@@ -32,6 +32,9 @@ $(document).ready(function() {
     
     //altentrance points
     var altJson;
+    
+    //store all geofi route names
+    var geofiRoute = [];
 
     //prevent rotation
     map.dragRotate.disable();
@@ -1080,7 +1083,6 @@ $(document).ready(function() {
         $('.on-map-sim').text('Run Nav Simulation');
         document.getElementById('search-directions').hidden = true;
         
-        map.setLayoutProperty("route", 'visibility', 'none');
         map.setLayoutProperty("gRoute", 'visibility', 'none');
         map.setLayoutProperty("gStart", 'visibility', 'none');
         map.setLayoutProperty("gEnd", 'visibility', 'none');
@@ -1101,14 +1103,22 @@ $(document).ready(function() {
         map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
         map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
         
-        //stop navigation
-        navCounter = -1;
-        map.setLayoutProperty("navPoint", 'visibility', 'none');
-        
         //change camera zoom/pitch/bearing
         map.setZoom(15);
         map.setPitch(0);
         map.setBearing(0);
+        
+        //clear old route
+        for(var a = 0; a < geofiRoute.length; a++){
+            var thisRoute = map.getSource(geofiRoute[a]);
+            
+            if(thisRoute){
+                map.removeLayer(geofiRoute[a]);
+                map.removeSource(geofiRoute[a]);
+            }
+        }
+        
+        geofiRoute = [];
     });
     
     $('.swap').on('click', function(e) {        
@@ -1386,6 +1396,19 @@ $(document).ready(function() {
     }
     
     function readDirections(response){
+        console.log(geofiRoute);
+        
+        //clear old route
+        for(var a = 0; a < geofiRoute.length; a++){
+            var thisRoute = map.getSource(geofiRoute[a]);
+            
+            if(thisRoute){
+                map.removeLayer(geofiRoute[a]);
+                map.removeSource(geofiRoute[a]);
+            }
+        }
+        
+        geofiRoute = [];
         
         var routes = response.routes;
         var duration = routes[0].duration;
@@ -1404,14 +1427,20 @@ $(document).ready(function() {
         //add first location
         locationArray.push(startLoc);
         
-        //test
-        var polylineArray = decode(polyline, 5);
-        
-        //add first and last points
-        polylineArray.unshift(startLoc);
-        polylineArray.push(endLoc);
-                
-        drawRoute(polylineArray);
+        //multiple polylines
+        var polylineArray = [];
+        for(var i = 0; i < steps.length; i++){
+            var thisStep = steps[i];
+            var thisPoly = decode(thisStep.geometry, 5);
+            
+            if(i == 0){
+                thisPoly.unshift(startLoc);
+            }else if(i == steps.length-1){
+                thisPoly.push(endLoc);
+            }
+            
+            drawRoute(thisPoly, i);
+        }
         
         fillInDetails(distance, duration);
         
@@ -1457,9 +1486,11 @@ $(document).ready(function() {
         googleStart(startPoint);
     }
     
-    function drawRoute(locationArray){
+    function drawRoute(locationArray, count){
+        var routeLabel = "route" + count;
+        geofiRoute.push(routeLabel);
         
-        var route = map.getSource('route');
+        var route = map.getSource(routeLabel);
         var locData = {
                 "type": "Feature",
                 "properties": {},
@@ -1470,18 +1501,18 @@ $(document).ready(function() {
         }
 
         if(route){
-            map.getSource('route').setData(locData);
-            map.setLayoutProperty("route", 'visibility', 'visible');
+            map.getSource(routeLabel).setData(locData);
+            map.setLayoutProperty(routeLabel, 'visibility', 'visible');
         }else{
-            map.addSource('route',{
+            map.addSource(routeLabel,{
                 type: 'geojson',
                 data: locData
             });
             
             map.addLayer({
-                "id": "route",
+                "id": routeLabel,
                 "type": "line",
-                "source": "route",
+                "source": routeLabel,
                 "layout": {
                     "line-join": "round",
                     "line-cap": "round"
