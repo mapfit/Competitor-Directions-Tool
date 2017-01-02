@@ -246,6 +246,44 @@ $(document).ready(function() {
         document.getElementById(defLoc).focus();
     });
     
+        //coordinate search/right click
+     map.on('contextmenu', function(e) {
+         
+         var xhttp = new XMLHttpRequest();
+         var ll = e.lngLat;
+                  
+         xhttp.onreadystatechange = function(){
+           if(xhttp.readyState == 4 && xhttp.status == 200){
+               var myArr = JSON.parse(xhttp.response);
+               console.log(JSON.stringify(myArr));
+//               readCoordinates(myArr);
+               
+               if(xhttp.readyState == 4 && xhttp.status == 200){
+               var myArr = JSON.parse(xhttp.responseText);
+               
+               console.log(xhttp.responseText);
+
+               if(myArr[0]){
+                   readLocation(myArr);
+                   
+                   //setup additional searches
+                   googleSearch(ll.lat + ","+ ll.lng);
+                   openSearch(ll.lng + ","+ ll.lat);
+                   bingSearch(ll.lat + ","+ ll.lng);
+               }else{
+                   console.log("no data found");
+                   alert("No Matching Address found. Please try another address.");
+               }
+           }else if(xhttp.readyState == 4){
+               alert('API Server is being updated -- please try again later');
+           }
+           }  
+         };
+
+         xhttp.open('GET', "https://geotest.parkourmethod.com/coordinate?lat=" + ll.lat + "\&lon="+ ll.lng + "\&radius=35", true);
+         xhttp.send();
+     });
+    
     //zoom buttons
     $('.IN').on('click', function(e) {
         var zoom = map.getZoom();        
@@ -542,6 +580,8 @@ $(document).ready(function() {
     });
     
     //drop marker
+    var currentMarkerAddress;
+    var currentMarkerCityState;
     function dropMarker(data){
         var thisAddJsonArray = new Array;
         
@@ -600,6 +640,10 @@ $(document).ready(function() {
               "text-color": "#09B529"
             }
         });
+        
+        //fill in address bar
+        currentMarkerAddress = data.address;
+        currentMarkerCityState = data.city + ", " + data.state;
     }
     
     function dropAltEntrance(data){
@@ -1027,8 +1071,8 @@ $(document).ready(function() {
         document.getElementById('comp-points').hidden = true;
         document.getElementById('alt-entrances').hidden = true;
         
-        $('.end-address').val(query);
-        $('.end-city-state').val(cityState);        
+        $('.end-address').val(currentMarkerAddress);
+        $('.end-city-state').val(currentMarkerCityState);        
         $('.open-Directions').click();
     });
     
