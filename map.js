@@ -280,7 +280,7 @@ $(document).ready(function() {
            }  
          };
 
-         xhttp.open('GET', "https://geotest.parkourmethod.com/coordinate?lat=" + ll.lat + "\&lon="+ ll.lng + "\&radius=35", true);
+         xhttp.open('GET', "https://api.geofi.io/coordinate?lat=" + ll.lat + "\&lon="+ ll.lng + "\&radius=35" + "\&api_key=" + geofiKey, true);
          xhttp.send();
      });
     
