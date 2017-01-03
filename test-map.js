@@ -256,28 +256,27 @@ $(document).ready(function() {
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var myArr = JSON.parse(xhttp.response);
                console.log(JSON.stringify(myArr));
-//               readCoordinates(myArr);
                
                if(xhttp.readyState == 4 && xhttp.status == 200){
-               var myArr = JSON.parse(xhttp.responseText);
-               
-               console.log(xhttp.responseText);
+                   var myArr = JSON.parse(xhttp.responseText);
 
-               if(myArr[0]){
-                   readLocation(myArr);
-                   
-                   //setup additional searches
-                   googleSearch(ll.lat + ","+ ll.lng);
-                   openSearch(ll.lng + ","+ ll.lat);
-                   bingSearch(ll.lat + ","+ ll.lng);
-               }else{
-                   console.log("no data found");
-                   alert("No Matching Address found. Please try another address.");
+                   console.log(xhttp.responseText);
+
+                   if(myArr[0]){
+                       readLocation(myArr);
+
+                       //setup additional searches
+                       googleSearch(ll.lat + ","+ ll.lng);
+                       openSearch(ll.lng + ","+ ll.lat);
+                       bingSearch(ll.lat + ","+ ll.lng);
+                   }else{
+                       console.log("no data found");
+                       alert("No Matching Address found. Please try another address.");
+                   }
+               }else if(xhttp.readyState == 4){
+                   alert('API Server is being updated -- please try again later');
                }
-           }else if(xhttp.readyState == 4){
-               alert('API Server is being updated -- please try again later');
            }
-           }  
          };
 
          xhttp.open('GET', "https://geotest.parkourmethod.com/coordinate?lat=" + ll.lat + "\&lon="+ ll.lng + "\&radius=35", true);
