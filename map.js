@@ -288,7 +288,7 @@ $(document).ready(function() {
            }
          };
 
-         xhttp.open('GET', "https://api.geofi.io/coordinate?lat=" + ll.lat + "\&lon="+ ll.lng + "\&radius=35" + "\&api_key=" + geofiKey, true);
+         xhttp.open('GET', "https://api.geofi.io/coordinate?lat=" + coords.lat + "\&lon="+ coords.lng + "\&radius=35" + "\&api_key=" + geofiKey, true);
 
          xhttp.send();
     }
