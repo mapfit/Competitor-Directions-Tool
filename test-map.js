@@ -50,10 +50,10 @@ $(document).ready(function() {
         $(".search-form").css("width", "100%");
         $(".search-form input").css("width", "74%");
         $(".search-form button").css("width", "19%");
-        $(".search-directions").css("top", "auto");
-        $(".search-directions").css("left", "auto");
-        $(".search-directions").css("right", "1%");
-        $(".search-directions").css("bottom", "50px");
+//        $(".search-directions").css("top", "auto");
+//        $(".search-directions").css("left", "auto");
+//        $(".search-directions").css("right", "1%");
+//        $(".search-directions").css("bottom", "50px");
         $(".search-directions").css("width", "50%");
         $(".search-directions button").css("width", "95%");
         
@@ -230,6 +230,12 @@ $(document).ready(function() {
         defLoc = "BOS";
     });
     
+    map.on('load', function(){
+        if(detectmob){
+            map.on('mousedown', mouseDown, true); 
+        }
+    });
+    
     //keep focus on the buttons so they stay highlighted
     map.on("click", function(){
        //keep focus on buttons
@@ -247,10 +253,13 @@ $(document).ready(function() {
     });
     
         //coordinate search/right click
-     map.on('contextmenu', function(e) {
-         
-         var xhttp = new XMLHttpRequest();
+     map.on('contextmenu', function(e) {         
          var ll = e.lngLat;
+         revGeocode(ll);         
+     });
+    
+    function revGeocode(coords){
+        var xhttp = new XMLHttpRequest();
                   
          xhttp.onreadystatechange = function(){
            if(xhttp.readyState == 4 && xhttp.status == 200){
@@ -266,9 +275,9 @@ $(document).ready(function() {
                        readLocation(myArr);
 
                        //setup additional searches
-                       googleSearch(ll.lat + ","+ ll.lng);
-                       openSearch(ll.lng + ","+ ll.lat);
-                       bingSearch(ll.lat + ","+ ll.lng);
+                       googleSearch(coords.lat + ","+ coords.lng);
+                       openSearch(coords.lng + ","+ coords.lat);
+                       bingSearch(coords.lat + ","+ coords.lng);
                    }else{
                        console.log("no data found");
                        alert("No Matching Address found. Please try another address.");
@@ -279,9 +288,9 @@ $(document).ready(function() {
            }
          };
 
-         xhttp.open('GET', "https://geotest.parkourmethod.com/coordinate?lat=" + ll.lat + "\&lon="+ ll.lng + "\&radius=35", true);
+         xhttp.open('GET', "https://geotest.parkourmethod.com/coordinate?lat=" + coords.lat + "\&lon="+ coords.lng + "\&radius=35", true);
          xhttp.send();
-     });
+    }
     
     //zoom buttons
     $('.IN').on('click', function(e) {
@@ -293,6 +302,26 @@ $(document).ready(function() {
         var zoom = map.getZoom();        
         map.setZoom(zoom - 1);
     });
+    
+    //long press detection for mobile
+
+    var delay = 1000;
+    var downTime;
+    var upTime;
+    var pressTimer;
+
+    function mouseDown(e) {  
+        var coords = e.lngLat;
+
+        pressTimer = window.setTimeout(function() {revGeocode(coords)},1000);
+        return false; 
+    }
+
+    function onUp(e) {
+        clearTimeout(pressTimer);
+        // Clear timeout
+        return false;
+    }
     
     //demo stuff
     var compareRoutes = false;
@@ -1123,7 +1152,7 @@ $(document).ready(function() {
         
         //hide buttons if out
         document.getElementById('on-map').hidden = true;
-        $('.on-map-sim').text('Run Nav Simulation');
+        $('.on-map-sim').text('Compare Us');
         document.getElementById('search-directions').hidden = true;
         
         map.setLayoutProperty("gRoute", 'visibility', 'none');
@@ -2633,16 +2662,16 @@ $(document).ready(function() {
         if(demoRunning){
             $this.text('Stop Demo');
         }else{
-            $this.text('Run Nav Simulation');
+            $this.text('Compare Us');
         }
     });
 
     $('.clear-route').on('click', function(e){
         //hide buttons
         document.getElementById('on-map').hidden = true;
-        $('.on-map-sim').text('Run Nav Simulation');
+        $('.on-map-sim').text('Compare Us');
         
-        map.setLayoutProperty("route", 'visibility', 'none');
+//        map.setLayoutProperty("route", 'visibility', 'none');
         map.setLayoutProperty("gRoute", 'visibility', 'none');
         map.setLayoutProperty("gStart", 'visibility', 'none');
         map.setLayoutProperty("gEnd", 'visibility', 'none');
@@ -2664,13 +2693,25 @@ $(document).ready(function() {
         map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
         
         //stop navigation
-        navCounter = -1;
-        map.setLayoutProperty("navPoint", 'visibility', 'none');
+//        navCounter = -1;
+//        map.setLayoutProperty("navPoint", 'visibility', 'none');
         
         //change camera zoom/pitch/bearing
         map.setZoom(15);
         map.setPitch(0);
         map.setBearing(0);
+        
+        //clear old route
+        for(var a = 0; a < geofiRoute.length; a++){
+            var thisRoute = map.getSource(geofiRoute[a]);
+            
+            if(thisRoute){
+                map.removeLayer(geofiRoute[a]);
+                map.removeSource(geofiRoute[a]);
+            }
+        }
+        
+        geofiRoute = [];
     });
 });
 
