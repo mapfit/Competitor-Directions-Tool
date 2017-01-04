@@ -50,10 +50,6 @@ $(document).ready(function() {
         $(".search-form").css("width", "100%");
         $(".search-form input").css("width", "74%");
         $(".search-form button").css("width", "19%");
-//        $(".search-directions").css("top", "auto");
-//        $(".search-directions").css("left", "auto");
-//        $(".search-directions").css("right", "1%");
-//        $(".search-directions").css("bottom", "50px");
         $(".search-directions").css("width", "50%");
         $(".search-directions button").css("width", "95%");
         
@@ -231,9 +227,7 @@ $(document).ready(function() {
     });
     
     map.on('load', function(){
-        if(detectmob){
-            map.on('mousedown', mouseDown, true); 
-        }
+//            map.on('mousedown', mouseDown, true); 
     });
     
     //keep focus on the buttons so they stay highlighted
@@ -311,9 +305,11 @@ $(document).ready(function() {
     var pressTimer;
 
     function mouseDown(e) {  
-        var coords = e.lngLat;
+        if(detectmob){
+            var coords = e.lngLat;
+            pressTimer = window.setTimeout(function() {revGeocode(coords)},1000);
+        }
 
-        pressTimer = window.setTimeout(function() {revGeocode(coords)},1000);
         return false; 
     }
 
