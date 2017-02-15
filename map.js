@@ -255,7 +255,7 @@ $(document).ready(function() {
         //coordinate search/right click
      map.on('contextmenu', function(e) {         
          var ll = e.lngLat;
-         revGeocode(ll);         
+//         revGeocode(ll);         
      });
     
     function revGeocode(coords){
@@ -268,8 +268,6 @@ $(document).ready(function() {
                
                if(xhttp.readyState == 4 && xhttp.status == 200){
                    var myArr = JSON.parse(xhttp.responseText);
-
-                   console.log(xhttp.responseText);
 
                    if(myArr[0]){
                        readLocation(myArr);
@@ -314,8 +312,8 @@ $(document).ready(function() {
     function mouseDown(e) {  
         var coords = e.lngLat;
 
-        pressTimer = window.setTimeout(function() {revGeocode(coords)},1000);
-        return false; 
+//        pressTimer = window.setTimeout(function() {revGeocode(coords)},1000);
+//        return false; 
     }
 
     function onUp(e) {
@@ -448,6 +446,8 @@ $(document).ready(function() {
            }
              
          };
+        
+        console.log("address query: " + thisQuery)
                         
         xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
@@ -530,7 +530,7 @@ $(document).ready(function() {
     }
     
     function readLocation(arr){
-        
+                
         var altEntrances = map.getSource('altEntrances')
         altJson = [];
         
@@ -1369,7 +1369,7 @@ $(document).ready(function() {
          xhttp.onreadystatechange = function(){
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var response = JSON.parse(xhttp.responseText);
-               
+               console.log("directions response: " + JSON.stringify(response));
                readDirections(response);
            }else if(xhttp.status == 500){
                alert("There was an error. Please try your request again");
@@ -1377,11 +1377,14 @@ $(document).ready(function() {
          };
 
         var dicString = "{\"sourceAddress\" : {\"address\":\"" + startAddress + "\",\"city\" :\"" + city + "\", \"state\" : \"" + state +"\", \"type\" : \"" + entranceType + "\"}, \"destinationAddress\" : {\"address\":\"" + endAddress + "\",\"city\" : \"" + city2 + "\", \"state\" : \"" + state2 + "\", \"type\" : \"" + entranceType + "\"}, \"type\": \"" + transitType + "\"}";
+        
         var bytes = [];
 
         for(var i = 0; i < dicString.length; ++i){
             bytes.push(dicString.charCodeAt(i));
         }
+        
+        console.log("directions request: " + dicString);
                 
         xhttp.open('POST', "https://api.geofi.io/directions?api_key=" + geofiKey, true);
         xhttp.setRequestHeader("Content-Type","application/json");
