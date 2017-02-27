@@ -330,22 +330,22 @@ $(document).ready(function() {
             compareRoutes = false;
             
             map.setLayoutProperty("gRoute", 'visibility', 'none');
-            map.setLayoutProperty("gStart", 'visibility', 'none');
-            map.setLayoutProperty("gEnd", 'visibility', 'none');
+//            map.setLayoutProperty("gStart", 'visibility', 'none');
+//            map.setLayoutProperty("gEnd", 'visibility', 'none');
             map.setLayoutProperty("googleStart", 'visibility', 'none');
             map.setLayoutProperty("googleEnd", 'visibility', 'none');
 
             map.setLayoutProperty("openRoute", 'visibility', 'none');
             map.setLayoutProperty("openStart", 'visibility', 'none');
             map.setLayoutProperty("openEnd", 'visibility', 'none');
-            map.setLayoutProperty("openRouteStart", 'visibility', 'none');
-            map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
+//            map.setLayoutProperty("openRouteStart", 'visibility', 'none');
+//            map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
 
             map.setLayoutProperty("bingRoute", 'visibility', 'none');
             map.setLayoutProperty("bingStart", 'visibility', 'none');
             map.setLayoutProperty("bingEnd", 'visibility', 'none');
-            map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
-            map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
+//            map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
+//            map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
             
             $('#gTime').text(" ");
         }else{
@@ -353,8 +353,8 @@ $(document).ready(function() {
             compareRoutes = true;
             
             map.setLayoutProperty("gRoute", 'visibility', 'visible');
-            map.setLayoutProperty("gStart", 'visibility', 'visible');
-            map.setLayoutProperty("gEnd", 'visibility', 'visible');
+//            map.setLayoutProperty("gStart", 'visibility', 'visible');
+//            map.setLayoutProperty("gEnd", 'visibility', 'visible');
             map.setLayoutProperty("googleStart", 'visibility', 'visible');
             map.setLayoutProperty("googleEnd", 'visibility', 'visible');
             map.setLayoutProperty("routeStart", 'visibility', 'visible');
@@ -363,14 +363,14 @@ $(document).ready(function() {
             map.setLayoutProperty("openRoute", 'visibility', 'visible');
             map.setLayoutProperty("openStart", 'visibility', 'visible');
             map.setLayoutProperty("openEnd", 'visibility', 'visible');
-            map.setLayoutProperty("openRouteStart", 'visibility', 'visible');
-            map.setLayoutProperty("openRouteEnd", 'visibility', 'visible');
+//            map.setLayoutProperty("openRouteStart", 'visibility', 'visible');
+//            map.setLayoutProperty("openRouteEnd", 'visibility', 'visible');
 
             map.setLayoutProperty("bingRoute", 'visibility', 'visible');
             map.setLayoutProperty("bingStart", 'visibility', 'visible');
             map.setLayoutProperty("bingEnd", 'visibility', 'visible');
-            map.setLayoutProperty("bingStartRoute", 'visibility', 'visible');
-            map.setLayoutProperty("bingEndRoute", 'visibility', 'visible');
+//            map.setLayoutProperty("bingStartRoute", 'visibility', 'visible');
+//            map.setLayoutProperty("bingEndRoute", 'visibility', 'visible');
             
             calcDurationDifference();
         }
@@ -1153,8 +1153,8 @@ $(document).ready(function() {
         document.getElementById('search-directions').hidden = true;
         
         map.setLayoutProperty("gRoute", 'visibility', 'none');
-        map.setLayoutProperty("gStart", 'visibility', 'none');
-        map.setLayoutProperty("gEnd", 'visibility', 'none');
+//        map.setLayoutProperty("gStart", 'visibility', 'none');
+//        map.setLayoutProperty("gEnd", 'visibility', 'none');
         map.setLayoutProperty("googleStart", 'visibility', 'none');
         map.setLayoutProperty("googleEnd", 'visibility', 'none');
         map.setLayoutProperty("routeStart", 'visibility', 'none');
@@ -1163,14 +1163,14 @@ $(document).ready(function() {
         map.setLayoutProperty("openRoute", 'visibility', 'none');
         map.setLayoutProperty("openStart", 'visibility', 'none');
         map.setLayoutProperty("openEnd", 'visibility', 'none');
-        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
-        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
+//        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
+//        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
         
         map.setLayoutProperty("bingRoute", 'visibility', 'none');
         map.setLayoutProperty("bingStart", 'visibility', 'none');
         map.setLayoutProperty("bingEnd", 'visibility', 'none');
-        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
-        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
+//        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
+//        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
         
         //change camera zoom/pitch/bearing
         map.setZoom(15);
@@ -2670,8 +2670,8 @@ $(document).ready(function() {
         
 //        map.setLayoutProperty("route", 'visibility', 'none');
         map.setLayoutProperty("gRoute", 'visibility', 'none');
-        map.setLayoutProperty("gStart", 'visibility', 'none');
-        map.setLayoutProperty("gEnd", 'visibility', 'none');
+//        map.setLayoutProperty("gStart", 'visibility', 'none');
+//        map.setLayoutProperty("gEnd", 'visibility', 'none');
         map.setLayoutProperty("googleStart", 'visibility', 'none');
         map.setLayoutProperty("googleEnd", 'visibility', 'none');
         map.setLayoutProperty("routeStart", 'visibility', 'none');
@@ -2680,14 +2680,14 @@ $(document).ready(function() {
         map.setLayoutProperty("openRoute", 'visibility', 'none');
         map.setLayoutProperty("openStart", 'visibility', 'none');
         map.setLayoutProperty("openEnd", 'visibility', 'none');
-        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
-        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
+//        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
+//        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
         
         map.setLayoutProperty("bingRoute", 'visibility', 'none');
         map.setLayoutProperty("bingStart", 'visibility', 'none');
         map.setLayoutProperty("bingEnd", 'visibility', 'none');
-        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
-        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
+//        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
+//        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
         
         //stop navigation
 //        navCounter = -1;
