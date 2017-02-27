@@ -676,14 +676,15 @@ $(document).ready(function() {
         var placeType = data.entrance_type;
         
         if(placeType == "pedestrian-secondary"){
-            placeType = "PED-S";
-        }else if(placeType == "parking"){
-            placeType = "PARK";
-        }else if(placeType == "loading"){
-            placeType = "LOAD";
-        }else if(placeType == "service"){
-            placeType = "SERV";
+            placeType = "pedestrian";
         }
+//        }else if(placeType == "parking"){
+//            placeType = "PARK";
+//        }else if(placeType == "loading"){
+//            placeType = "LOAD";
+//        }else if(placeType == "service"){
+//            placeType = "SERV";
+//        }
         
         var thisJSON = {"type": "Feature",
                 "geometry": {
