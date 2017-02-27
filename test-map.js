@@ -654,7 +654,7 @@ $(document).ready(function() {
             "layout": {
                 "icon-image": "geofi-marker",
                 "icon-allow-overlap": true,
-                "text-field": "GeoFi\n" + data.address,
+                "text-field": data.address,
                 "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
                 "text-size": 11,
                 "text-letter-spacing": 0.05,
