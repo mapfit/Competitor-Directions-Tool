@@ -379,7 +379,7 @@ $(document).ready(function() {
     function calcDurationDifference(){
         var diff = gDuration - geofiDuration;
         
-        console.log("time diff = " + diff);
+//        console.log("time diff = " + diff);
         
         if(Math.sign(diff) > 0){
             var time = secondsToHms(diff);
@@ -425,7 +425,7 @@ $(document).ready(function() {
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var myArr = JSON.parse(xhttp.responseText);
                
-               console.log(xhttp.responseText);
+//               console.log(xhttp.responseText);
 
                if(myArr[0]){
                    readLocation(myArr);
@@ -525,7 +525,7 @@ $(document).ready(function() {
     }
     
     function readLocation(arr){
-        
+                
         var altEntrances = map.getSource('altEntrances')
         altJson = [];
         
@@ -971,7 +971,7 @@ $(document).ready(function() {
             thisQuery = thisQuery.replace(" ", "+");
         }
         
-        var geocodeRequest = "http://dev.virtualearth.net/REST/v1/Locations?query=" + encodeURI(thisQuery) + "&output=json&jsonp=geocodeCallback&suppressStatus=true&key=" + bingAPI;
+        var geocodeRequest = "https://dev.virtualearth.net/REST/v1/Locations?query=" + encodeURI(thisQuery) + "&output=json&jsonp=geocodeCallback&suppressStatus=true&key=" + bingAPI;
         
         callRestService(geocodeRequest);
     }
@@ -1310,7 +1310,7 @@ $(document).ready(function() {
     });
         
     $('.get-directions').on('click', function(e) {        
-        console.log("get " + transitType + " directions");
+//        console.log("get " + transitType + " directions");
         
         //reset comparison
         compareRoutes = false;
@@ -2162,7 +2162,6 @@ $(document).ready(function() {
     }
     
     function drawOpenEndsRoutes(points, start, end){
-        console.log("points");
         
         //start line
         var openRouteStart = map.getSource('openRouteStart');
@@ -2261,7 +2260,7 @@ $(document).ready(function() {
             sentTransit = "walking";
         }
         
-        var directionsRequest = "http://dev.virtualearth.net/REST/V1/Routes/"+ sentTransit +"?wp.0="+ encodeURI(start) +"&wp.1=" + encodeURI(end) + "&output=json&jsonp=directionsCallback&suppressStatus=true&routeAttributes=routePath&key=" + bingAPI;
+        var directionsRequest = "https://dev.virtualearth.net/REST/V1/Routes/"+ sentTransit +"?wp.0="+ encodeURI(start) +"&wp.1=" + encodeURI(end) + "&output=json&jsonp=directionsCallback&suppressStatus=true&routeAttributes=routePath&key=" + bingAPI;
         
         directionsRestService(directionsRequest);
     }
