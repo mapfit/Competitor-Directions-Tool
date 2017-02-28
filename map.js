@@ -1,5 +1,10 @@
 $(document).ready(function() {
     
+    //version control
+    var vNum = 1.0;
+    var copyright = "GeoFi " +new Date().getFullYear() + " " + vNum.toPrecision(2);
+    console.log(copyright);
+    
     var geofiKey = "d2ab3ecab8d443e3b9871a6cc1ee616e";
     
     //prevent pin to zoom
