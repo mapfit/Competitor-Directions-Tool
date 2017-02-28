@@ -50,10 +50,6 @@ $(document).ready(function() {
         $(".search-form").css("width", "100%");
         $(".search-form input").css("width", "74%");
         $(".search-form button").css("width", "19%");
-//        $(".search-directions").css("top", "auto");
-//        $(".search-directions").css("left", "auto");
-//        $(".search-directions").css("right", "1%");
-//        $(".search-directions").css("bottom", "50px");
         $(".search-directions").css("width", "50%");
         $(".search-directions button").css("width", "95%");
         
@@ -231,9 +227,7 @@ $(document).ready(function() {
     });
     
     map.on('load', function(){
-        if(detectmob){
-            map.on('mousedown', mouseDown, true); 
-        }
+//            map.on('mousedown', mouseDown, true); 
     });
     
     //keep focus on the buttons so they stay highlighted
@@ -310,10 +304,14 @@ $(document).ready(function() {
     var pressTimer;
 
     function mouseDown(e) {  
-        var coords = e.lngLat;
+        if(detectmob){
+            var coords = e.lngLat;
+            pressTimer = window.setTimeout(function() {revGeocode(coords)},1000);
+        }
 
 //        pressTimer = window.setTimeout(function() {revGeocode(coords)},1000);
 //        return false; 
+
     }
 
     function onUp(e) {
@@ -333,22 +331,22 @@ $(document).ready(function() {
             compareRoutes = false;
             
             map.setLayoutProperty("gRoute", 'visibility', 'none');
-            map.setLayoutProperty("gStart", 'visibility', 'none');
-            map.setLayoutProperty("gEnd", 'visibility', 'none');
+//            map.setLayoutProperty("gStart", 'visibility', 'none');
+//            map.setLayoutProperty("gEnd", 'visibility', 'none');
             map.setLayoutProperty("googleStart", 'visibility', 'none');
             map.setLayoutProperty("googleEnd", 'visibility', 'none');
 
             map.setLayoutProperty("openRoute", 'visibility', 'none');
             map.setLayoutProperty("openStart", 'visibility', 'none');
             map.setLayoutProperty("openEnd", 'visibility', 'none');
-            map.setLayoutProperty("openRouteStart", 'visibility', 'none');
-            map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
+//            map.setLayoutProperty("openRouteStart", 'visibility', 'none');
+//            map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
 
             map.setLayoutProperty("bingRoute", 'visibility', 'none');
             map.setLayoutProperty("bingStart", 'visibility', 'none');
             map.setLayoutProperty("bingEnd", 'visibility', 'none');
-            map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
-            map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
+//            map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
+//            map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
             
             $('#gTime').text(" ");
         }else{
@@ -356,8 +354,8 @@ $(document).ready(function() {
             compareRoutes = true;
             
             map.setLayoutProperty("gRoute", 'visibility', 'visible');
-            map.setLayoutProperty("gStart", 'visibility', 'visible');
-            map.setLayoutProperty("gEnd", 'visibility', 'visible');
+//            map.setLayoutProperty("gStart", 'visibility', 'visible');
+//            map.setLayoutProperty("gEnd", 'visibility', 'visible');
             map.setLayoutProperty("googleStart", 'visibility', 'visible');
             map.setLayoutProperty("googleEnd", 'visibility', 'visible');
             map.setLayoutProperty("routeStart", 'visibility', 'visible');
@@ -366,14 +364,14 @@ $(document).ready(function() {
             map.setLayoutProperty("openRoute", 'visibility', 'visible');
             map.setLayoutProperty("openStart", 'visibility', 'visible');
             map.setLayoutProperty("openEnd", 'visibility', 'visible');
-            map.setLayoutProperty("openRouteStart", 'visibility', 'visible');
-            map.setLayoutProperty("openRouteEnd", 'visibility', 'visible');
+//            map.setLayoutProperty("openRouteStart", 'visibility', 'visible');
+//            map.setLayoutProperty("openRouteEnd", 'visibility', 'visible');
 
             map.setLayoutProperty("bingRoute", 'visibility', 'visible');
             map.setLayoutProperty("bingStart", 'visibility', 'visible');
             map.setLayoutProperty("bingEnd", 'visibility', 'visible');
-            map.setLayoutProperty("bingStartRoute", 'visibility', 'visible');
-            map.setLayoutProperty("bingEndRoute", 'visibility', 'visible');
+//            map.setLayoutProperty("bingStartRoute", 'visibility', 'visible');
+//            map.setLayoutProperty("bingEndRoute", 'visibility', 'visible');
             
             calcDurationDifference();
         }
@@ -382,7 +380,7 @@ $(document).ready(function() {
     function calcDurationDifference(){
         var diff = gDuration - geofiDuration;
         
-        console.log("time diff = " + diff);
+//        console.log("time diff = " + diff);
         
         if(Math.sign(diff) > 0){
             var time = secondsToHms(diff);
@@ -428,7 +426,7 @@ $(document).ready(function() {
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var myArr = JSON.parse(xhttp.responseText);
                
-               console.log(xhttp.responseText);
+//               console.log(xhttp.responseText);
 
                if(myArr[0]){
                    readLocation(myArr);
@@ -447,7 +445,7 @@ $(document).ready(function() {
              
          };
         
-        console.log("address query: " + thisQuery)
+//        console.log("address query: " + thisQuery)
                         
         xhttp.open('GET', "https://api.geofi.io/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
@@ -659,7 +657,7 @@ $(document).ready(function() {
             "layout": {
                 "icon-image": "geofi-marker",
                 "icon-allow-overlap": true,
-                "text-field": "GeoFi\n" + data.address,
+                "text-field": data.address,
                 "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
                 "text-size": 11,
                 "text-letter-spacing": 0.05,
@@ -681,14 +679,15 @@ $(document).ready(function() {
         var placeType = data.entrance_type;
         
         if(placeType == "pedestrian-secondary"){
-            placeType = "PED-S";
-        }else if(placeType == "parking"){
-            placeType = "PARK";
-        }else if(placeType == "loading"){
-            placeType = "LOAD";
-        }else if(placeType == "service"){
-            placeType = "SERV";
+            placeType = "pedestrian";
         }
+//        }else if(placeType == "parking"){
+//            placeType = "PARK";
+//        }else if(placeType == "loading"){
+//            placeType = "LOAD";
+//        }else if(placeType == "service"){
+//            placeType = "SERV";
+//        }
         
         var thisJSON = {"type": "Feature",
                 "geometry": {
@@ -975,7 +974,7 @@ $(document).ready(function() {
             thisQuery = thisQuery.replace(" ", "+");
         }
         
-        var geocodeRequest = "http://dev.virtualearth.net/REST/v1/Locations?query=" + encodeURI(thisQuery) + "&output=json&jsonp=geocodeCallback&suppressStatus=true&key=" + bingAPI;
+        var geocodeRequest = "https://dev.virtualearth.net/REST/v1/Locations?query=" + encodeURI(thisQuery) + "&output=json&jsonp=geocodeCallback&suppressStatus=true&key=" + bingAPI;
         
         callRestService(geocodeRequest);
     }
@@ -1157,8 +1156,8 @@ $(document).ready(function() {
         document.getElementById('search-directions').hidden = true;
         
         map.setLayoutProperty("gRoute", 'visibility', 'none');
-        map.setLayoutProperty("gStart", 'visibility', 'none');
-        map.setLayoutProperty("gEnd", 'visibility', 'none');
+//        map.setLayoutProperty("gStart", 'visibility', 'none');
+//        map.setLayoutProperty("gEnd", 'visibility', 'none');
         map.setLayoutProperty("googleStart", 'visibility', 'none');
         map.setLayoutProperty("googleEnd", 'visibility', 'none');
         map.setLayoutProperty("routeStart", 'visibility', 'none');
@@ -1167,14 +1166,14 @@ $(document).ready(function() {
         map.setLayoutProperty("openRoute", 'visibility', 'none');
         map.setLayoutProperty("openStart", 'visibility', 'none');
         map.setLayoutProperty("openEnd", 'visibility', 'none');
-        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
-        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
+//        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
+//        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
         
         map.setLayoutProperty("bingRoute", 'visibility', 'none');
         map.setLayoutProperty("bingStart", 'visibility', 'none');
         map.setLayoutProperty("bingEnd", 'visibility', 'none');
-        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
-        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
+//        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
+//        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
         
         //change camera zoom/pitch/bearing
         map.setZoom(15);
@@ -1314,7 +1313,7 @@ $(document).ready(function() {
     });
         
     $('.get-directions').on('click', function(e) {        
-        console.log("get " + transitType + " directions");
+//        console.log("get " + transitType + " directions");
         
         //reset comparison
         compareRoutes = false;
@@ -1369,7 +1368,7 @@ $(document).ready(function() {
          xhttp.onreadystatechange = function(){
            if(xhttp.readyState == 4 && xhttp.status == 200){
                var response = JSON.parse(xhttp.responseText);
-               console.log("directions response: " + JSON.stringify(response));
+//               console.log("directions response: " + JSON.stringify(response));
                readDirections(response);
            }else if(xhttp.status == 500){
                alert("There was an error. Please try your request again");
@@ -1387,6 +1386,7 @@ $(document).ready(function() {
         console.log("directions request: " + dicString);
                 
         xhttp.open('POST', "https://api.geofi.io/directions?api_key=" + geofiKey, true);
+
         xhttp.setRequestHeader("Content-Type","application/json");
         xhttp.setRequestHeader("Accept","application/json");
         xhttp.send(dicString);
@@ -2169,7 +2169,6 @@ $(document).ready(function() {
     }
     
     function drawOpenEndsRoutes(points, start, end){
-        console.log("points");
         
         //start line
         var openRouteStart = map.getSource('openRouteStart');
@@ -2268,7 +2267,7 @@ $(document).ready(function() {
             sentTransit = "walking";
         }
         
-        var directionsRequest = "http://dev.virtualearth.net/REST/V1/Routes/"+ sentTransit +"?wp.0="+ encodeURI(start) +"&wp.1=" + encodeURI(end) + "&output=json&jsonp=directionsCallback&suppressStatus=true&routeAttributes=routePath&key=" + bingAPI;
+        var directionsRequest = "https://dev.virtualearth.net/REST/V1/Routes/"+ sentTransit +"?wp.0="+ encodeURI(start) +"&wp.1=" + encodeURI(end) + "&output=json&jsonp=directionsCallback&suppressStatus=true&routeAttributes=routePath&key=" + bingAPI;
         
         directionsRestService(directionsRequest);
     }
@@ -2677,8 +2676,8 @@ $(document).ready(function() {
         
 //        map.setLayoutProperty("route", 'visibility', 'none');
         map.setLayoutProperty("gRoute", 'visibility', 'none');
-        map.setLayoutProperty("gStart", 'visibility', 'none');
-        map.setLayoutProperty("gEnd", 'visibility', 'none');
+//        map.setLayoutProperty("gStart", 'visibility', 'none');
+//        map.setLayoutProperty("gEnd", 'visibility', 'none');
         map.setLayoutProperty("googleStart", 'visibility', 'none');
         map.setLayoutProperty("googleEnd", 'visibility', 'none');
         map.setLayoutProperty("routeStart", 'visibility', 'none');
@@ -2687,14 +2686,14 @@ $(document).ready(function() {
         map.setLayoutProperty("openRoute", 'visibility', 'none');
         map.setLayoutProperty("openStart", 'visibility', 'none');
         map.setLayoutProperty("openEnd", 'visibility', 'none');
-        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
-        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
+//        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
+//        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
         
         map.setLayoutProperty("bingRoute", 'visibility', 'none');
         map.setLayoutProperty("bingStart", 'visibility', 'none');
         map.setLayoutProperty("bingEnd", 'visibility', 'none');
-        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
-        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
+//        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
+//        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
         
         //stop navigation
 //        navCounter = -1;
