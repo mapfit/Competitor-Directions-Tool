@@ -1388,7 +1388,7 @@ $(document).ready(function() {
             bytes.push(dicString.charCodeAt(i));
         }
         
-        console.log("directions request: " + dicString);
+//        console.log("directions request: " + dicString);
                 
         xhttp.open('POST', "https://api.geofi.io/directions?api_key=" + geofiKey, true);
 
