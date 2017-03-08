@@ -524,10 +524,7 @@ $(document).ready(function() {
         xhttp.send();
     }
     
-    function readLocation(arr){
-        
-        console.log("response: " + JSON.stringify(arr));
-                
+    function readLocation(arr){        
         var altEntrances = map.getSource('altEntrances')
         altJson = [];
         
@@ -536,23 +533,35 @@ $(document).ready(function() {
             map.removeLayer('altEntrances');
         }
         
-        for(var i = 0; i < arr.length; i++){            
-            if(arr[i]["entrance-type"] == "pedestrian-primary" || arr[i]["place-type"] == "interpolated point"){
-                dropMarker(arr[i]);
-                var lat = arr[i].lat;
-                var lon = arr[i].lon;
+        //new entraces code
+        var entrances = arr[0].entrances;
+        
+        for(var i = 0; i < entrances.length; i++){            
+            if(entrances[i]["entrance-type"] == "pedestrian-primary" || entrances[i]["place-type"] == "interpolated point"){
+                
+                var lat = entrances[i].lat;
+                var lon = entrances[i].lon;
+                
+                arr[0].lat = lat;
+                arr[0].lon = lon;
+                arr[0]["place-type"] = entrances[i]["place-type"];
+                dropMarker(arr[0]);
                 
                 map.setCenter([lon, lat]);
                 map.setZoom(18);
                 currentAddress = {"lat": lat, "lon": lon};
             }else{
-                dropAltEntrance(arr[i]);
+                arr[0].lat = entrances[i].lat;
+                arr[0].lon = entrances[i].lon;
+                arr[0]["place-type"] = entrances[i]["place-type"];
+                arr[0]["entrance-type"] = entrances[i]["entrance-type"];
+                
+                dropAltEntrance(arr[0]);
             }
         }
         
         //show directions button
         document.getElementById('search-directions').hidden = false;
-        
         
         turnOnPointUI(arr);
      }
@@ -568,7 +577,7 @@ $(document).ready(function() {
         document.getElementById('extra-data').hidden = false;
         document.getElementById('comp-points').hidden = false;
         
-        if(arr.length > 1){
+        if(arr[0].entrances.length > 1){
             document.getElementById('alt-entrances').hidden = false;
         }
     }
@@ -673,8 +682,7 @@ $(document).ready(function() {
     }
     
     function dropAltEntrance(data){
-        var thisAddJsonArray = new Array;
-        
+        var thisAddJsonArray = new Array;        
         var placeType = data["entrance-type"];
         
         if(placeType == "pedestrian-secondary"){
