@@ -282,7 +282,7 @@ $(document).ready(function() {
            }
          };
 
-         xhttp.open('GET', "https://geotest.geofi.io/coordinate?lat=" + coords.lat + "\&lon="+ coords.lng + "\&radius=35", true);
+         xhttp.open('GET', "https://geotest.geofi.io/reverse-geocode?lat=" + coords.lat + "\&lon="+ coords.lng + "\&radius=35", true);
          xhttp.send();
     }
     
@@ -444,7 +444,7 @@ $(document).ready(function() {
              
          };
                         
-        xhttp.open('GET', "https://geotest.geofi.io/address?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
+        xhttp.open('GET', "https://geotest.geofi.io/geocode?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -470,7 +470,7 @@ $(document).ready(function() {
            }
          };
 
-         xhttp.open('GET', "https://geotest.geofi.io?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
+         xhttp.open('GET', "https://geotest.geofi.io/geocode?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -525,6 +525,8 @@ $(document).ready(function() {
     }
     
     function readLocation(arr){
+        
+        console.log("response: " + JSON.stringify(arr));
                 
         var altEntrances = map.getSource('altEntrances')
         altJson = [];
@@ -535,7 +537,7 @@ $(document).ready(function() {
         }
         
         for(var i = 0; i < arr.length; i++){            
-            if(arr[i].entrance_type == "pedestrian-primary" || arr[i]["place-type"] == "interpolated point"){
+            if(arr[i]["entrance-type"] == "pedestrian-primary" || arr[i]["place-type"] == "interpolated point"){
                 dropMarker(arr[i]);
                 var lat = arr[i].lat;
                 var lon = arr[i].lon;
@@ -673,7 +675,7 @@ $(document).ready(function() {
     function dropAltEntrance(data){
         var thisAddJsonArray = new Array;
         
-        var placeType = data.entrance_type;
+        var placeType = data["entrance-type"];
         
         if(placeType == "pedestrian-secondary"){
             placeType = "pedestrian";
@@ -1372,7 +1374,7 @@ $(document).ready(function() {
            }
          };
 
-        var dicString = "{\"sourceAddress\" : {\"address\":\"" + startAddress + "\",\"city\" :\"" + city + "\", \"state\" : \"" + state +"\", \"type\" : \"" + entranceType + "\"}, \"destinationAddress\" : {\"address\":\"" + endAddress + "\",\"city\" : \"" + city2 + "\", \"state\" : \"" + state2 + "\", \"type\" : \"" + entranceType + "\"}, \"type\": \"" + transitType + "\"}";
+        var dicString = "{\"source-address\" : {\"address\":\"" + startAddress + "\",\"city\" :\"" + city + "\", \"state\" : \"" + state +"\", \"type\" : \"" + entranceType + "\"}, \"destination-address\" : {\"address\":\"" + endAddress + "\",\"city\" : \"" + city2 + "\", \"state\" : \"" + state2 + "\", \"type\" : \"" + entranceType + "\"}, \"type\": \"" + transitType + "\"}";
         var bytes = [];
 
         for(var i = 0; i < dicString.length; ++i){
