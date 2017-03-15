@@ -282,7 +282,7 @@ $(document).ready(function() {
            }
          };
 
-         xhttp.open('GET', "https://geotest.geofi.io/reverse-geocode?lat=" + coords.lat + "\&lon="+ coords.lng + "\&radius=35", true);
+         xhttp.open('GET', "https://geofi-test.apigee.net/v1/reverse-geocode?lat=" + coords.lat + "\&lon="+ coords.lng + "\&radius=35", true);
          xhttp.send();
     }
     
@@ -444,7 +444,7 @@ $(document).ready(function() {
              
          };
                         
-        xhttp.open('GET', "https://geotest.geofi.io/geocode?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
+        xhttp.open('GET', "https://geofi-test.apigee.net/v1/geocode?address=" + thisQuery + "\&city="+ city +"\&state=" + state + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -470,7 +470,7 @@ $(document).ready(function() {
            }
          };
 
-         xhttp.open('GET', "https://geotest.geofi.io/geocode?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
+         xhttp.open('GET', "https://geofi-test.apigee.net/v1/geocode?address=" + thisQuery + "\&lat=" + center.lat +"\&lon=" + center.lng + "\&type=" + "all" + "\&api_key=" + geofiKey, true);
         
          xhttp.send();
     }
@@ -524,7 +524,8 @@ $(document).ready(function() {
         xhttp.send();
     }
     
-    function readLocation(arr){        
+    function readLocation(arr){       
+        console.log(JSON.stringify(arr));
         var altEntrances = map.getSource('altEntrances')
         altJson = [];
         
@@ -688,13 +689,6 @@ $(document).ready(function() {
         if(placeType == "pedestrian-secondary"){
             placeType = "pedestrian";
         }
-//        }else if(placeType == "parking"){
-//            placeType = "PARK";
-//        }else if(placeType == "loading"){
-//            placeType = "LOAD";
-//        }else if(placeType == "service"){
-//            placeType = "SERV";
-//        }
         
         var thisJSON = {"type": "Feature",
                 "geometry": {
@@ -1389,7 +1383,7 @@ $(document).ready(function() {
             bytes.push(dicString.charCodeAt(i));
         }
                 
-        xhttp.open('POST', "https://geotest.geofi.io/directions?api_key=" + geofiKey, true);
+        xhttp.open('POST', "https://geofi-test.apigee.net/v1/directions?api_key=" + geofiKey, true);
         xhttp.setRequestHeader("Content-Type","application/json");
         xhttp.setRequestHeader("Accept","application/json");
         xhttp.send(dicString);
@@ -1475,7 +1469,6 @@ $(document).ready(function() {
     }
     
     function readDirections(response){
-        console.log(geofiRoute);
         
         //clear old route
         for(var a = 0; a < geofiRoute.length; a++){
