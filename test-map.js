@@ -9,7 +9,14 @@ $(document).ready(function() {
       }
     });
     
-    mapboxgl.accessToken = 'pk.eyJ1IjoicGFya291cm1ldGhvZCIsImEiOiI5Y2JmOGJhMDYzZDgyODBhYzQ3OTFkZWE3NGFiMmUzYiJ9.kp_5LMwcR79TKOERpkilAQ';
+    //mapzen stuff
+    L.Mapzen.apiKey = 'mapzen-F9hR6PQ';            
+    var map = L.Mapzen.map('map');
+
+    var mapLayer = Tangram.leafletLayer({ scene: 'https://mapzen.com/api/scenes/47183/407/resources/cinnabar-style.yaml', global: {sdk_mapzen_api_key: 'mapzen-F9hR6PQ'} });
+    mapLayer.addTo(map);     
+    map.setView([38.902705, -77.043132], 16);
+    
     var googleAPI = 'AIzaSyALB5yXEHcbkr51lCbrPeCdVf60SbWENtU';
     var bingAPI = 'Aks14rX10AqP9GDWoreX8d-Mw-lD1d13TkKKLvgXIGEvr8Ke4Iuni6w5wRUxaKj1';
     
@@ -20,15 +27,6 @@ $(document).ready(function() {
     ];
     
     var currentAddress;
-    
-    var map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/parkourmethod/civtu956m000b2kmx6k62naro',
-        center: [-77.043132, 38.902705],
-        zoom: 16,
-        minZoom: 4,
-        attributionControl: false
-    });
     
     //altentrance points
     var altJson;
