@@ -13,12 +13,12 @@ $(document).ready(function() {
     L.Mapzen.apiKey = 'mapzen-F9hR6PQ';            
     var map = L.Mapzen.map('map',{
         center: [38.902705, -77.043132],
-        zoom: 16                       
+        zoom: 16,
+        zoomControl: null
     });
 
     var mapLayer = Tangram.leafletLayer({ scene: 'https://mapzen.com/api/scenes/47183/407/resources/cinnabar-style.yaml', global: {sdk_mapzen_api_key: 'mapzen-F9hR6PQ'} });
     mapLayer.addTo(map);     
-//    map.setView([38.902705, -77.043132], 16);
     
     var googleAPI = 'AIzaSyALB5yXEHcbkr51lCbrPeCdVf60SbWENtU';
     var bingAPI = 'Aks14rX10AqP9GDWoreX8d-Mw-lD1d13TkKKLvgXIGEvr8Ke4Iuni6w5wRUxaKj1';
@@ -404,6 +404,7 @@ $(document).ready(function() {
         if(cityState == ""){
             coordSearch(query);
             map.removeLayer(mainMarker);
+            map.removeLayer(altEntrances);
         }else{
             if(cityState.indexOf(",") == -1){
                 alert("Make sure there is a comma between city and state.");
@@ -412,6 +413,7 @@ $(document).ready(function() {
             
             stateSearch(query, cityState);
             map.removeLayer(mainMarker);
+            map.removeLayer(altEntrances);
         }
         
     });
@@ -542,6 +544,7 @@ $(document).ready(function() {
         //new entraces code
         var entrances = arr[0].entrances;
         
+        //need to go through all alternative entrances (no system in place to combine)
         for(var i = 0; i < entrances.length; i++){            
             if(entrances[i]["entrance-type"] == "pedestrian-primary" || entrances[i]["place-type"] == "interpolated point"){
                 
@@ -568,7 +571,8 @@ $(document).ready(function() {
         //show directions button
         document.getElementById('search-directions').hidden = false;
         
-        turnOnPointUI(arr);
+        //still need to activate this
+//        turnOnPointUI(arr);
      }
     
     //alt entrances and competitor points
@@ -688,6 +692,7 @@ $(document).ready(function() {
         currentMarkerCityState = data.city + ", " + data.state;
     }
     
+    var altEntrances;
     function dropAltEntrance(data){
         var thisAddJsonArray = new Array;        
         var placeType = data["entrance-type"];
@@ -715,42 +720,44 @@ $(document).ready(function() {
                   "color" : '#09B529'
                 }};
 
-        var altEntrances = map.getSource('altEntrances')
+        
 
-        if(altEntrances){
-            altJson.features.push(thisJSON);
-            map.getSource('altEntrances').setData(altJson);
-        }else{
+//        if(altEntrances){
+//            altJson.features.push(thisJSON);
+//            map.getSource('altEntrances').setData(altJson);
+//        }else{
             thisAddJsonArray.push(thisJSON);
         
             altJson = {
                 "type": "FeatureCollection",       
                 "features": thisAddJsonArray
             }
-
-            map.addSource('altEntrances',{
-                type: 'geojson',
-                data: altJson
-            });
-
-            map.addLayer({
-                id: 'altEntrances',
-                source: 'altEntrances',
-                type: 'symbol',
-                "layout": {
-                    "icon-image": "geofi-marker",
-                    "icon-allow-overlap": true,
-                    "text-field": '{description}',
-                    "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-                    "text-size": 11,
-                    "text-letter-spacing": 0.05,
-                    "text-offset": [0, 3]
-                },
-                paint: {
-                  "text-color": "#09B529"
-                }
-            });
-        }
+        
+            altEntrances = L.geoJson(altJson).addTo(map);
+//
+//            map.addSource('altEntrances',{
+//                type: 'geojson',
+//                data: altJson
+//            });
+//
+//            map.addLayer({
+//                id: 'altEntrances',
+//                source: 'altEntrances',
+//                type: 'symbol',
+//                "layout": {
+//                    "icon-image": "geofi-marker",
+//                    "icon-allow-overlap": true,
+//                    "text-field": '{description}',
+//                    "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+//                    "text-size": 11,
+//                    "text-letter-spacing": 0.05,
+//                    "text-offset": [0, 3]
+//                },
+//                paint: {
+//                  "text-color": "#09B529"
+//                }
+//            });
+//        }
         
 
     }
@@ -970,7 +977,7 @@ $(document).ready(function() {
     
     //marker click detection
     map.on('click', function(e) {
-          
+          console.log('click');
     });
     
     //***********************Bing Geocoding****************************************
