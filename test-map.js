@@ -11,11 +11,19 @@ $(document).ready(function() {
     
     //mapzen stuff
     L.Mapzen.apiKey = 'mapzen-F9hR6PQ';            
-    var map = L.Mapzen.map('map');
+    var map = L.Mapzen.map('map',{
+        center: [38.902705, -77.043132],
+        zoom: 16                       
+    });
+    
+//    map.on('load', function(e){
+//        console.log("loaded: " + e);
+////            map.on('mousedown', mouseDown, true); 
+//    });
 
     var mapLayer = Tangram.leafletLayer({ scene: 'https://mapzen.com/api/scenes/47183/407/resources/cinnabar-style.yaml', global: {sdk_mapzen_api_key: 'mapzen-F9hR6PQ'} });
     mapLayer.addTo(map);     
-    map.setView([38.902705, -77.043132], 16);
+//    map.setView([38.902705, -77.043132], 16);
     
     var googleAPI = 'AIzaSyALB5yXEHcbkr51lCbrPeCdVf60SbWENtU';
     var bingAPI = 'Aks14rX10AqP9GDWoreX8d-Mw-lD1d13TkKKLvgXIGEvr8Ke4Iuni6w5wRUxaKj1';
@@ -35,13 +43,14 @@ $(document).ready(function() {
     var geofiRoute = [];
 
     //prevent rotation
-    map.dragRotate.disable();
-    map.touchZoomRotate.disableRotation();
+//    map.dragRotate.disable();
+//    map.touchZoomRotate.disableRotation();
         
     var defLoc = "cities";
     
     //mobile OS detection and setup    
-    if(detectmob()){        
+    if(detectmob()){
+        console.log("mobile detected");
         document.getElementById('zoom').hidden = true;
         
         //address search
@@ -224,7 +233,8 @@ $(document).ready(function() {
         defLoc = "BOS";
     });
     
-    map.on('load', function(){
+    map.on('load', function(e){
+        console.log("loaded: " + e);
 //            map.on('mousedown', mouseDown, true); 
     });
     
