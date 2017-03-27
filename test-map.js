@@ -15,11 +15,6 @@ $(document).ready(function() {
         center: [38.902705, -77.043132],
         zoom: 16                       
     });
-    
-//    map.on('load', function(e){
-//        console.log("loaded: " + e);
-////            map.on('mousedown', mouseDown, true); 
-//    });
 
     var mapLayer = Tangram.leafletLayer({ scene: 'https://mapzen.com/api/scenes/47183/407/resources/cinnabar-style.yaml', global: {sdk_mapzen_api_key: 'mapzen-F9hR6PQ'} });
     mapLayer.addTo(map);     
@@ -408,6 +403,7 @@ $(document).ready(function() {
         
         if(cityState == ""){
             coordSearch(query);
+            map.removeLayer(mainMarker);
         }else{
             if(cityState.indexOf(",") == -1){
                 alert("Make sure there is a comma between city and state.");
@@ -415,6 +411,7 @@ $(document).ready(function() {
             }
             
             stateSearch(query, cityState);
+            map.removeLayer(mainMarker);
         }
         
     });
@@ -534,13 +531,13 @@ $(document).ready(function() {
     
     function readLocation(arr){       
         console.log(JSON.stringify(arr));
-        var altEntrances = map.getSource('altEntrances')
-        altJson = [];
-        
-        if(altEntrances){
-            map.removeSource('altEntrances');
-            map.removeLayer('altEntrances');
-        }
+//        var altEntrances = map.getSource('altEntrances')
+//        altJson = [];
+//        
+//        if(altEntrances){
+//            map.removeSource('altEntrances');
+//            map.removeLayer('altEntrances');
+//        }
         
         //new entraces code
         var entrances = arr[0].entrances;
@@ -556,8 +553,7 @@ $(document).ready(function() {
                 arr[0]["place-type"] = entrances[i]["place-type"];
                 dropMarker(arr[0]);
                 
-                map.setCenter([lon, lat]);
-                map.setZoom(18);
+                map.setView([lat, lon], 18);
                 currentAddress = {"lat": lat, "lon": lon};
             }else{
                 arr[0].lat = entrances[i].lat;
@@ -626,6 +622,7 @@ $(document).ready(function() {
     //drop marker
     var currentMarkerAddress;
     var currentMarkerCityState;
+    var mainMarker;
     function dropMarker(data){
         var thisAddJsonArray = new Array;
         
@@ -655,37 +652,38 @@ $(document).ready(function() {
             "features": thisAddJsonArray
         }
 
-        var addresses = map.getSource('addresses')
-
-        if(addresses){
-            map.removeSource('addresses');
-            map.removeLayer('addresses');
-        }
-
-        map.addSource('addresses',{
-            type: 'geojson',
-            data: geoJson
-        });
-
-        map.addLayer({
-            id: 'addresses',
-            source: 'addresses',
-            type: 'symbol',
-            "layout": {
-                "icon-image": "geofi-marker",
-                "icon-allow-overlap": true,
-                "text-field": data.address,
-                "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-                "text-size": 11,
-                "text-letter-spacing": 0.05,
-                "text-offset": [0, 3]
-            },
-            paint: {
-              "text-color": "#09B529"
-            }
-        });
+//        var addresses = map.getSource('addresses')
+//
+//        if(addresses){
+//            map.removeSource('addresses');
+//            map.removeLayer('addresses');
+//        }
+//
+//        map.addSource('addresses',{
+//            type: 'geojson',
+//            data: geoJson
+//        });
+//
+//        map.addLayer({
+//            id: 'addresses',
+//            source: 'addresses',
+//            type: 'symbol',
+//            "layout": {
+//                "icon-image": "geofi-marker",
+//                "icon-allow-overlap": true,
+//                "text-field": data.address,
+//                "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+//                "text-size": 11,
+//                "text-letter-spacing": 0.05,
+//                "text-offset": [0, 3]
+//            },
+//            paint: {
+//              "text-color": "#09B529"
+//            }
+//        });
         
         //fill in address bar
+        mainMarker = L.geoJson(geoJson).addTo(map);
         currentMarkerAddress = data.address;
         currentMarkerCityState = data.city + ", " + data.state;
     }
