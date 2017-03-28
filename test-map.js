@@ -558,15 +558,18 @@ $(document).ready(function() {
                 
                 map.setView([lat, lon], 18);
                 currentAddress = {"lat": lat, "lon": lon};
-            }else{
-                arr[0].lat = entrances[i].lat;
-                arr[0].lon = entrances[i].lon;
-                arr[0]["place-type"] = entrances[i]["place-type"];
-                arr[0]["entrance-type"] = entrances[i]["entrance-type"];
-                
-                dropAltEntrance(arr[0]);
             }
+//            else{
+//                arr[0].lat = entrances[i].lat;
+//                arr[0].lon = entrances[i].lon;
+//                arr[0]["place-type"] = entrances[i]["place-type"];
+//                arr[0]["entrance-type"] = entrances[i]["entrance-type"];
+//                
+//                dropAltEntrance(arr[0]);
+//            }
         }
+        
+        dropAltEntrance(arr[0]);
         
         //show directions button
         document.getElementById('search-directions').hidden = false;
@@ -694,31 +697,47 @@ $(document).ready(function() {
     
     var altEntrances;
     function dropAltEntrance(data){
-        var thisAddJsonArray = new Array;        
-        var placeType = data["entrance-type"];
+        var thisAddJsonArray = new Array;
         
-        if(placeType == "pedestrian-secondary"){
-            placeType = "pedestrian";
-        }
+        var entrances = data.entrances;
         
-        var thisJSON = {"type": "Feature",
-                "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                    data.lon,
-                    data.lat
-                  ]
-                },
-                "properties": {
-                  "description": placeType,
-                  "address" : data.address,
-                  "city" : data.city,
-                  "state" : data.state,
-                  "zip" : data.zip,
-                  "placeType" : placeType,
-                  "icon" : "circle",
-                  "color" : '#09B529'
-                }};
+        for(var i = 0; i < entrances.length; i++){
+            var thisEntrance = entrances[i];
+            
+            var placeType = thisEntrance["entrance-type"];
+        
+            if(placeType == "pedestrian-primary"){
+                //do nothing
+            }else{
+                if(placeType == "pedestrian-secondary"){
+                    placeType = "pedestrian";
+                }
+                
+                var thisJSON = {"type": "Feature",
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        thisEntrance.lon,
+                        thisEntrance.lat
+                      ]
+                    },
+                    "properties": {
+                      "description": placeType,
+                      "address" : data.address,
+                      "city" : data.city,
+                      "state" : data.state,
+                      "zip" : data.zip,
+                      "placeType" : placeType,
+                      "icon" : "circle",
+                      "color" : '#09B529'
+                    }};
+                
+                thisAddJsonArray.push(thisJSON);
+            }
+        };
+        
+        console.log("array: " + JSON.stringify(data));
+        console.log("altentrances: " + JSON.stringify(thisAddJsonArray));
 
         
 
@@ -726,7 +745,7 @@ $(document).ready(function() {
 //            altJson.features.push(thisJSON);
 //            map.getSource('altEntrances').setData(altJson);
 //        }else{
-            thisAddJsonArray.push(thisJSON);
+//            thisAddJsonArray.push(thisJSON);
         
             altJson = {
                 "type": "FeatureCollection",       
