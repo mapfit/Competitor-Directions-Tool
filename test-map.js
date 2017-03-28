@@ -533,18 +533,10 @@ $(document).ready(function() {
     
     function readLocation(arr){       
         console.log(JSON.stringify(arr));
-//        var altEntrances = map.getSource('altEntrances')
-//        altJson = [];
-//        
-//        if(altEntrances){
-//            map.removeSource('altEntrances');
-//            map.removeLayer('altEntrances');
-//        }
         
         //new entraces code
         var entrances = arr[0].entrances;
         
-        //need to go through all alternative entrances (no system in place to combine)
         for(var i = 0; i < entrances.length; i++){            
             if(entrances[i]["entrance-type"] == "pedestrian-primary" || entrances[i]["place-type"] == "interpolated point"){
                 
@@ -559,14 +551,6 @@ $(document).ready(function() {
                 map.setView([lat, lon], 18);
                 currentAddress = {"lat": lat, "lon": lon};
             }
-//            else{
-//                arr[0].lat = entrances[i].lat;
-//                arr[0].lon = entrances[i].lon;
-//                arr[0]["place-type"] = entrances[i]["place-type"];
-//                arr[0]["entrance-type"] = entrances[i]["entrance-type"];
-//                
-//                dropAltEntrance(arr[0]);
-//            }
         }
         
         dropAltEntrance(arr[0]);
@@ -691,6 +675,7 @@ $(document).ready(function() {
         
         //fill in address bar
         mainMarker = L.geoJson(geoJson).addTo(map);
+        mainMarker.bindTooltip(data.address, {permanent: true, className: "my-label", offset: [0, 0] });
         currentMarkerAddress = data.address;
         currentMarkerCityState = data.city + ", " + data.state;
     }
@@ -736,49 +721,15 @@ $(document).ready(function() {
             }
         };
         
-        console.log("array: " + JSON.stringify(data));
-        console.log("altentrances: " + JSON.stringify(thisAddJsonArray));
+        altJson = {
+            "type": "FeatureCollection",       
+            "features": thisAddJsonArray
+        }
 
-        
-
-//        if(altEntrances){
-//            altJson.features.push(thisJSON);
-//            map.getSource('altEntrances').setData(altJson);
-//        }else{
-//            thisAddJsonArray.push(thisJSON);
-        
-            altJson = {
-                "type": "FeatureCollection",       
-                "features": thisAddJsonArray
-            }
-        
-            altEntrances = L.geoJson(altJson).addTo(map);
-//
-//            map.addSource('altEntrances',{
-//                type: 'geojson',
-//                data: altJson
-//            });
-//
-//            map.addLayer({
-//                id: 'altEntrances',
-//                source: 'altEntrances',
-//                type: 'symbol',
-//                "layout": {
-//                    "icon-image": "geofi-marker",
-//                    "icon-allow-overlap": true,
-//                    "text-field": '{description}',
-//                    "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-//                    "text-size": 11,
-//                    "text-letter-spacing": 0.05,
-//                    "text-offset": [0, 3]
-//                },
-//                paint: {
-//                  "text-color": "#09B529"
-//                }
-//            });
-//        }
-        
-
+        //need way to display entrance type for each individual marker (mainMarker.bindTooltip(data.address, {permanent: true, className: "my-label", offset: [0, 0] });
+        //css styling: http://gis.stackexchange.com/questions/59571/how-to-add-text-only-labels-on-leaflet-map-with-no-icon
+)
+        altEntrances = L.geoJson(altJson).addTo(map);
     }
     
     //drop google point
@@ -1630,7 +1581,6 @@ $(document).ready(function() {
     }
     
     function drawGoogle(locationArray){
-        
         var gRoute = map.getSource('gRoute');
         var locData = {
                 "type": "Feature",
