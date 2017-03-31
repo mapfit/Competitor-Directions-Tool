@@ -404,7 +404,7 @@ $(document).ready(function() {
         if(cityState == ""){
             coordSearch(query);
             map.removeLayer(mainMarker);
-            map.removeLayer(altEntrances);
+            removeLayerArray(altEntrances);
         }else{
             if(cityState.indexOf(",") == -1){
                 alert("Make sure there is a comma between city and state.");
@@ -413,7 +413,7 @@ $(document).ready(function() {
             
             stateSearch(query, cityState);
             map.removeLayer(mainMarker);
-            map.removeLayer(altEntrances);
+            removeLayerArray(altEntrances);
         }
         
     });
@@ -680,7 +680,7 @@ $(document).ready(function() {
         currentMarkerCityState = data.city + ", " + data.state;
     }
     
-    var altEntrances;
+    var altEntrances = [];
     function dropAltEntrance(data){
         var thisAddJsonArray = new Array;
         
@@ -717,19 +717,17 @@ $(document).ready(function() {
                       "color" : '#09B529'
                     }};
                 
-                thisAddJsonArray.push(thisJSON);
+                altJson = {
+                    "type": "FeatureCollection",       
+                    "features": [thisJSON]
+                }
+                
+                var thisAltEntrance = L.geoJson(altJson).addTo(map);
+                thisAltEntrance.bindTooltip(placeType, {permanent: true, className: "alt-label", offset: [0, 0] });
+
+                altEntrances.push(thisAltEntrance);
             }
         };
-        
-        altJson = {
-            "type": "FeatureCollection",       
-            "features": thisAddJsonArray
-        }
-
-        //need way to display entrance type for each individual marker (mainMarker.bindTooltip(data.address, {permanent: true, className: "my-label", offset: [0, 0] });
-        //css styling: http://gis.stackexchange.com/questions/59571/how-to-add-text-only-labels-on-leaflet-map-with-no-icon
-)
-        altEntrances = L.geoJson(altJson).addTo(map);
     }
     
     //drop google point
@@ -2694,5 +2692,12 @@ $(document).ready(function() {
         
         geofiRoute = [];
     });
+    
+    //remove all layers within an array
+    function removeLayerArray(array){
+        for(var i = 0; i < array.length; i++){
+            map.removeLayer(array[i]);
+        }
+    }
 });
 
