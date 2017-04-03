@@ -531,9 +531,7 @@ $(document).ready(function() {
         xhttp.send();
     }
     
-    function readLocation(arr){       
-        console.log(JSON.stringify(arr));
-        
+    function readLocation(arr){               
         //new entraces code
         var entrances = arr[0].entrances;
         
@@ -1468,19 +1466,17 @@ $(document).ready(function() {
         geofiRoute = [];
         
         var routes = response.trip;
-        var duration = routes.time;
-        var distance = routes.length;
-        
-        //format start and stop coordinates
-        var startLoc = response.sourceLocation;
-        var endLoc = response.destinationLocation;
+        var duration = routes.summary.time;
+        var distance = routes.summary.length;
 
         //get location points for route
         var locationArray = [];
         var geometryArray = [];
         var steps = routes.legs[0];
-        
-        console.log("routes: " + JSON.stringify(routes.legs[0]));
+                
+        //format start and stop coordinates
+        var startLoc = [routes.locations[0].lon, routes.locations[0].lat];
+        var endLoc = [routes.locations[1].lon, routes.locations[1].lat];;
         
         //add first location
         locationArray.push(startLoc);
@@ -1500,14 +1496,15 @@ $(document).ready(function() {
             drawRoute(thisPoly, i);
         }
         
+        console.log("summary: " + JSON.stringify(routes.summary));
+        
         fillInDetails(distance, duration);
         
         //drop end marker
         routeEnd(endLoc);
         routeStart(startLoc);
         
-        map.setCenter(endLoc);
-        map.setZoom(18);
+        map.setView([endLoc[1], endLoc[0]], 18);
         
         ourRoute = polylineArray;
     }
@@ -1699,9 +1696,9 @@ $(document).ready(function() {
     }
     
     var geofiDuration;
-    function fillInDetails(meters, seconds){
+    function fillInDetails(miles, seconds){
         geofiDuration = seconds;
-        var miles = meters*0.000621371192;
+//        var miles = meters*0.000621371192;
         var time = secondsToHms(seconds);
                 
         $('#distance').text("Distance:  " + miles.toFixed(1) + " miles");
