@@ -926,8 +926,8 @@ $(document).ready(function() {
     
     //distance calculation
     function calcDist(lat1,lon1,lat2,lon2) {
-      var R = 6371; // Radius of the earth in km
-      var dLat = deg2rad(lat2-lat1);  // deg2rad below
+      var R = 6371;
+      var dLat = deg2rad(lat2-lat1);
       var dLon = deg2rad(lon2-lon1); 
       var a = 
         Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -1449,7 +1449,11 @@ $(document).ready(function() {
         xhttp.send();
     }
     
+    var endMarker;
+    var startMarker;
     function readDirections(response){
+        
+        map.removeLayer(mainMarker);
         
         //clear old route
         for(var a = 0; a < geofiRoute.length; a++){
@@ -1463,10 +1467,9 @@ $(document).ready(function() {
         
         geofiRoute = [];
         
-        var routes = response.routes;
-        var duration = routes[0].duration;
-        var distance = routes[0].distance;
-        var polyline = routes[0].geometry;
+        var routes = response.trip;
+        var duration = routes.time;
+        var distance = routes.length;
         
         //format start and stop coordinates
         var startLoc = response.sourceLocation;
@@ -1475,7 +1478,9 @@ $(document).ready(function() {
         //get location points for route
         var locationArray = [];
         var geometryArray = [];
-        var steps = routes[0].legs[0].steps;
+        var steps = routes.legs[0];
+        
+        console.log("routes: " + JSON.stringify(routes.legs[0]));
         
         //add first location
         locationArray.push(startLoc);
@@ -1484,7 +1489,7 @@ $(document).ready(function() {
         var polylineArray = [];
         for(var i = 0; i < steps.length; i++){
             var thisStep = steps[i];
-            var thisPoly = decode(thisStep.geometry, 5);
+            var thisPoly = decode(thisStep.shape, 5);
             
             if(i == 0){
                 thisPoly.unshift(startLoc);
@@ -1782,29 +1787,31 @@ $(document).ready(function() {
             "type": "FeatureCollection",       
             "features": thisAddJsonArray
         }
+        
+        endMarker = L.geoJson(geoJson).addTo(map);
 
-        var addresses = map.getSource('routeEnd')
-
-        if(addresses){
-            map.removeSource('routeEnd');
-            map.removeLayer('routeEnd');
-        }
-            map.addSource('routeEnd',{
-                type: 'geojson',
-                data: geoJson
-            });
-
-            map.addLayer({
-                id: 'routeEnd',
-                source: 'routeEnd',
-                type: 'symbol',
-                "layout": {
-                    "icon-image": "geofi-marker",
-                },
-                paint: {
-                  "text-color": "#09B529"
-                }
-            });
+//        var addresses = map.getSource('routeEnd')
+//
+//        if(addresses){
+//            map.removeSource('routeEnd');
+//            map.removeLayer('routeEnd');
+//        }
+//            map.addSource('routeEnd',{
+//                type: 'geojson',
+//                data: geoJson
+//            });
+//
+//            map.addLayer({
+//                id: 'routeEnd',
+//                source: 'routeEnd',
+//                type: 'symbol',
+//                "layout": {
+//                    "icon-image": "geofi-marker",
+//                },
+//                paint: {
+//                  "text-color": "#09B529"
+//                }
+//            });
     }
     
     function googleEnd(location){
@@ -1867,28 +1874,29 @@ $(document).ready(function() {
             "features": thisAddJsonArray
         }
 
-        var addresses = map.getSource('routeStart')
-
-        if(addresses){
-            map.removeSource('routeStart');
-            map.removeLayer('routeStart');
-        }
-            map.addSource('routeStart',{
-                type: 'geojson',
-                data: geoJson
-            });
-
-            map.addLayer({
-                id: 'routeStart',
-                source: 'routeStart',
-                type: 'symbol',
-                "layout": {
-                    "icon-image": "geofi-marker",
-                },
-                paint: {
-                  "text-color": "#09B529"
-                }
-            });
+        startMarker = L.geoJson(geoJson).addTo(map);
+//        var addresses = map.getSource('routeStart')
+//
+//        if(addresses){
+//            map.removeSource('routeStart');
+//            map.removeLayer('routeStart');
+//        }
+//            map.addSource('routeStart',{
+//                type: 'geojson',
+//                data: geoJson
+//            });
+//
+//            map.addLayer({
+//                id: 'routeStart',
+//                source: 'routeStart',
+//                type: 'symbol',
+//                "layout": {
+//                    "icon-image": "geofi-marker",
+//                },
+//                paint: {
+//                  "text-color": "#09B529"
+//                }
+//            });
     }
     
     function googleStart(location){
