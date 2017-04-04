@@ -3,8 +3,10 @@
     <head>
       <meta charset=utf-8 />
       <title>GeoFi Map</title>
-      <script src='https://api.mapbox.com/mapbox-gl-js/v0.25.1/mapbox-gl.js'></script>
-      <link href='https://api.mapbox.com/mapbox-gl-js/v0.25.1/mapbox-gl.css' rel='stylesheet' />
+
+      <script src="https://mapzen.com/js/mapzen.js"></script>
+      <script src="https://mapzen.com/tangram/0.11/tangram.min.js"></script>
+      <link href="https://mapzen.com/js/mapzen.css" rel='stylesheet' />
       <link rel="stylesheet" type="text/css" href="test-map.css">
       <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALB5yXEHcbkr51lCbrPeCdVf60SbWENtU"
@@ -14,6 +16,7 @@
     </head>
     <body>
         
+<!--
         <div class="options">
             <button id="cities" class="cities"><img src="light-travel.png"></button>
             <button id="DC" class="DC" hidden="true">DC</button>
@@ -25,9 +28,12 @@
             <button id="SEA" class="SEA" hidden="true">SEA</button>
             <button id="BOS" class="BOS" hidden="true">BOS</button>
           </div>
+-->
         
         <div id='map'>
-            <form class="search-form">
+        </div>
+        
+        <form class="search-form">
                 <input id="address-query" type="text" placeholder="Address" required>
                 <button class="address-search" type="button">Go</button>
                 <input id="city-state" type="text" placeholder="City, State" required>
@@ -46,21 +52,21 @@
                 <button id="direction-butt" class="open-Directions" title="Directions"><i class="fa fa-map fa-2x" aria-hidden="false"></i></button>
             </div>
             
+<!--
             <div class="sat">
                 <button id="toggle-sat" class="toggle-sat" title="toggle satellite"></button>
             </div>
+-->
             
             <div class="on-map" hidden="true" id="on-map">
-                <button class="clear-route">Clear Route</button>
-                <button class="on-map-sim">Compare Us</button>
+<!--                <button class="clear-route">Clear Route</button>-->
+<!--                <button class="on-map-sim">Compare Us</button>-->
             </div>
             
             <div class="extra-data" hidden="true" id="extra-data">
-                <button class="comp-points" id="comp-points" hidden="true">Compare Us</button>
+<!--                <button class="comp-points" id="comp-points" hidden="true">Compare Us</button>-->
                 <button class="alt-entrances" id="alt-entrances" hidden="true">Additional Entrances</button>
             </div>
-
-        </div>
         
         <div class="menu" id="menu">
             <div class="menu-sidebar">
@@ -112,7 +118,7 @@
                     <label id="gTime"></label>
                 </div>
                 
-                <button class="compareRoutes">Compare Routes</button>
+<!--                <button class="compareRoutes">Compare Routes</button>-->
             </div>
         </div>
         

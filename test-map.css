@@ -21,6 +21,7 @@ html, body {
 
 #map {
 	height: 100%;
+    z-index: 0;
 }
 
 /********************* Search Bar Style *********************/
@@ -36,6 +37,7 @@ html, body {
 
 .search-box {
      margin-bottom: 5px;
+    z-index: 1;
  }
 
 .search-form input {
@@ -49,6 +51,7 @@ html, body {
 	font-style: italic;
     margin-bottom: 2px;
     border-radius: 5px;
+    z-index: 1;
 }
 
 .search-form input-state {
@@ -61,11 +64,13 @@ html, body {
 	font-weight: normal;
 	font-style: italic;
     border-radius: 5px;
+    z-index: 1;
 }
 
 .search-form input:focus {
 	outline: 0;
 	background: #fff;
+    z-index: 1;
 }
 
 .search-form button {
@@ -86,11 +91,13 @@ html, body {
     border: 1px white;
     border-style: solid;
     border-radius: 10px;
+    z-index: 1;
 /*    margin-left: 5px;*/
 }
 
 .search-form button:hover {
     background-color: #1F363D;
+    z-index: 1;
 }
 
 /********************* Search Directions *****************/

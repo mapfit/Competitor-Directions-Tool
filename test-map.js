@@ -9,7 +9,17 @@ $(document).ready(function() {
       }
     });
     
-    mapboxgl.accessToken = 'pk.eyJ1IjoicGFya291cm1ldGhvZCIsImEiOiI5Y2JmOGJhMDYzZDgyODBhYzQ3OTFkZWE3NGFiMmUzYiJ9.kp_5LMwcR79TKOERpkilAQ';
+    //mapzen stuff
+    L.Mapzen.apiKey = 'mapzen-F9hR6PQ';            
+    var map = L.Mapzen.map('map',{
+        center: [38.902705, -77.043132],
+        zoom: 16,
+        zoomControl: null
+    });
+
+    var mapLayer = Tangram.leafletLayer({ scene: 'https://mapzen.com/api/scenes/47183/407/resources/cinnabar-style.yaml', global: {sdk_mapzen_api_key: 'mapzen-F9hR6PQ'} });
+    mapLayer.addTo(map);     
+    
     var googleAPI = 'AIzaSyALB5yXEHcbkr51lCbrPeCdVf60SbWENtU';
     var bingAPI = 'Aks14rX10AqP9GDWoreX8d-Mw-lD1d13TkKKLvgXIGEvr8Ke4Iuni6w5wRUxaKj1';
     
@@ -21,15 +31,6 @@ $(document).ready(function() {
     
     var currentAddress;
     
-    var map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/parkourmethod/civtu956m000b2kmx6k62naro',
-        center: [-77.043132, 38.902705],
-        zoom: 16,
-        minZoom: 4,
-        attributionControl: false
-    });
-    
     //altentrance points
     var altJson;
     
@@ -37,13 +38,14 @@ $(document).ready(function() {
     var geofiRoute = [];
 
     //prevent rotation
-    map.dragRotate.disable();
-    map.touchZoomRotate.disableRotation();
+//    map.dragRotate.disable();
+//    map.touchZoomRotate.disableRotation();
         
     var defLoc = "cities";
     
     //mobile OS detection and setup    
-    if(detectmob()){        
+    if(detectmob()){
+        console.log("mobile detected");
         document.getElementById('zoom').hidden = true;
         
         //address search
@@ -226,7 +228,8 @@ $(document).ready(function() {
         defLoc = "BOS";
     });
     
-    map.on('load', function(){
+    map.on('load', function(e){
+        console.log("loaded: " + e);
 //            map.on('mousedown', mouseDown, true); 
     });
     
@@ -400,6 +403,8 @@ $(document).ready(function() {
         
         if(cityState == ""){
             coordSearch(query);
+            map.removeLayer(mainMarker);
+            removeLayerArray(altEntrances);
         }else{
             if(cityState.indexOf(",") == -1){
                 alert("Make sure there is a comma between city and state.");
@@ -407,6 +412,8 @@ $(document).ready(function() {
             }
             
             stateSearch(query, cityState);
+            map.removeLayer(mainMarker);
+            removeLayerArray(altEntrances);
         }
         
     });
@@ -524,16 +531,7 @@ $(document).ready(function() {
         xhttp.send();
     }
     
-    function readLocation(arr){       
-        console.log(JSON.stringify(arr));
-        var altEntrances = map.getSource('altEntrances')
-        altJson = [];
-        
-        if(altEntrances){
-            map.removeSource('altEntrances');
-            map.removeLayer('altEntrances');
-        }
-        
+    function readLocation(arr){               
         //new entraces code
         var entrances = arr[0].entrances;
         
@@ -548,49 +546,35 @@ $(document).ready(function() {
                 arr[0]["place-type"] = entrances[i]["place-type"];
                 dropMarker(arr[0]);
                 
-                map.setCenter([lon, lat]);
-                map.setZoom(18);
+                map.setView([lat, lon], 18);
                 currentAddress = {"lat": lat, "lon": lon};
-            }else{
-                arr[0].lat = entrances[i].lat;
-                arr[0].lon = entrances[i].lon;
-                arr[0]["place-type"] = entrances[i]["place-type"];
-                arr[0]["entrance-type"] = entrances[i]["entrance-type"];
-                
-                dropAltEntrance(arr[0]);
             }
         }
         
         //show directions button
         document.getElementById('search-directions').hidden = false;
         
+        //still need to activate this
         turnOnPointUI(arr);
      }
     
     //alt entrances and competitor points
+    var tempAlt;
     function turnOnPointUI(arr){
-        var altEntrances = map.getSource('altEntrances')
-
-        if(altEntrances){
-            map.setLayoutProperty("altEntrances", 'visibility', 'none');
-        }
+        tempAlt = arr[0];
         
         document.getElementById('extra-data').hidden = false;
-        document.getElementById('comp-points').hidden = false;
-        
-        if(arr[0].entrances.length > 1){
-            document.getElementById('alt-entrances').hidden = false;
-        }
+        document.getElementById('alt-entrances').hidden = false;
     }
     
     var altShowing = false;
     $('.alt-entrances').on('click', function(e) {        
         if(altShowing){
             altShowing = false;
-            map.setLayoutProperty("altEntrances", 'visibility', 'none');
+            removeLayerArray(altEntrances);
         }else{
             altShowing = true;
-            map.setLayoutProperty("altEntrances", 'visibility', 'visible');
+            dropAltEntrance(tempAlt);
         }
     });
     
@@ -618,6 +602,7 @@ $(document).ready(function() {
     //drop marker
     var currentMarkerAddress;
     var currentMarkerCityState;
+    var mainMarker;
     function dropMarker(data){
         var thisAddJsonArray = new Array;
         
@@ -646,107 +631,62 @@ $(document).ready(function() {
             "type": "FeatureCollection",       
             "features": thisAddJsonArray
         }
-
-        var addresses = map.getSource('addresses')
-
-        if(addresses){
-            map.removeSource('addresses');
-            map.removeLayer('addresses');
-        }
-
-        map.addSource('addresses',{
-            type: 'geojson',
-            data: geoJson
-        });
-
-        map.addLayer({
-            id: 'addresses',
-            source: 'addresses',
-            type: 'symbol',
-            "layout": {
-                "icon-image": "geofi-marker",
-                "icon-allow-overlap": true,
-                "text-field": data.address,
-                "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-                "text-size": 11,
-                "text-letter-spacing": 0.05,
-                "text-offset": [0, 3]
-            },
-            paint: {
-              "text-color": "#09B529"
-            }
-        });
         
         //fill in address bar
+        mainMarker = L.geoJson(geoJson).addTo(map);
+        mainMarker.bindTooltip(data.address, {permanent: true, className: "my-label", offset: [0, 0] });
         currentMarkerAddress = data.address;
         currentMarkerCityState = data.city + ", " + data.state;
     }
     
+    var altEntrances = [];
     function dropAltEntrance(data){
-        var thisAddJsonArray = new Array;        
-        var placeType = data["entrance-type"];
+        var thisAddJsonArray = new Array;
         
-        if(placeType == "pedestrian-secondary"){
-            placeType = "pedestrian";
-        }
+        var entrances = data.entrances;
         
-        var thisJSON = {"type": "Feature",
-                "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                    data.lon,
-                    data.lat
-                  ]
-                },
-                "properties": {
-                  "description": placeType,
-                  "address" : data.address,
-                  "city" : data.city,
-                  "state" : data.state,
-                  "zip" : data.zip,
-                  "placeType" : placeType,
-                  "icon" : "circle",
-                  "color" : '#09B529'
-                }};
-
-        var altEntrances = map.getSource('altEntrances')
-
-        if(altEntrances){
-            altJson.features.push(thisJSON);
-            map.getSource('altEntrances').setData(altJson);
-        }else{
-            thisAddJsonArray.push(thisJSON);
+        for(var i = 0; i < entrances.length; i++){
+            var thisEntrance = entrances[i];
+            
+            var placeType = thisEntrance["entrance-type"];
         
-            altJson = {
-                "type": "FeatureCollection",       
-                "features": thisAddJsonArray
-            }
-
-            map.addSource('altEntrances',{
-                type: 'geojson',
-                data: altJson
-            });
-
-            map.addLayer({
-                id: 'altEntrances',
-                source: 'altEntrances',
-                type: 'symbol',
-                "layout": {
-                    "icon-image": "geofi-marker",
-                    "icon-allow-overlap": true,
-                    "text-field": '{description}',
-                    "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-                    "text-size": 11,
-                    "text-letter-spacing": 0.05,
-                    "text-offset": [0, 3]
-                },
-                paint: {
-                  "text-color": "#09B529"
+            if(placeType == "pedestrian-primary"){
+                //do nothing
+            }else{
+                if(placeType == "pedestrian-secondary"){
+                    placeType = "pedestrian";
                 }
-            });
-        }
-        
+                
+                var thisJSON = {"type": "Feature",
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        thisEntrance.lon,
+                        thisEntrance.lat
+                      ]
+                    },
+                    "properties": {
+                      "description": placeType,
+                      "address" : data.address,
+                      "city" : data.city,
+                      "state" : data.state,
+                      "zip" : data.zip,
+                      "placeType" : placeType,
+                      "icon" : "circle",
+                      "color" : '#09B529'
+                    }};
+                
+                altJson = {
+                    "type": "FeatureCollection",       
+                    "features": [thisJSON]
+                }
+                
+                var thisAltEntrance = L.geoJson(altJson).addTo(map);
+                thisAltEntrance.bindTooltip(placeType, {permanent: true, className: "alt-label", offset: [0, 0] });
 
+                altEntrances.push(thisAltEntrance);
+            }
+        };
     }
     
     //drop google point
@@ -945,8 +885,8 @@ $(document).ready(function() {
     
     //distance calculation
     function calcDist(lat1,lon1,lat2,lon2) {
-      var R = 6371; // Radius of the earth in km
-      var dLat = deg2rad(lat2-lat1);  // deg2rad below
+      var R = 6371;
+      var dLat = deg2rad(lat2-lat1);
       var dLon = deg2rad(lon2-lon1); 
       var a = 
         Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -964,7 +904,7 @@ $(document).ready(function() {
     
     //marker click detection
     map.on('click', function(e) {
-          
+          console.log('click');
     });
     
     //***********************Bing Geocoding****************************************
@@ -1097,8 +1037,11 @@ $(document).ready(function() {
             
         document.getElementById('search-directions').hidden = true;
         document.getElementById('extra-data').hidden = true;
-        document.getElementById('comp-points').hidden = true;
-        document.getElementById('alt-entrances').hidden = true;
+//        document.getElementById('comp-points').hidden = true;
+//        document.getElementById('alt-entrances').hidden = true;
+        map.removeLayer(mainMarker);
+        removeLayerArray(altEntrances);
+        
         
         $('.end-address').val(currentMarkerAddress);
         $('.end-city-state').val(currentMarkerCityState);        
@@ -1156,40 +1099,20 @@ $(document).ready(function() {
         $('.on-map-sim').text('Compare Us');
         document.getElementById('search-directions').hidden = true;
         
-        map.setLayoutProperty("gRoute", 'visibility', 'none');
-//        map.setLayoutProperty("gStart", 'visibility', 'none');
-//        map.setLayoutProperty("gEnd", 'visibility', 'none');
-        map.setLayoutProperty("googleStart", 'visibility', 'none');
-        map.setLayoutProperty("googleEnd", 'visibility', 'none');
-        map.setLayoutProperty("routeStart", 'visibility', 'none');
-        map.setLayoutProperty("routeEnd", 'visibility', 'none');
+        //remove mainroute if exists
+        if(mainRoute){
+            map.removeLayer(mainRoute);
+        }
         
-        map.setLayoutProperty("openRoute", 'visibility', 'none');
-        map.setLayoutProperty("openStart", 'visibility', 'none');
-        map.setLayoutProperty("openEnd", 'visibility', 'none');
-//        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
-//        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
-        
-        map.setLayoutProperty("bingRoute", 'visibility', 'none');
-        map.setLayoutProperty("bingStart", 'visibility', 'none');
-        map.setLayoutProperty("bingEnd", 'visibility', 'none');
-//        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
-//        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
-        
+        if(startMarker){
+            map.removeLayer(startMarker);
+            map.removeLayer(endMarker);
+        }
+
         //change camera zoom/pitch/bearing
-        map.setZoom(15);
+//        map.setZoom(15);
         map.setPitch(0);
         map.setBearing(0);
-        
-        //clear old route
-        for(var a = 0; a < geofiRoute.length; a++){
-            var thisRoute = map.getSource(geofiRoute[a]);
-            
-            if(thisRoute){
-                map.removeLayer(geofiRoute[a]);
-                map.removeSource(geofiRoute[a]);
-            }
-        }
         
         geofiRoute = [];
     });
@@ -1348,10 +1271,21 @@ $(document).ready(function() {
             document.getElementById('on-map').hidden = false;
         }
         
+        //remove mainroute if exists
+        if(mainRoute){
+            map.removeLayer(mainRoute);
+        }
+        
+        if(startMarker){
+            map.removeLayer(startMarker);
+            map.removeLayer(endMarker);
+        }
+        
+                
         callDirections(startAddress, startCityState, endAddress, endCityState);
-        googleDirections(startAddress, startCityState, endAddress, endCityState);
-        openStart(startAddress, startCityState, endAddress, endCityState);
-        bingStart(startAddress, startCityState, endAddress, endCityState);
+//        googleDirections(startAddress, startCityState, endAddress, endCityState);
+//        openStart(startAddress, startCityState, endAddress, endCityState);
+//        bingStart(startAddress, startCityState, endAddress, endCityState);
     });
     
     function callDirections(startAddress, startCityState, endAddress, endCityState){
@@ -1468,8 +1402,9 @@ $(document).ready(function() {
         xhttp.send();
     }
     
+    var endMarker;
+    var startMarker;
     function readDirections(response){
-        
         //clear old route
         for(var a = 0; a < geofiRoute.length; a++){
             var thisRoute = map.getSource(geofiRoute[a]);
@@ -1482,46 +1417,39 @@ $(document).ready(function() {
         
         geofiRoute = [];
         
-        var routes = response.routes;
-        var duration = routes[0].duration;
-        var distance = routes[0].distance;
-        var polyline = routes[0].geometry;
-        
-        //format start and stop coordinates
-        var startLoc = response.sourceLocation;
-        var endLoc = response.destinationLocation;
+        var routes = response.trip;
+        var duration = routes.summary.time;
+        var distance = routes.summary.length;
 
         //get location points for route
         var locationArray = [];
         var geometryArray = [];
-        var steps = routes[0].legs[0].steps;
+        var steps = routes.legs[0];
+                
+        //format start and stop coordinates
+        var startLoc = [routes.locations[0].lon, routes.locations[0].lat];
+        var endLoc = [routes.locations[1].lon, routes.locations[1].lat];;
         
         //add first location
         locationArray.push(startLoc);
         
         //multiple polylines
         var polylineArray = [];
-        for(var i = 0; i < steps.length; i++){
-            var thisStep = steps[i];
-            var thisPoly = decode(thisStep.geometry, 5);
-            
-            if(i == 0){
-                thisPoly.unshift(startLoc);
-            }else if(i == steps.length-1){
-                thisPoly.push(endLoc);
-            }
-            
-            drawRoute(thisPoly, i);
-        }
         
+        var thisPoly = decode(steps.shape, 6);
+        
+        thisPoly.unshift([startLoc[1], startLoc[0]]);
+        thisPoly.push([endLoc[1], endLoc[0]]);
+        
+        drawRoute(thisPoly, 0);
+                
         fillInDetails(distance, duration);
         
         //drop end marker
         routeEnd(endLoc);
         routeStart(startLoc);
         
-        map.setCenter(endLoc);
-        map.setZoom(18);
+        map.setView([endLoc[1], endLoc[0]], 18);
         
         ourRoute = polylineArray;
     }
@@ -1558,47 +1486,14 @@ $(document).ready(function() {
         googleStart(startPoint);
     }
     
-    function drawRoute(locationArray, count){
-        var routeLabel = "route" + count;
-        geofiRoute.push(routeLabel);
-        
-        var route = map.getSource(routeLabel);
-        var locData = {
-                "type": "Feature",
-                "properties": {},
-                "geometry": {
-                    "type": "LineString",
-                    "coordinates": locationArray
-                }
-        }
 
-        if(route){
-            map.getSource(routeLabel).setData(locData);
-            map.setLayoutProperty(routeLabel, 'visibility', 'visible');
-        }else{
-            map.addSource(routeLabel,{
-                type: 'geojson',
-                data: locData
-            });
-            
-            map.addLayer({
-                "id": routeLabel,
-                "type": "line",
-                "source": routeLabel,
-                "layout": {
-                    "line-join": "round",
-                    "line-cap": "round"
-                },
-                "paint": {
-                    "line-color": "#09B529",
-                    "line-width": 4
-                }
-            });
-        }
+    var mainRoute;
+    function drawRoute(locationArray, count){
+        mainRoute = L.polyline(locationArray, {color: '#09B529'});
+        map.addLayer(mainRoute);
     }
     
     function drawGoogle(locationArray){
-        
         var gRoute = map.getSource('gRoute');
         var locData = {
                 "type": "Feature",
@@ -1714,9 +1609,8 @@ $(document).ready(function() {
     }
     
     var geofiDuration;
-    function fillInDetails(meters, seconds){
+    function fillInDetails(miles, seconds){
         geofiDuration = seconds;
-        var miles = meters*0.000621371192;
         var time = secondsToHms(seconds);
                 
         $('#distance').text("Distance:  " + miles.toFixed(1) + " miles");
@@ -1776,8 +1670,8 @@ $(document).ready(function() {
             lng += longitude_change;
                         
             var theseCoords = [];
-            theseCoords.push(lng / factor);
             theseCoords.push(lat/factor);
+            theseCoords.push(lng/factor);
 
             coordinates.push(theseCoords);
         }
@@ -1802,29 +1696,31 @@ $(document).ready(function() {
             "type": "FeatureCollection",       
             "features": thisAddJsonArray
         }
+        
+        endMarker = L.geoJson(geoJson).addTo(map);
 
-        var addresses = map.getSource('routeEnd')
-
-        if(addresses){
-            map.removeSource('routeEnd');
-            map.removeLayer('routeEnd');
-        }
-            map.addSource('routeEnd',{
-                type: 'geojson',
-                data: geoJson
-            });
-
-            map.addLayer({
-                id: 'routeEnd',
-                source: 'routeEnd',
-                type: 'symbol',
-                "layout": {
-                    "icon-image": "geofi-marker",
-                },
-                paint: {
-                  "text-color": "#09B529"
-                }
-            });
+//        var addresses = map.getSource('routeEnd')
+//
+//        if(addresses){
+//            map.removeSource('routeEnd');
+//            map.removeLayer('routeEnd');
+//        }
+//            map.addSource('routeEnd',{
+//                type: 'geojson',
+//                data: geoJson
+//            });
+//
+//            map.addLayer({
+//                id: 'routeEnd',
+//                source: 'routeEnd',
+//                type: 'symbol',
+//                "layout": {
+//                    "icon-image": "geofi-marker",
+//                },
+//                paint: {
+//                  "text-color": "#09B529"
+//                }
+//            });
     }
     
     function googleEnd(location){
@@ -1887,28 +1783,29 @@ $(document).ready(function() {
             "features": thisAddJsonArray
         }
 
-        var addresses = map.getSource('routeStart')
-
-        if(addresses){
-            map.removeSource('routeStart');
-            map.removeLayer('routeStart');
-        }
-            map.addSource('routeStart',{
-                type: 'geojson',
-                data: geoJson
-            });
-
-            map.addLayer({
-                id: 'routeStart',
-                source: 'routeStart',
-                type: 'symbol',
-                "layout": {
-                    "icon-image": "geofi-marker",
-                },
-                paint: {
-                  "text-color": "#09B529"
-                }
-            });
+        startMarker = L.geoJson(geoJson).addTo(map);
+//        var addresses = map.getSource('routeStart')
+//
+//        if(addresses){
+//            map.removeSource('routeStart');
+//            map.removeLayer('routeStart');
+//        }
+//            map.addSource('routeStart',{
+//                type: 'geojson',
+//                data: geoJson
+//            });
+//
+//            map.addLayer({
+//                id: 'routeStart',
+//                source: 'routeStart',
+//                type: 'symbol',
+//                "layout": {
+//                    "icon-image": "geofi-marker",
+//                },
+//                paint: {
+//                  "text-color": "#09B529"
+//                }
+//            });
     }
     
     function googleStart(location){
@@ -2712,5 +2609,12 @@ $(document).ready(function() {
         
         geofiRoute = [];
     });
+    
+    //remove all layers within an array
+    function removeLayerArray(array){
+        for(var i = 0; i < array.length; i++){
+            map.removeLayer(array[i]);
+        }
+    }
 });
 
