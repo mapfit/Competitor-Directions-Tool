@@ -551,39 +551,30 @@ $(document).ready(function() {
             }
         }
         
-        dropAltEntrance(arr[0]);
-        
         //show directions button
         document.getElementById('search-directions').hidden = false;
         
         //still need to activate this
-//        turnOnPointUI(arr);
+        turnOnPointUI(arr);
      }
     
     //alt entrances and competitor points
+    var tempAlt;
     function turnOnPointUI(arr){
-        var altEntrances = map.getSource('altEntrances')
-
-        if(altEntrances){
-            map.setLayoutProperty("altEntrances", 'visibility', 'none');
-        }
+        tempAlt = arr[0];
         
         document.getElementById('extra-data').hidden = false;
-        document.getElementById('comp-points').hidden = false;
-        
-        if(arr[0].entrances.length > 1){
-            document.getElementById('alt-entrances').hidden = false;
-        }
+        document.getElementById('alt-entrances').hidden = false;
     }
     
     var altShowing = false;
     $('.alt-entrances').on('click', function(e) {        
         if(altShowing){
             altShowing = false;
-            map.setLayoutProperty("altEntrances", 'visibility', 'none');
+            removeLayerArray(altEntrances);
         }else{
             altShowing = true;
-            map.setLayoutProperty("altEntrances", 'visibility', 'visible');
+            dropAltEntrance(tempAlt);
         }
     });
     
@@ -640,36 +631,6 @@ $(document).ready(function() {
             "type": "FeatureCollection",       
             "features": thisAddJsonArray
         }
-
-//        var addresses = map.getSource('addresses')
-//
-//        if(addresses){
-//            map.removeSource('addresses');
-//            map.removeLayer('addresses');
-//        }
-//
-//        map.addSource('addresses',{
-//            type: 'geojson',
-//            data: geoJson
-//        });
-//
-//        map.addLayer({
-//            id: 'addresses',
-//            source: 'addresses',
-//            type: 'symbol',
-//            "layout": {
-//                "icon-image": "geofi-marker",
-//                "icon-allow-overlap": true,
-//                "text-field": data.address,
-//                "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-//                "text-size": 11,
-//                "text-letter-spacing": 0.05,
-//                "text-offset": [0, 3]
-//            },
-//            paint: {
-//              "text-color": "#09B529"
-//            }
-//        });
         
         //fill in address bar
         mainMarker = L.geoJson(geoJson).addTo(map);
@@ -1077,7 +1038,10 @@ $(document).ready(function() {
         document.getElementById('search-directions').hidden = true;
         document.getElementById('extra-data').hidden = true;
 //        document.getElementById('comp-points').hidden = true;
-        document.getElementById('alt-entrances').hidden = true;
+//        document.getElementById('alt-entrances').hidden = true;
+        map.removeLayer(mainMarker);
+        removeLayerArray(altEntrances);
+        
         
         $('.end-address').val(currentMarkerAddress);
         $('.end-city-state').val(currentMarkerCityState);        
@@ -1144,41 +1108,11 @@ $(document).ready(function() {
             map.removeLayer(startMarker);
             map.removeLayer(endMarker);
         }
-        
-//        map.setLayoutProperty("gRoute", 'visibility', 'none');
-////        map.setLayoutProperty("gStart", 'visibility', 'none');
-////        map.setLayoutProperty("gEnd", 'visibility', 'none');
-//        map.setLayoutProperty("googleStart", 'visibility', 'none');
-//        map.setLayoutProperty("googleEnd", 'visibility', 'none');
-//        map.setLayoutProperty("routeStart", 'visibility', 'none');
-//        map.setLayoutProperty("routeEnd", 'visibility', 'none');
-//        
-//        map.setLayoutProperty("openRoute", 'visibility', 'none');
-//        map.setLayoutProperty("openStart", 'visibility', 'none');
-//        map.setLayoutProperty("openEnd", 'visibility', 'none');
-////        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
-////        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
-//        
-//        map.setLayoutProperty("bingRoute", 'visibility', 'none');
-//        map.setLayoutProperty("bingStart", 'visibility', 'none');
-//        map.setLayoutProperty("bingEnd", 'visibility', 'none');
-////        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
-////        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
-        
+
         //change camera zoom/pitch/bearing
-        map.setZoom(15);
+//        map.setZoom(15);
         map.setPitch(0);
         map.setBearing(0);
-        
-        //clear old route
-//        for(var a = 0; a < geofiRoute.length; a++){
-//            var thisRoute = map.getSource(geofiRoute[a]);
-//            
-//            if(thisRoute){
-//                map.removeLayer(geofiRoute[a]);
-//                map.removeSource(geofiRoute[a]);
-//            }
-//        }
         
         geofiRoute = [];
     });
@@ -1346,6 +1280,7 @@ $(document).ready(function() {
             map.removeLayer(startMarker);
             map.removeLayer(endMarker);
         }
+        
                 
         callDirections(startAddress, startCityState, endAddress, endCityState);
 //        googleDirections(startAddress, startCityState, endAddress, endCityState);
@@ -1470,11 +1405,6 @@ $(document).ready(function() {
     var endMarker;
     var startMarker;
     function readDirections(response){
-        map.removeLayer(mainMarker);
-//        map.removeLayer(mainRoute);
-//        map.removeLayer(startMarker);
-//        map.removeLayer(endMarker);
-        
         //clear old route
         for(var a = 0; a < geofiRoute.length; a++){
             var thisRoute = map.getSource(geofiRoute[a]);
