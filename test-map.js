@@ -1076,7 +1076,7 @@ $(document).ready(function() {
             
         document.getElementById('search-directions').hidden = true;
         document.getElementById('extra-data').hidden = true;
-        document.getElementById('comp-points').hidden = true;
+//        document.getElementById('comp-points').hidden = true;
         document.getElementById('alt-entrances').hidden = true;
         
         $('.end-address').val(currentMarkerAddress);
@@ -1135,25 +1135,35 @@ $(document).ready(function() {
         $('.on-map-sim').text('Compare Us');
         document.getElementById('search-directions').hidden = true;
         
-        map.setLayoutProperty("gRoute", 'visibility', 'none');
-//        map.setLayoutProperty("gStart", 'visibility', 'none');
-//        map.setLayoutProperty("gEnd", 'visibility', 'none');
-        map.setLayoutProperty("googleStart", 'visibility', 'none');
-        map.setLayoutProperty("googleEnd", 'visibility', 'none');
-        map.setLayoutProperty("routeStart", 'visibility', 'none');
-        map.setLayoutProperty("routeEnd", 'visibility', 'none');
+        //remove mainroute if exists
+        if(mainRoute){
+            map.removeLayer(mainRoute);
+        }
         
-        map.setLayoutProperty("openRoute", 'visibility', 'none');
-        map.setLayoutProperty("openStart", 'visibility', 'none');
-        map.setLayoutProperty("openEnd", 'visibility', 'none');
-//        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
-//        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
+        if(startMarker){
+            map.removeLayer(startMarker);
+            map.removeLayer(endMarker);
+        }
         
-        map.setLayoutProperty("bingRoute", 'visibility', 'none');
-        map.setLayoutProperty("bingStart", 'visibility', 'none');
-        map.setLayoutProperty("bingEnd", 'visibility', 'none');
-//        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
-//        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
+//        map.setLayoutProperty("gRoute", 'visibility', 'none');
+////        map.setLayoutProperty("gStart", 'visibility', 'none');
+////        map.setLayoutProperty("gEnd", 'visibility', 'none');
+//        map.setLayoutProperty("googleStart", 'visibility', 'none');
+//        map.setLayoutProperty("googleEnd", 'visibility', 'none');
+//        map.setLayoutProperty("routeStart", 'visibility', 'none');
+//        map.setLayoutProperty("routeEnd", 'visibility', 'none');
+//        
+//        map.setLayoutProperty("openRoute", 'visibility', 'none');
+//        map.setLayoutProperty("openStart", 'visibility', 'none');
+//        map.setLayoutProperty("openEnd", 'visibility', 'none');
+////        map.setLayoutProperty("openRouteStart", 'visibility', 'none');
+////        map.setLayoutProperty("openRouteEnd", 'visibility', 'none');
+//        
+//        map.setLayoutProperty("bingRoute", 'visibility', 'none');
+//        map.setLayoutProperty("bingStart", 'visibility', 'none');
+//        map.setLayoutProperty("bingEnd", 'visibility', 'none');
+////        map.setLayoutProperty("bingStartRoute", 'visibility', 'none');
+////        map.setLayoutProperty("bingEndRoute", 'visibility', 'none');
         
         //change camera zoom/pitch/bearing
         map.setZoom(15);
@@ -1161,14 +1171,14 @@ $(document).ready(function() {
         map.setBearing(0);
         
         //clear old route
-        for(var a = 0; a < geofiRoute.length; a++){
-            var thisRoute = map.getSource(geofiRoute[a]);
-            
-            if(thisRoute){
-                map.removeLayer(geofiRoute[a]);
-                map.removeSource(geofiRoute[a]);
-            }
-        }
+//        for(var a = 0; a < geofiRoute.length; a++){
+//            var thisRoute = map.getSource(geofiRoute[a]);
+//            
+//            if(thisRoute){
+//                map.removeLayer(geofiRoute[a]);
+//                map.removeSource(geofiRoute[a]);
+//            }
+//        }
         
         geofiRoute = [];
     });
@@ -1327,6 +1337,16 @@ $(document).ready(function() {
             document.getElementById('on-map').hidden = false;
         }
         
+        //remove mainroute if exists
+        if(mainRoute){
+            map.removeLayer(mainRoute);
+        }
+        
+        if(startMarker){
+            map.removeLayer(startMarker);
+            map.removeLayer(endMarker);
+        }
+                
         callDirections(startAddress, startCityState, endAddress, endCityState);
 //        googleDirections(startAddress, startCityState, endAddress, endCityState);
 //        openStart(startAddress, startCityState, endAddress, endCityState);
@@ -1492,18 +1512,6 @@ $(document).ready(function() {
         thisPoly.push([endLoc[1], endLoc[0]]);
         
         drawRoute(thisPoly, 0);
-//        for(var i = 0; i < steps.length; i++){
-//            var thisStep = steps[i];
-//            var thisPoly = decode(thisStep.shape, 5);
-//            
-//            if(i == 0){
-//                thisPoly.unshift(startLoc);
-//            }else if(i == steps.length-1){
-//                thisPoly.push(endLoc);
-//            }
-//            
-//            drawRoute(thisPoly, i);
-//        }
                 
         fillInDetails(distance, duration);
         
@@ -1551,52 +1559,8 @@ $(document).ready(function() {
 
     var mainRoute;
     function drawRoute(locationArray, count){
-        
-//        var routeLabel = "route" + count;
-//        geofiRoute.push(routeLabel);
-//        
-//        var route = map.getSource(routeLabel);
-//        var locData = {
-//                "type": "Feature",
-//                "properties": {},
-//                "geometry": {
-//                    "type": "LineString",
-//                    "coordinates": locationArray
-//                }
-//        }
-//        
-//        var geoJson = {
-//            "type": "FeatureCollection",       
-//            "features": locData
-//        }
-        
-        console.log("locationArrays: " + locationArray);
-        
-        mainRoute = L.polyline(locationArray, {color: 'red'}).addTo(map);
-
-//        if(route){
-//            map.getSource(routeLabel).setData(locData);
-//            map.setLayoutProperty(routeLabel, 'visibility', 'visible');
-//        }else{
-//            map.addSource(routeLabel,{
-//                type: 'geojson',
-//                data: locData
-//            });
-//            
-//            map.addLayer({
-//                "id": routeLabel,
-//                "type": "line",
-//                "source": routeLabel,
-//                "layout": {
-//                    "line-join": "round",
-//                    "line-cap": "round"
-//                },
-//                "paint": {
-//                    "line-color": "#09B529",
-//                    "line-width": 4
-//                }
-//            });
-//        }
+        mainRoute = L.polyline(locationArray, {color: '#09B529'});
+        map.addLayer(mainRoute);
     }
     
     function drawGoogle(locationArray){
