@@ -1,16 +1,16 @@
 ---
 - name: Remove old www directory contents (app)
-  command: rm -rf /var/www/html/*
+  command: rm -rf /var/www/html/
   sudo: yes
   ignore_errors: true
 
 - name: Update with latest website
   sudo: no
-  command: git clone git@github.com:parkourmethod/Geofi-Map.git /home/ubuntu/app/
+  command: git clone git@github.com:parkourmethod/Geofi-Map.git /home/ubuntu/html/
 
 - name: Move site content to Apache
   sudo: yes
-  command: mv /home/ubuntu/app/* /var/www/html/
+  command: mv /home/ubuntu/html/ /var/www/
 
 - name: Make sure Apache can handle headers
   sudo: yes
