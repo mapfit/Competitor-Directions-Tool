@@ -1,0 +1,8 @@
+---
+- name: Update Apt
+  sudo: yes
+  apt: update_cache=yes cache_valid_time=3600 force=yes
+  
+- name: Install git
+  sudo: yes
+  apt: name=git force=yes  install_recommends=yes

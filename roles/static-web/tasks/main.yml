@@ -1,0 +1,43 @@
+---
+- name: Remove old www directory contents (app)
+  command: rm -rf /var/www/html/app/
+  sudo: yes
+  ignore_errors: true
+
+- name: Remove old www directory contents (dl)
+  command: rm -rf /var/www/html/dl/
+  sudo: yes
+  ignore_errors: true
+
+- name: Update with latest mapfix website
+  sudo: no
+  command: git clone git@github.com:parkourmethod/MapFix.git /home/ubuntu/app/
+
+- name: Update with latest download website
+  sudo: no
+  command: git clone git@github.com:parkourmethod/downloadsSite.git /home/ubuntu/dl/
+
+- name: Move site content to Apache
+  sudo: yes
+  command: mv /home/ubuntu/app/ /var/www/html/
+
+- name: Move site content to Apache
+  sudo: yes
+  command: mv /home/ubuntu/dl/ /var/www/html/
+
+- name: Make sure Apache can handle headers
+  sudo: yes
+  command: a2enmod headers
+  register: apache_modded
+
+- name: Restart Apache
+  sudo: yes
+  command: service apache2 restart
+  when: apache_modded|changed
+
+- name: Ensure apache2 config is up-to-date
+  copy: src=sites-enabled.conf dest=/etc/apache2/sites-enabled/000_default.conf
+
+- name: Restart Apache
+  sudo: yes
+  command: service apache2 restart

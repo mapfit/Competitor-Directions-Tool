@@ -1,0 +1,9 @@
+---
+- name: Configure Static Web (Read Only) Host
+  hosts: tag_Ansible_Role_Static_Web_RO
+  user: ubuntu
+  sudo: true
+  roles:
+  - git
+  - mrlesmithjr.apache2
+  - static-web-ro

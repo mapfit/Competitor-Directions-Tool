@@ -1,0 +1,9 @@
+---
+- name: Configure Static Web Host
+  hosts: tag_Ansible_Role_Static_Web
+  user: ubuntu
+  sudo: true
+  roles:
+  - git
+  - mrlesmithjr.apache2
+  - static-web

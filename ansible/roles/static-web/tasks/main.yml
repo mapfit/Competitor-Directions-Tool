@@ -1,0 +1,30 @@
+---
+- name: Remove old www directory contents (app)
+  command: rm -rf /var/www/html/*
+  sudo: yes
+  ignore_errors: true
+
+- name: Update with latest website
+  sudo: no
+  command: git clone git@github.com:parkourmethod/Geofi-Map.git /home/ubuntu/app/
+
+- name: Move site content to Apache
+  sudo: yes
+  command: mv /home/ubuntu/app/* /var/www/html/
+
+- name: Make sure Apache can handle headers
+  sudo: yes
+  command: a2enmod headers
+  register: apache_modded
+
+- name: Restart Apache
+  sudo: yes
+  command: service apache2 restart
+  when: apache_modded|changed
+
+- name: Ensure apache2 config is up-to-date
+  copy: src=sites-enabled.conf dest=/etc/apache2/sites-enabled/000_default.conf
+
+- name: Restart Apache
+  sudo: yes
+  command: service apache2 restart

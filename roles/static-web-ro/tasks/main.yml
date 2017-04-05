@@ -1,0 +1,20 @@
+---
+- name: Remove old www directory contents (app)
+  command: rm -rf /var/www/html/
+  sudo: yes
+  ignore_errors: true
+
+- name: Update with latest mapfix-ro website
+  sudo: no
+  command: git clone -b Read-Only git@github.com:parkourmethod/MapFix.git /home/ubuntu/app/
+
+- name: Move site content to Apache
+  sudo: yes
+  command: mv /home/ubuntu/app/ /var/www/html/
+
+- name: Ensure apache2 config is up-to-date
+  copy: src=sites-enabled.conf dest=/etc/apache2/sites-enabled/000_default.conf
+
+- name: Restart Apache
+  sudo: yes
+  command: service apache2 restart
