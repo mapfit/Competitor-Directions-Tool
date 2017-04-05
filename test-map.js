@@ -84,7 +84,7 @@ $(document).ready(function() {
     }
     
     //initial button focus
-    document.getElementById("cities").focus();
+//    document.getElementById("cities").focus();
     
     //initialize car for transit
     var transitType = "driving";
@@ -236,17 +236,17 @@ $(document).ready(function() {
     //keep focus on the buttons so they stay highlighted
     map.on("click", function(){
        //keep focus on buttons
-        document.getElementById(defLoc).focus();
+//        document.getElementById(defLoc).focus();
     });
     
     map.on("dragend", function(){
        //keep focus on buttons
-        document.getElementById(defLoc).focus();
+//        document.getElementById(defLoc).focus();
     });
     
     map.on("dragstart", function(){
        //keep focus on buttons
-        document.getElementById(defLoc).focus();
+//        document.getElementById(defLoc).focus();
     });
     
         //coordinate search/right click
@@ -272,9 +272,9 @@ $(document).ready(function() {
                        readLocation(myArr);
 
                        //setup additional searches
-                       googleSearch(coords.lat + ","+ coords.lng);
-                       openSearch(coords.lng + ","+ coords.lat);
-                       bingSearch(coords.lat + ","+ coords.lng);
+//                       googleSearch(coords.lat + ","+ coords.lng);
+//                       openSearch(coords.lng + ","+ coords.lat);
+//                       bingSearch(coords.lat + ","+ coords.lng);
                    }else{
                        console.log("no data found");
                        alert("No Matching Address found. Please try another address.");
@@ -393,6 +393,7 @@ $(document).ready(function() {
     
     //search
     $('.address-search').on('click', function(e) {
+        console.log("clicked");
          var query = document.getElementById('address-query').value;
         var cityState = document.getElementById('city-state').value;
                 
@@ -438,9 +439,9 @@ $(document).ready(function() {
                    readLocation(myArr);
                    
                    //setup additional searches
-                   googleSearch(thisQuery + " " + cityState);
-                   openSearch(thisQuery + " " + cityState);
-                   bingSearch(thisQuery + " " + cityState);
+//                   googleSearch(thisQuery + " " + cityState);
+//                   openSearch(thisQuery + " " + cityState);
+//                   bingSearch(thisQuery + " " + cityState);
                }else{
                    console.log("no data found");
                    alert("No Matching Address found. Please try another address.");
@@ -1053,21 +1054,21 @@ $(document).ready(function() {
     $('.open-Directions').on('click', function(e) {
         document.getElementById("menu").style.marginLeft = "0px";
         
-        var addresses = map.getSource('addresses')
-
-        if(addresses){
-            map.setLayoutProperty("addresses", 'visibility', 'none');
-            map.setLayoutProperty("openAddress", 'visibility', 'none');
-            map.setLayoutProperty("gAddress", 'visibility', 'none');
-            map.setLayoutProperty("gDist", 'visibility', 'none');
-            map.setLayoutProperty("openDist", 'visibility', 'none');
-            map.setLayoutProperty("bingAddress", 'visibility', 'none');
-            map.setLayoutProperty("bingDist", 'visibility', 'none');
-            map.setLayoutProperty("altEntrances", 'visibility', 'none');
-            document.getElementById('extra-data').hidden = true;
-            document.getElementById('comp-points').hidden = true;
-            document.getElementById('alt-entrances').hidden = true;
-        }
+//        var addresses = map.getSource('addresses')
+//
+//        if(addresses){
+//            map.setLayoutProperty("addresses", 'visibility', 'none');
+//            map.setLayoutProperty("openAddress", 'visibility', 'none');
+//            map.setLayoutProperty("gAddress", 'visibility', 'none');
+//            map.setLayoutProperty("gDist", 'visibility', 'none');
+//            map.setLayoutProperty("openDist", 'visibility', 'none');
+//            map.setLayoutProperty("bingAddress", 'visibility', 'none');
+//            map.setLayoutProperty("bingDist", 'visibility', 'none');
+//            map.setLayoutProperty("altEntrances", 'visibility', 'none');
+//            document.getElementById('extra-data').hidden = true;
+//            document.getElementById('comp-points').hidden = true;
+//            document.getElementById('alt-entrances').hidden = true;
+//        }
         
         if(directionOut){
             directionOut = false;
@@ -1111,7 +1112,7 @@ $(document).ready(function() {
 
         //change camera zoom/pitch/bearing
 //        map.setZoom(15);
-        map.setPitch(0);
+//        map.setPitch(0);
         map.setBearing(0);
         
         geofiRoute = [];
