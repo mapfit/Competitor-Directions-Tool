@@ -84,7 +84,7 @@ $(document).ready(function() {
     }
     
     //initial button focus
-    document.getElementById("cities").focus();
+//    document.getElementById("cities").focus();
     
     //initialize car for transit
     var transitType = "driving";
@@ -236,17 +236,17 @@ $(document).ready(function() {
     //keep focus on the buttons so they stay highlighted
     map.on("click", function(){
        //keep focus on buttons
-        document.getElementById(defLoc).focus();
+//        document.getElementById(defLoc).focus();
     });
     
     map.on("dragend", function(){
        //keep focus on buttons
-        document.getElementById(defLoc).focus();
+//        document.getElementById(defLoc).focus();
     });
     
     map.on("dragstart", function(){
        //keep focus on buttons
-        document.getElementById(defLoc).focus();
+//        document.getElementById(defLoc).focus();
     });
     
         //coordinate search/right click
@@ -393,6 +393,7 @@ $(document).ready(function() {
     
     //search
     $('.address-search').on('click', function(e) {
+        console.log("clicked");
          var query = document.getElementById('address-query').value;
         var cityState = document.getElementById('city-state').value;
                 
