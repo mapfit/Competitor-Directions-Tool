@@ -10,15 +10,22 @@ $(document).ready(function() {
     });
     
     //mapzen stuff
-    L.Mapzen.apiKey = 'mapzen-F9hR6PQ';            
+    L.Mapzen.apiKey = 'mapzen-F9hR6PQ';        
     var map = L.Mapzen.map('map',{
         center: [38.902705, -77.043132],
         zoom: 16,
-        zoomControl: null
+        maxZoom: 20,
+        minZoom: 5,
+        zoomControl: null,
+        tangramOptions:{
+            scene: {
+                import: 'https://mapzen.com/carto/cinnabar-style-no-labels/cinnabar-style-no-labels.yaml',
+            }
+        }
     });
 
-    var mapLayer = Tangram.leafletLayer({ scene: 'https://mapzen.com/api/scenes/47183/407/resources/cinnabar-style.yaml', global: {sdk_mapzen_api_key: 'mapzen-F9hR6PQ'} });
-    mapLayer.addTo(map);     
+//    var mapLayer = Tangram.leafletLayer({ import: 'https://mapzen.com/carto/walkabout-style-no-labels/walkabout-style-no-labels.yaml', global: {sdk_mapzen_api_key: 'mapzen-F9hR6PQ'} });
+//    mapLayer.addTo(map);     
     
     var googleAPI = 'AIzaSyALB5yXEHcbkr51lCbrPeCdVf60SbWENtU';
     var bingAPI = 'Aks14rX10AqP9GDWoreX8d-Mw-lD1d13TkKKLvgXIGEvr8Ke4Iuni6w5wRUxaKj1';
@@ -393,7 +400,6 @@ $(document).ready(function() {
     
     //search
     $('.address-search').on('click', function(e) {
-        console.log("clicked");
          var query = document.getElementById('address-query').value;
         var cityState = document.getElementById('city-state').value;
                 
