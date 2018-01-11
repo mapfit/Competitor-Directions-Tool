@@ -1,7 +1,7 @@
 $(document).ready(function() {
-    
-    var geofiKey = "d2ab3ecab8d443e3b9871a6cc1ee616e";
-    
+
+    var geofiKey = "591dccc4e499ca0001a4c6a41a2ed1be54804856508265221862231b";
+
     //prevent pin to zoom
     document.addEventListener('mousewheel', function(e) {
       if(e.deltaY % 1 !== 0) {
@@ -10,10 +10,10 @@ $(document).ready(function() {
     });
     
     //mapzen stuff
-    L.Mapzen.apiKey = 'mapzen-F9hR6PQ';        
+    L.Mapzen.apiKey = 'mapzen-9Y4zDcP';
     var map = L.Mapzen.map('map',{
-        center: [38.902705, -77.043132],
-        zoom: 16,
+        center: [40.744182, -73.993205],
+        zoom: 17,
         maxZoom: 20,
         minZoom: 5,
         zoomControl: null,
@@ -25,9 +25,9 @@ $(document).ready(function() {
     });
 
 //    var mapLayer = Tangram.leafletLayer({ import: 'https://mapzen.com/carto/walkabout-style-no-labels/walkabout-style-no-labels.yaml', global: {sdk_mapzen_api_key: 'mapzen-F9hR6PQ'} });
-//    mapLayer.addTo(map);     
-    
-    var googleAPI = 'AIzaSyALB5yXEHcbkr51lCbrPeCdVf60SbWENtU';
+//    mapLayer.addTo(map);
+
+    var googleAPI = 'AIzaSyCb9PEt7AZSV2-Ggs2fHCB_OdflGaARYrI';
     var bingAPI = 'Aks14rX10AqP9GDWoreX8d-Mw-lD1d13TkKKLvgXIGEvr8Ke4Iuni6w5wRUxaKj1';
     
     // Set bounds to DMV
